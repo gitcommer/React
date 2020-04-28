@@ -1,0 +1,3002 @@
+HOW TO USE THIS FILE
+NOTES
+REACT-REDUX-FIREBASE-NOTES
+HOW FIND PAGE IN REACT
+
+HOW TO USE THIS FILE
+----------------------------------------------------------------------------------------
+1. ctrl+f and type your concern to go in the tutorial number
+2. carefully read and understand the sequence like //1. //2. //3. and so on
+
+NOTES
+----------------------------------------------------------------------------------------
+VISUAL STUDIO CODE COMPILER - i blur niya ang code basta error or (maka detect siya og error code)
+
+REACT-REDUX-FIREBASE-NOTES
+----------------------------------------------------------------------------------------
+April 4, 2020
+https://www.youtube.com/watch?v=Oi4v5uxTY5o&list=PL4cUxeGkcC9iWstfXntcj8f-dFZ4UtlN3
+https://github.com/iamshaunjp/React-Redux-Firebase-App
+
+3. CREATE PROJECT & RUN, Materialize CSS, react-router-dom
+4. CREATE NAVBAR, SIGN-IN, SIGN-OUT COMPONENT or TEMPLATE, functional component
+5. CREATE DASHBOARD COMPONENT or TEMPLATE, class base component
+6. CREATE PROJECT SUMMARY COMPONENT or TEMPALTE, modular, display more data usign <ProjectSummary />
+7. PROJECT DETAILS COMPONENT - display id in the page like http://localhost:3000/project/1 or yoshi etc.
+8. LOGING & SIGNUP COMPONENTS - when login or signup display data in the console
+9. CREATE PROJECT FORM - with textare
+10. NAV LINKS CSS - navigation links, background image, css styling
+11. install react-redux, set-up store(combine data of all reducer), set-up state (changeable data), set-up reducers, rootReducer(combine all reducers.js file), property, provider
+12. (ok / read it again) display id, title in array using dummy data in ProjectSummary.js 
+    - attach props in a component like <ProjectSummary project={project} key={project.id} />
+    - mapStateToProps, connect 
+13. Async Code with Redux - crud or async explain
+14. (ok/to review) - insert form data to "New Project Page" and data will display in the console
+15. (ok) create database using firebase - all backend services, hosting (NoSQL db called FireStore)
+16. create collection or table and fields in firebase  and insert dummy data
+17. connect to database or connect redux to firebase
+18. (ok/review) insert data in database or firestore and redirect to home page, display success message or error message in console
+19. display data from the database or syncing in console and home page
+20. Project Details Data - when click link from ProjectLink.js direct to ProjectDetails.js and display data
+21. create dummy email and passwrod in firebase
+22. connect your app to authentation in firebase or username, password, login etc
+23. login(singIn page) and display error message, if success display to console, user/pass are in firebase authentication
+24. (ok/review) logout and display logout message to console
+25. (ok/review) if login display logout link or if logout display login in the navbar (no redirect to home page)
+26. (ok/review) fix error: mag change change ang login and logout sa nav inig ka refresh sa page
+27. (ok/review) redirect to login page if not login and redirect to homepage after login. if, else
+28. (ok/review) - sign up and redirect to the home page, add data to authentication and database table or collection in firebase, 
+                - error if data already exists, form trapping, 6 character required
+29. (ok/review) display firstname and lastname first letter of the user in the navbar
+30. (ok) insert data to firebase, display firstname and lastname in the ProjectSummary.js, redirect to home page
+31. (((((ERRROOORRRRRRRRRRR))))) display date, time, moment from firebase
+	- dili mao ang format sa date, time and moment
+32. security rules in firebase, para walay maka edit sa imong database, you can practice query in the firebase,
+    kinsa ray maka login, or display of edit etc.
+33-34. Cloud Functions Intro & Setup - local security rules setup using terminal
+35. Notification Component - create notification ui
+36-37. Cloud Function Firestore Triggers
+38. Showing Notifications - display notification to page
+39. Ordering Firestore Data - or display order the post
+40. Deploying to Firebase Hosting
+
+3. (ok) CREATE PROJECT & RUN, Materialize CSS, react-router-dom
+----------------------------------------------------------------------------------------
+1. cmd/desktop/react-redux-firebase-app (project folder)> npx create-react-app marioplan   //this will create complete package
+2. cmd/desktop/react-redux-firebase-app/marioplan> (project folder)> npm start
+3. add materialize cdn into public/index.html/above closing </title> tag
+4. create folder inside src/components/auth, dashboard, layout and projects
+5. layout(folder) - Navbar.js, SignedInLinks.js, SignedOutLinks.js
+6. dashboard(folder) - Dashboard.js, Notifications.js
+7. auth(folder) - SignIn.js, SignUp.js
+8. projects(folder) - CreateProject.js, ProjectDetails.js, ProjectList.js, ProjectSummary.js
+9. desktop\react-redux-firebase-app\marioplan> npm install react-router-dom
+10. App.js
+
+	import React, { Component } from 'react';
+	import { BrowserRouter } from 'react-router-dom'     //3.1
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter> 				     //3.2
+	        <div className="App">
+	          <h1>MarioPlan</h1>
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+4. (ok) CREATE NAVBAR, SIGN-IN, SIGN-OUT COMPONENT or TEMPLATE, functional component
+----------------------------------------------------------------------------------------
+
+1. Apps.js
+   note: import { BrowserRouter } from 'react-router-dom' 	//para maka route route ka
+
+	import React, { Component } from 'react';
+	import { BrowserRouter } from 'react-router-dom'
+	import Navbar from './components/layout/Navbar'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>
+	        <div className="App">
+	          <Navbar />
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Navbar.js
+   note: import { Link } from 'react-router-dom' 	//1. link sa logo
+
+	import React from 'react'
+	import { Link } from 'react-router-dom'
+	import SignedInLinks from './SignedInLinks'
+	import SignedOutLinks from './SignedOutLinks'
+
+	const Navbar = () => {
+	  return (
+	    <nav className="nav-wrapper grey darken-3">
+	      <div className="container">
+	        <Link to='/' className="brand-logo">MarioPlan</Link>   //1. link sa logo
+	        <SignedInLinks />
+	        <SignedOutLinks />
+	      </div>
+	    </nav>
+	  )
+	}
+
+	export default Navbar
+
+3. SignedInLinks.js
+   note: import { NavLink } from 'react-router-dom' 	//navigation link
+
+	import React from 'react'
+	import { NavLink } from 'react-router-dom'
+
+	const SignedInLinks = () => {			//functional component
+	  return (
+	    <div>
+	      <ul className="right">
+	        <li><NavLink to='/'>New Project</NavLink></li>
+	        <li><NavLink to='/'>Log Out</NavLink></li>
+	        <li><NavLink to='/' className="btn btn-floating pink lighten-1">NN</NavLink></li>
+	      </ul>
+	    </div>
+	  )
+	}
+
+	export default SignedInLinks
+
+4. SignedOutLinks.js
+   note: import { NavLink } from 'react-router-dom' 	//navigation link
+
+	import React from 'react'
+	import { NavLink } from 'react-router-dom'
+
+	const SignedOutLinks = () => {
+	  return (
+	    <div>
+	      <ul className="right">
+	        <li><NavLink to='/'>Signup</NavLink></li>
+	        <li><NavLink to='/'>Login</NavLink></li>
+	      </ul>
+	    </div>
+	  )
+	}
+
+	export default SignedOutLinks
+
+5. (ok) CREATE DASHBOARD COMPONENT or TEMPLATE, class base component, BrowserRouter, Switch, Route
+----------------------------------------------------------------------------------------
+1. App.js
+
+	/*
+	import { BrowserRouter, switch, Route } from 'react-router-dom'     //switch library
+	import Dashboard from './components/dashboard/Dashboard'     //dashboard library
+
+	<switch> 										 //this will only allow only 1 route to load up
+		<Route path='/' Component={Dashboard} />     //localhost:3000/ or load only the Dashboard.js
+	</switch>
+	*/
+
+	import React, { Component } from 'react';
+	import { BrowserRouter, Switch, Route } from 'react-router-dom'
+	import Navbar from './components/layout/Navbar'
+	import Dashboard from './components/dashboard/Dashboard'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>
+	        <div className="App">
+	          <Navbar />
+	          <Switch>
+	            <Route path='/'component={Dashboard} />
+	          </Switch>
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Dashboard.js
+
+	import React, { Component } from 'react'
+	import ProjectList from '../projects/ProjectList' 	//call ProjectList.js
+	import Notifications from './Notifications' 		//call Notifications.js
+
+	class Dashboard extends Component {
+	  render() {
+	    return (
+	      <div className="dashboard container">
+	        <div className="row">
+	          <div className="col s12 m6">
+	            <ProjectList /> 				//display ProjectList.js
+	          </div>
+	          <div className="col s12 m5 offset-m1">
+	            <Notifications /> 				//display Notifications.js
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	export default Dashboard
+
+3. Notifications.js
+
+	import React from 'react'
+
+	const Notifications = () => {
+	  return (
+	    <div>
+	      <p>Notifications</p>
+	    </div>
+	  )
+	}
+
+	export default Notifications
+
+4. ProjectList.js
+
+	import React from 'react'
+
+	const ProjectList = () => {
+	  return (
+	    <div className="project-list section">
+
+	      <div className="card z-depth-0 project-summary">
+	        <div className="card-content grey-text text-darken-3">
+	          <span className="card-title ">Project title</span>
+	          <p>Posted by The Net Ninja</p>
+	          <p className="grey-text">3rd September, 2am</p>
+	        </div>
+	      </div>
+
+	      <div className="card z-depth-0 project-summary">
+	        <div className="card-content grey-text text-darken-3">
+	          <span className="card-title ">Project title</span>
+	          <p>Posted by The Net Ninja</p>
+	          <p className="grey-text">3rd September, 2am</p>
+	        </div>
+	      </div>
+
+	      <div className="card z-depth-0 project-summary">
+	        <div className="card-content grey-text text-darken-3">
+	          <span className="card-title ">Project title</span>
+	          <p>Posted by The Net Ninja</p>
+	          <p className="grey-text">3rd September, 2am</p>
+	        </div>
+	      </div>
+
+	    </div>
+	  )
+	}
+
+	export default ProjectList 	//display this in the Dashboard.js
+
+6. (ok) CREATE PROJECT SUMMARY COMPONENT or TEMPALTE, modular, display more data using <ProjectSummary />
+----------------------------------------------------------------------------------------
+1. ProjectList.js
+   /*
+	import ProjectSummary from './ProjectSummary' 	//call ProjectSummary.js
+	<ProjectSummary />     //sa Dashboard.js ni siya i display og 4 times (modular)
+	*/
+
+	import React from 'react'
+	import ProjectSummary from './ProjectSummary'
+
+	const ProjectList = () => {
+	  return (
+	    <div className="project-list section">
+	      <ProjectSummary />
+	      <ProjectSummary />
+	      <ProjectSummary />
+	      <ProjectSummary />
+	    </div>
+	  )
+	}
+
+	export default ProjectList
+
+2. ProjectSummary.js
+
+	import React from 'react'
+
+	const ProjectSummary = () => {
+	  return (
+	    <div className="card z-depth-0 project-summary">
+	      <div className="card-content grey-text text-darken-3">
+	        <span className="card-title ">Project title</span>
+	        <p>Posted by The Net Ninja</p>
+	        <p className="grey-text">3rd September, 2am</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default ProjectSummary
+
+7. (ok) PROJECT DETAILS COMPONENT - display id in the page like http://localhost:3000/project/1 or yoshi etc.
+----------------------------------------------------------------------------------------
+1. App.js
+
+	/*
+	1. import ProjectDetails from './components/projects/ProjectDetails'
+	2. <Route path='/project/:id' component={ProjectDetails} /> 	//like localhost/3000/project/3
+	3. exact   //meaning display only sa page id like number, kong unsay data ni number id:3 mao na i display localhost:3000/project/3
+	*/
+
+	import React, { Component } from 'react';
+	import { BrowserRouter, Switch, Route } from 'react-router-dom'
+	import Navbar from './components/layout/Navbar'
+	import Dashboard from './components/dashboard/Dashboard'
+	import ProjectDetails from './components/projects/ProjectDetails'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>
+	        <div className="App">
+	          <Navbar />
+	          <Switch>
+	            <Route exact path='/'component={Dashboard} />
+	            <Route path='/project/:id' component={ProjectDetails} />
+	          </Switch>
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. ProjectDetails.js
+
+	/*
+	App.js / <Route path='/project/:id' component={ProjectDetails} />   //kong mogamit ka ani na style sa Route kay naana ni naka attach na "props"
+																		//props contain detail about the router like localhost/3000/project/3
+																		//kong mag inspect element ka sa ProjectDetails.js makita nimo didto ang
+																		  "object" or mga data
+
+	1. const id = props.match.params.id; 	//OR SIMPLY GET THE 'ID' OF THIS ROUTE
+	2. { id } 	//display url id in the page
+	3. const ProjectDetails = (props) => { 	//this will get the props of this <Route path='/project/:id' component={ProjectDetails} /> in App.js
+											//you will see the object details or this route using console.log(props);
+	4. to run: localhost:3000/project/3 or 7 or yoshi etc.
+	*/
+
+	import React from 'react'
+
+	const ProjectDetails = (props) => {
+	  //console.log(props);
+	  const id = props.match.params.id;
+	  return (
+	    <div className="container section project-details">
+	      <div className="card z-depth-0">
+	        <div className="card-content">
+	          <span className="card-title">Project title - { id }</span>
+	          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et labore quaerat quibusdam vel saepe, ab voluptate accusantium culpa nemo fuga earum? Soluta amet nobis officia sed neque fuga aperiam quia?</p>
+	        </div>
+	        <div className="card-action grey lighten-4 grey-text">
+	          <div>Posted by The Net Ninja</div>
+	          <div>2nd September, 2am</div>
+	        </div>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default ProjectDetails
+
+8. (ok) LOGING & SIGNUP COMPONENTS - when login or signup display data in the console, routing
+----------------------------------------------------------------------------------------
+- add above <body> :
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+1. App.js
+
+/*
+import SignIn from './components/auth/SignIn'
+<Route path='/signin' component={SignIn} />
+to run: http://localhost:3000/signin or signup (this is called routing)
+*/
+
+import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Navbar from './components/layout/Navbar'
+import Dashboard from './components/dashboard/Dashboard'
+import ProjectDetails from './components/projects/ProjectDetails'
+import SignIn from './components/auth/SignIn'
+import SignUp from './components/auth/SignUp'
+
+class App extends Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <Switch>
+            <Route exact path='/'component={Dashboard} />
+            <Route path='/project/:id' component={ProjectDetails} />
+            <Route path='/signin' component={SignIn} />
+            <Route path='/signup' component={SignUp} />
+          </Switch>
+        </div>
+      </BrowserRouter>
+    );
+  }
+}
+
+export default App;
+
+2. SingIn.js
+
+/*
+onSubmit={this.handleSubmit}    //when forms is sunmitted (event listener)
+onChange={this.handleChange}    //when input in the field (event listener)
+
+state = {                       //state will get the data of the forms
+email: '',
+password: ''
+}
+
+handleChange = (e) => {         //this will update kong ang user mag change change sa input niya
+this.setState({
+    [e.target.id]: e.target.value
+})
+}
+
+handleSubmit = (e) => {         //run this when form submit
+e.preventDefault();
+console.log(this.state);
+}
+
+console.log(this.state);        //display email and password in the console
+*/
+
+import React, { Component } from 'react'
+
+class SignIn extends Component {
+
+    state = {
+    email: '',
+    password: ''
+    }
+
+    // handleChange = (e) => {
+    //   console.log(e)
+    // }
+
+    handleChange = (e) => {
+    this.setState({
+        [e.target.id]: e.target.value
+    })
+    }
+
+    // handleSubmit = (e) => {
+    //   console.log(e)
+    // }
+
+    handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state);
+    }
+
+    render() {
+    return (
+        <div className="container">
+        <form className="white" onSubmit={this.handleSubmit}>
+            <h5 className="grey-text text-darken-3">Sign In</h5>
+            <div className="input-field">
+            <label htmlFor="email">Email</label>
+            <input type="email" id='email' onChange={this.handleChange} />
+            </div>
+            <div className="input-field">
+            <label htmlFor="password">Password</label>
+            <input type="password" id='password' onChange={this.handleChange} />
+            </div>
+            <div className="input-field">
+            <button className="btn pink lighten-1 z-depth-0">Login</button>
+            </div>
+        </form>
+        </div>
+    )
+    }
+}
+
+export default SignIn
+
+3. SignUp.js
+
+/*
+onSubmit={this.handleSubmit}    //when forms is sunmitted
+onChange={this.handleChange}    //when input in the field
+
+email: '',                      //email and password by default is empty
+password: ''
+
+[e.target.id]: e.target.value   //get the value of email and password
+
+console.log(this.state);        //display email and password in the console
+*/
+
+import React, { Component } from 'react'
+
+class SignUp extends Component {
+    state = {
+    email: '',
+    password: '',
+    firstname: '',
+    lastname: ''
+    }
+
+    handleChange = (e) => {
+    this.setState({
+        [e.target.id]: e.target.value
+    })
+    }
+
+    handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state);
+    }
+
+    render() {
+    return (
+        <div className="container">
+        <form className="white" onSubmit={this.handleSubmit}>
+            <h5 className="grey-text text-darken-3">Sign Up</h5>
+            <div className="input-field">
+            <label htmlFor="email">Email</label>
+            <input type="email" id='email' onChange={this.handleChange} />
+            </div>
+            <div className="input-field">
+            <label htmlFor="password">Password</label>
+            <input type="password" id='password' onChange={this.handleChange} />
+            </div>
+            <div className="input-field">
+            <label htmlFor="firstName">First Name</label>
+            <input type="text" id='firstName' onChange={this.handleChange} />
+            </div>
+            <div className="input-field">
+            <label htmlFor="lastName">Last Name</label>
+            <input type="text" id='lastName' onChange={this.handleChange} />
+            </div>
+            <div className="input-field">
+            <button className="btn pink lighten-1 z-depth-0">Login</button>
+            </div>
+        </form>
+        </div>
+    )
+    }
+}
+
+export default SignUp
+
+9. (ok) CREATE PROJECT FORM - with textarea
+----------------------------------------------------------------------------------------
+to run: localhost:3000/create
+
+1. App.js
+
+	/*
+	import SignIn from './components/auth/SignIn'
+	<Route path='/signin' component={SignIn} />
+
+	to run: http://localhost:3000/signin
+	*/
+
+	import React, { Component } from 'react';
+	import { BrowserRouter, Switch, Route } from 'react-router-dom'
+	import Navbar from './components/layout/Navbar'
+	import Dashboard from './components/dashboard/Dashboard'
+	import ProjectDetails from './components/projects/ProjectDetails'
+	import SignIn from './components/auth/SignIn'
+	import SignUp from './components/auth/SignUp'
+	import CreateProject from './components/projects/CreateProject'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>
+	        <div className="App">
+	          <Navbar />
+	          <Switch>
+	            <Route exact path='/'component={Dashboard} />
+	            <Route path='/project/:id' component={ProjectDetails} />
+	            <Route path='/signin' component={SignIn} />
+	            <Route path='/create' component={CreateProject} />
+	          </Switch>
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. CreateProject.js
+
+	import React, { Component } from 'react'
+
+	class CreateProject extends Component {
+	  state = {
+	    title: '',
+	    content: ''
+	  }
+
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    console.log(this.state);
+	  }
+
+	  render() {
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Create new project</h5>
+	          <div className="input-field">
+	            <label htmlFor="title">Title</label>
+	            <input type="text" id='title' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="content">Project Content</label>
+	            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1 z-depth-0">Create</button>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	export default CreateProject
+
+10. NAV LINKS CSS - navigation links, background image, css styling
+----------------------------------------------------------------------------------------
+1. App.js
+
+	/*
+	import SignIn from './components/auth/SignIn'
+	<Route path='/signin' component={SignIn} />
+	to run: http://localhost:3000/signin or signout
+	*/
+
+	import React, { Component } from 'react';
+	import { BrowserRouter, Switch, Route } from 'react-router-dom'
+	import Navbar from './components/layout/Navbar'
+	import Dashboard from './components/dashboard/Dashboard'
+	import ProjectDetails from './components/projects/ProjectDetails'
+	import SignIn from './components/auth/SignIn'
+	import SignUp from './components/auth/SignUp'
+	import CreateProject from './components/projects/CreateProject'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>
+	        <div className="App">
+	          <Navbar />
+	          <Switch>
+	            <Route exact path='/'component={Dashboard} />
+	            <Route path='/project/:id' component={ProjectDetails} />
+	            <Route path='/signin' component={SignIn} />
+	            <Route path='/signup' component={SignUp} />
+	            <Route path='/create' component={CreateProject} />
+	          </Switch>
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. SignedInLinks.js
+
+	import React from 'react'
+	import { NavLink } from 'react-router-dom'
+
+	const SignedInLinks = () => {
+	  return (
+	    <div>
+	      <ul className="right">
+	        <li><NavLink to='/create'>New Project</NavLink></li>
+	        <li><NavLink to='/'>Log Out</NavLink></li>
+	        <li><NavLink to='/' className="btn btn-floating pink lighten-1">NN</NavLink></li>
+	      </ul>
+	    </div>
+	  )
+	}
+
+	export default SignedInLinks
+
+3. SignedOutLinks.js
+
+	import React from 'react'
+	import { NavLink } from 'react-router-dom'
+
+	const SignedOutLinks = () => {
+	  return (
+	    <div>
+	      <ul className="right">
+	        <li><NavLink to='/signup'>Signup</NavLink></li>
+	        <li><NavLink to='/signin'>Login</NavLink></li>
+	      </ul>
+	    </div>
+	  )
+	}
+
+	export default SignedOutLinks
+
+4.  - add image to public/img/mario-bg.png
+	- index.css
+
+	html{
+	  min-height: 100%;
+	}
+
+	body {
+	  margin: 0;
+	  padding: 0;
+	  font-family: sans-serif;
+	  background: url(/img/mario-bg.png) no-repeat;
+	  background-size: 100%;
+	  background-position: bottom;
+	  background-color: #95e8f3;
+	  min-height: 100%;
+	}
+
+	form{
+	  padding: 20px;
+	  margin-top: 60px;
+	}
+
+	form button, form h5{
+	  margin: 20px 0;
+	}
+
+	/* when click field borderline is pink */
+	input[type=text]:not(.browser-default):focus:not([readonly]),
+	input[type=email]:not(.browser-default):focus:not([readonly]),
+	input[type=password]:not(.browser-default):focus:not([readonly]),
+	textarea.materialize-textarea:focus:not([readonly]){
+	  border-color: #ec407a;
+	  box-shadow: none;
+	}
+
+	input[type=text]:not(.browser-default):focus:not([readonly]) + label,
+	textarea.materialize-textarea:focus:not([readonly]) + label,
+	input[type=email]:not(.browser-default):focus:not([readonly]) + label,
+	input[type=password]:not(.browser-default):focus:not([readonly]) + label{
+	  color: #ec407a !important;
+	}
+
+11. (ok) install react-redux, set-up store(combine data of all reducer), set-up state (changeable data), set-up reducers, rootReducer(combine all reducers.js file), property, provider
+----------------------------------------------------------------------------------------
+1. cmd/desktop/react-redux-firebase-app/marioplan> npm install redux react-redux 	//1.install redux
+2. create folders and files in src/store/reducers/authReducer.js, projectReducer.js, rootReducer.js 	//4. create reducer file
+
+3. authReducer.js 					 						//5.
+
+	/*
+	const initState = {} 									//{} - is empty object(link in inspect element)
+															//const initState = if naay ma recieve na state value kay i assign ni initState
+	const authReducer = (state = initState, action) => { 	//const authReducer = () => {}; - this is called and arrow function
+	  return state; 										//initState meaning walay value or default, if naanay value ma assign siya sa state = 
+	}; 														//return state; - i simply send the value of the state
+	*/
+
+	const initState = {}
+
+	const authReducer = (state = initState, action) => {
+	  return state;
+	};
+
+	export default authReducer;
+
+4. projectReducer.js 										//same sa data 3. authReducer.js 
+
+	const initState = {}
+
+	const projectReducer = (state = initState, action) => {
+	  return state;
+	};
+
+	export default projectReducer;
+
+5. rootReducer.js
+
+	/*
+	NOTE: rootReducer is use to combine all the reducer
+
+	import authReducer from './authReducer'
+	import projectReducer from './projectReducer'
+	import { combineReducers } from 'redux'  		//6. this library combine all the reducer like authReducer.js and projectReducer.js
+
+	const rootReducer = combineReducers({  			//combineReducers this function combine all reducers and assign to rootReducer
+	  auth: authReducer, 							//this will update the data of authReducer.js data
+	  project: projectReducer 						//this will update the data of projectReducer.js data
+	}); 											//auth: and project: called property, this will be called outside
+
+	export default rootReducer
+
+	// the key name will be the data property on the state object
+	*/
+
+	import authReducer from './authReducer'
+	import projectReducer from './projectReducer'
+	import { combineReducers } from 'redux'
+
+	const rootReducer = combineReducers({
+	  auth: authReducer,
+	  project: projectReducer
+	});
+
+	export default rootReducer
+
+6. index.js
+
+	/*
+	import rootReducer from './store/reducers/rootReducer' 			//7. ang sulod ni rootReducer.js kay data ni authReducer.js and projectReducer.js
+
+	import { createStore } from 'redux' 							//8. createStore is a library that get the combine data of a reducer 
+	const store = createStore(rootReducer);
+
+	import { Provider } from 'react-redux' 																//9. Provider library
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root')); 		//10. Provider is use to pass the store in the component or templete
+																										//11. <App /> is App.js send data here
+
+	import * as serviceWorker from './serviceWorker'; 				//wrong ni
+	import registerServiceWorker from './registerServiceWorker';	//kani gamita
+	*/
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import registerServiceWorker from './registerServiceWorker';
+	import { createStore } from 'redux'
+	import rootReducer from './store/reducers/rootReducer'
+	import { Provider } from 'react-redux'
+
+	const store = createStore(rootReducer);
+
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+	registerServiceWorker();
+
+12. (ok / read it again) display id, title in array using dummy data in ProjectSummary.js 
+    - attach props in a component like <ProjectSummary project={project} key={project.id} />
+    - mapStateToProps, connect 
+----------------------------------------------------------------------------------------
+1. projectReducer.js
+
+	/*
+	const initState = { 														//1. initState - hold the array data
+		projects: [ 															//2. property - that will called outside
+	    {id: '1', title: 'help me find peach', content: 'blah blah blah'}, 		//3. array [] of objects {} (dummy data)
+	    {id: '2', title: 'collect all the stars', content: 'blah blah blah'},
+	    {id: '3', title: 'egg hunt with yoshi', content: 'blah blah blah'}
+	  ]
+	}
+	*/
+
+	const initState = {
+		projects: [
+	    {id: '1', title: 'help me find peach', content: 'blah blah blah'},
+	    {id: '2', title: 'collect all the stars', content: 'blah blah blah'},
+	    {id: '3', title: 'egg hunt with yoshi', content: 'blah blah blah'}
+	  ]
+	}
+
+	const projectReducer = (state = initState, action) => {
+	  return state;
+	};
+
+	export default projectReducer;
+
+2. rootReducer.js
+
+	/*
+	project: projectReducer 						//4 project: property has now the (dummy data)
+	*/
+
+	import authReducer from './authReducer'
+	import projectReducer from './projectReducer'
+	import { combineReducers } from 'redux'
+
+	const rootReducer = combineReducers({
+	  auth: authReducer,
+	  project: projectReducer
+	});
+
+	export default rootReducer
+
+3. Dashboard.js
+	/*
+	import React, { Component } from 'react'
+	import ProjectList from '../projects/ProjectList'
+	import Notifications from './Notifications'
+	import { connect } from 'react-redux' 				//5. connect library - a higher order component (meaning connect dashboard.js component to redux store)
+
+	class Dashboard extends Component {
+	  render() {
+
+	    // console.log(this.props); 					//9. props is the props in mapStateToProps or mapStateTo'Props', when inspect element you will see the (all dummy data) in array
+	    const { projects } = this.props; 				//10 get the props or the (all dummy data) in array and assign projects: state.project.projects below
+
+	    return (
+	      <div className="dashboard container">
+	        <div className="row">
+	          <div className="col s12 m6">
+	            <ProjectList projects={projects} /> 	//11 display props or (all dummy data) in array to components/projects/ProjectList.js
+	          </div>
+	          <div className="col s12 m5 offset-m1">
+	            <Notifications />
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => { 				//6. mapStateToProps - map/locate our state/ return state or initState data from the store/redux to the props/property
+	  return { 																 - or find the (dummy data) in the state array
+	    projects: state.project.projects 				//projects: - is the property here
+	  } 												//project: - property is in rootReducer.js
+	} 													//projects: - property in the (dummy data) array in projectReducer.js
+														//state - is the iniState in projectReducer.js
+
+	export default connect(mapStateToProps)(Dashboard) 	//7. use connect - a higher order component (meaning connect dashboard.js component to redux store)
+ 														//8. send the data to Dashboard.js
+ 	*/													
+
+ 	import React, { Component } from 'react'
+	import ProjectList from '../projects/ProjectList'
+	import Notifications from './Notifications'
+	import { connect } from 'react-redux' 				
+
+	class Dashboard extends Component {
+	  render() {
+
+	    // console.log(this.props); 					
+	    const { projects } = this.props; 				
+
+	    return (
+	      <div className="dashboard container">
+	        <div className="row">
+	          <div className="col s12 m6">
+	            <ProjectList projects={projects} /> 	
+	          </div>
+	          <div className="col s12 m5 offset-m1">
+	            <Notifications />
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => { 				
+	  return { 																 
+	    projects: state.project.projects 			
+	  } 												
+	} 													
+														
+
+	export default connect(mapStateToProps)(Dashboard) 
+ 																			
+4. ProjectList.js
+
+	import React from 'react'
+	import ProjectSummary from './ProjectSummary'
+
+	const ProjectList = ({projects}) => { 								//12. {projects} - is <ProjectList projects={projects} /> in Dashboard.js
+	  return (
+	    <div className="project-list section">
+	      { projects && projects.map(project => { 						//13. if we have the projects or data then do this && projects.map(project => {
+	        return (														  if not the don't do this && projects.map(project => {
+	          <ProjectSummary project={project} key={project.id} /> 	//14. get the data and id (using loop) in dummy array
+	        )
+	      })}
+	    </div>
+	  )
+	}
+
+	export default ProjectList 										
+
+5. ProjectSummary.js
+
+	import React from 'react'
+
+	const ProjectSummary = ({project}) => { 							//15. ({project}) - is the <ProjectSummary project={project} key={project.id} /> in projectList.js
+	  return (
+	    <div className="card z-depth-0 project-summary">
+	      <div className="card-content grey-text text-darken-3">
+	        <span className="card-title ">{project.title}</span> 		//16. display data here
+	        <p>Posted by The Net Ninja</p>
+	        <p className="grey-text">3rd September, 2am</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default ProjectSummary
+
+to run: localhost/3000
+
+
+14. (ok/to review) - insert form data to "New Project Page" and data will display in the console
+
+	HOW THIS WORKS: 1. index.js  	 		//install and declare thunk
+					2. projectActions.js 	//create and insert operation line crud
+					3. CreateProject.js 	//create forms
+					4. projectReducer.js 	//insert form data to console
+
+----------------------------------------------------------------------------------------
+1. cmd/marioplan> npm install redux-thunk - install and use thunk 									//1.
+2. index.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import * as serviceWorker from './serviceWorker';
+	import { createStore, applyMiddleware } from 'redux' 											//3. applyMiddleware - is the link between frontend and backend
+	import rootReducer from './store/reducers/rootReducer'
+	import { Provider } from 'react-redux'
+	import thunk from 'redux-thunk'																	//2. thunk library
+
+
+	const store = createStore(rootReducer, applyMiddleware(thunk)); 								//4. use applyMiddleware as thunk in the middleware
+
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+3. create folder and file in src/store/actions/projectActions.js 									//5. crud file
+	/*
+	NOTE:
+	actions - is the file interact the database
+	thunk - returns functions not objects
+	dispatch - will dispatch or run an action like crud operation action from reducer
+	async - or like query to database
+	type: 'CREATE_PROJECT' - or insert data
+	getState - get the data in the forms
+	*/
+
+	export const createProject = (project) => { 													//6. createProject(function name), project - is the project the form data
+	  return (dispatch, getState) => { 																//7. usually we return object but now we return function
+	    // make async call to database 																	 dispatch - perform the action from the reducers
+	    dispatch({ type: 'CREATE_PROJECT', project }); 												//project is the data of state
+	  }
+	};
+
+4. CreateProject.js
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux' 								  //9. connect this component from redux store or like connect to database                              
+	import { createProject } from '../../store/actions/projectActions'    //8. createProject is found in "export const createProject = (project) => {  from projectActions.js "
+ 																			   - inside here is the insert to database operation
+	class CreateProject extends Component {
+	  state = { 								 						  //10.
+	    title: '',
+	    content: ''
+	  }
+
+	  handleChange = (e) => {
+	    this.setState({	
+	      [e.target.id]: e.target.value
+	    })
+	  }
+
+	  handleSubmit = (e) => {     				
+	    e.preventDefault();
+	    // console.log(this.state);
+	    this.props.createProject(this.state);							//11. createProject is the reateProject: (project) => dispatch(createProject(project))
+	  } 										      						  state - state = { title: '', content: '' }
+
+	  render() {
+	    return (	
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Create new project</h5>
+	          <div className="input-field">
+	            <label htmlFor="title">Title</label>
+	            <input type="text" id='title' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="content">Project Content</label>
+	            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1 z-depth-0">Create</button>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapDispatchToProps = (dispatch) => {     						//12. mapDispatchToProps - find the dispatch or the forms data and store to Props
+	  return {
+	    createProject: (project) => dispatch(createProject(project)) 	      dispatch - is the dispatch({ type: 'CREATE_PROJECT', project }); in projectActions.js
+	  }
+	}
+
+	export default connect(null, mapDispatchToProps)(CreateProject)   	//13. connect to redux or connect to database
+
+5. projectReducer.js
+
+	const initState = {
+	  projects: [
+	    {id: '1', title: 'help me find peach', content: 'blah blah blah'},
+	    {id: '2', title: 'collect all the stars', content: 'blah blah blah'},
+	    {id: '3', title: 'egg hunt with yoshi', content: 'blah blah blah'}
+	  ]
+	}
+
+	const projectReducer = (state = initState, action) => {   
+	  switch (action.type) { 								  //14. action.type of the project is CREATE_PROJECT
+	    case 'CREATE_PROJECT':
+	      console.log('create project', action.project)       //15. if the value of action.project is equal to CREATE_PROJECT log to console
+	  }
+	  return state
+	}
+
+	export default projectReducer
+
+6. to run: localhost/3000/create - insert data to New Project Page and data will display in the console
+   output: create project { title: "test", content: "blah blah blah" }
+
+
+15. (ok) create database in firebase - all backend services, hosting (NoSQL db called FireStore)
+----------------------------------------------------------------------------------------
+firebase.google.com
+account: ucrumcinco@gmail.com
+
+1. cmd/desktop/react-redux-firebase-app/marioplan> npm install firebase
+
+2. create src/config/fbConfig.js
+
+	import firebase from 'firebase/app' 									// /app- meaning import only firebase app(for practive), for dev is no /app
+	import 'firebase/firestore' 											// import database in firebase
+	import 'firebase/auth' 													// for login/registration
+
+	// Your web app's Firebase configuration
+	var firebaseConfig = {
+		apiKey: "AIzaSyDLh3tMG-j2l80knduZ6_sfnqCmTpTJTpQ", 					//this key use which database you will connect
+		authDomain: "net-ninja-marioplan-7e223.firebaseapp.com",
+		databaseURL: "https://net-ninja-marioplan-7e223.firebaseio.com",
+		projectId: "net-ninja-marioplan-7e223",
+		storageBucket: "net-ninja-marioplan-7e223.appspot.com",
+		messagingSenderId: "399143948362",
+		appId: "1:399143948362:web:ee3a906446c904109b16b3"
+		};
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig); 								//this will connect your project to database
+	firebase.firestore().settings({ timestampsInSnapshots: true }); 		//date/time in database
+
+	---------------------------------------------------------------
+	/*
+	username: ucrumcinco@gmail.com
+	*/
+
+	// Your web app's Firebase configuration 								
+	  var firebaseConfig = {
+	    apiKey: "AIzaSyDQSCvPQEfOeom9yt6NHK6Sv6cUSZIEgrM",
+	    authDomain: "even-electron-246506.firebaseapp.com",
+	    databaseURL: "https://even-electron-246506.firebaseio.com",
+	    projectId: "even-electron-246506",
+	    storageBucket: "even-electron-246506.appspot.com",
+	    messagingSenderId: "1025674617941",
+	    appId: "1:1025674617941:web:59e388b3e4bc2fc51c20dc"
+	  };
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+
+	--------------------------------------------------------------
+
+	export default firebase;
+
+3. connect you react project to firebase
+
+4. firebase(web), database, start in test mode
+
+
+17. connect to database or connect redux to firebase
+----------------------------------------------------------------------------------------
+1. cmd/desktop/react-redux-firebase-app/marioplan> npm install react-redux-firebase redux-firestore
+
+2. src/config/fbConfig.js
+
+	import firebase from 'firebase/app' 								
+	import 'firebase/firestore' 											
+	import 'firebase/auth' 													
+
+	// Your web app's Firebase configuration 								
+	var firebaseConfig = {
+	apiKey: "AIzaSyDQSCvPQEfOeom9yt6NHK6Sv6cUSZIEgrM",
+	authDomain: "even-electron-246506.firebaseapp.com",
+	databaseURL: "https://even-electron-246506.firebaseio.com",
+	projectId: "even-electron-246506",
+	storageBucket: "even-electron-246506.appspot.com",
+	messagingSenderId: "1025674617941",
+	appId: "1:1025674617941:web:59e388b3e4bc2fc51c20dc"
+	};
+
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+	firebase.firestore().settings({ timestampsInSnapshots: true }); 
+
+	export default firebase;
+
+3. index.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import registerServiceWorker from './registerServiceWorker';
+	import { createStore, applyMiddleware, compose } from 'redux' 				//4. compose-1
+	import rootReducer from './store/reducers/rootReducer'
+	import { Provider } from 'react-redux'
+	import thunk from 'redux-thunk'
+	import { reduxFirestore, getFirestore } from 'redux-firestore'; 			//1.
+	import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'; 	//2.
+	import fbConfig from './config/fbConfig' 									//6. fbConfig-1 database info
+
+	const store = createStore(rootReducer,
+	  compose(																	//5. compose-2
+	    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})), 	//3. this is called store enhancer
+	    reactReduxFirebase(fbConfig),  											//   fbConfig-2 redux binding for firebase
+	    reduxFirestore(fbConfig) 												//   fbConfig-3 redux bindings for firestore
+	  )
+	);
+
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+4. projectActions.js
+
+	export const createProject = (project) => { 													
+	  return (dispatch, getState { getFirebase, getFirestore }) => { 	//1. this will know which database to connect															
+	    // make async call to database 																
+	    dispatch({ type: 'CREATE_PROJECT', project });  												 											
+	  }
+	};
+
+18. (ok/review) insert data in database or firestore and redirect to home page, display success message or error message in console
+----------------------------------------------------------------------------------------
+error: 	- ./src/config/fbConfig.js
+		  Module not found: Can't resolve 'firebase/app' in '/home/dummy/Desktop/react-redux-firebase/marioplan/src/config'
+
+solution: - https://stackoverflow.com/questions/52659859/module-not-found-cant-resolve-firebase-index
+		  - npm i --save react-redux@5.1.1 react-redux-firebase@2.2.4 (packages compatibility issue)
+		  - cmd/desktop/react-redux-firebase-app/marioplan> npm install react-redux-firebase redux-firestore
+
+1. marioplan\src\config\fbConfig.js
+
+	/*
+	username: ucrumcinco@gmail.com 		//pwede ka maka change og connection sa imong database
+	*/
+
+	import firebase from 'firebase/app'
+	import 'firebase/firestore'
+	import 'firebase/auth'
+
+	// Your web app's Firebase configuration
+	var firebaseConfig = {
+		apiKey: "AIzaSyDLh3tMG-j2l80knduZ6_sfnqCmTpTJTpQ",
+		authDomain: "net-ninja-marioplan-7e223.firebaseapp.com",
+		databaseURL: "https://net-ninja-marioplan-7e223.firebaseio.com",
+		projectId: "net-ninja-marioplan-7e223",
+		storageBucket: "net-ninja-marioplan-7e223.appspot.com",
+		messagingSenderId: "399143948362",
+		appId: "1:399143948362:web:ee3a906446c904109b16b3"
+		};
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+	firebase.firestore().settings({ timestampsInSnapshots: true });
+
+	export default firebase;
+
+2. index.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import { createStore, applyMiddleware, compose } from 'redux'
+	import rootReducer from './store/reducers/rootReducer'
+	import { Provider } from 'react-redux'
+	import thunk from 'redux-thunk'
+	import { reduxFirestore, getFirestore } from 'redux-firestore';
+	import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+	import fbConfig from './config/fbConfig'
+
+	const store = createStore(rootReducer,
+	  compose(
+	    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
+	    reactReduxFirebase(fbConfig), // redux binding for firebase
+	    reduxFirestore(fbConfig) // redux bindings for firestore
+	  )
+	);
+
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+3. marioplan\src\store\actions\projectActions.js
+
+	export const createProject = (project) => {
+	  return (dispatch, getState, {getFirestore}) => {
+	    // make async call to database
+	    const firestore = getFirestore();
+	    firestore.collection('projects').add({
+	      ...project,
+	      authorFirstName: 'Net',
+	      authorLastName: 'Ninja',
+	      authorId: 12345,
+	      createdAt: new Date()
+	    }).then(() => {
+	      dispatch({ type: 'CREATE_PROJECT_SUCCESS' });
+	    }).catch(err => {
+	      dispatch({ type: 'CREATE_PROJECT_ERROR' }, err);
+	    });
+	  }
+	};
+
+4. marioplan\src\store\reducers\projectReducer.js
+
+	const initState = {
+	  projects: [
+	    {id: '1', title: 'help me find peach', content: 'blah blah blah'},
+	    {id: '2', title: 'collect all the stars', content: 'blah blah blah'},
+	    {id: '3', title: 'egg hunt with yoshi', content: 'blah blah blah'}
+	  ]
+	}
+
+	const projectReducer = (state = initState, action) => {
+	  switch (action.type) {
+	    case 'CREATE_PROJECT_SUCCESS':
+	      console.log('create project success');
+	      return state;
+	    case 'CREATE_PROJECT_ERROR':
+	      console.log('create project error');
+	      return state;
+	    default:
+	      return state;
+	  }
+	};
+
+	export default projectReducer;
+
+5. marioplan\src\components\projects\CreateProject.js
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux'
+	import { createProject } from '../../store/actions/projectActions'
+
+	class CreateProject extends Component {
+	  state = {
+	    title: '',
+	    content: ''
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    // console.log(this.state);
+	    this.props.createProject(this.state);
+	    this.props.history.push('/');
+	  }
+	  render() {
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Create a New Project</h5>
+	          <div className="input-field">
+	            <input type="text" id='title' onChange={this.handleChange} />
+	            <label htmlFor="title">Project Title</label>
+	          </div>
+	          <div className="input-field">
+	            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
+	            <label htmlFor="content">Project Content</label>
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1">Create</button>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapDispatchToProps = dispatch => {
+	  return {
+	    createProject: (project) => dispatch(createProject(project))
+	  }
+	}
+
+	export default connect(null, mapDispatchToProps)(CreateProject)
+
+19. display data from the database or syncing in console and home page
+----------------------------------------------------------------------------------------
+1. index.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import { createStore, applyMiddleware, compose } from 'redux'
+	import rootReducer from './store/reducers/rootReducer'
+	import { Provider } from 'react-redux'
+	import thunk from 'redux-thunk'
+	import { reduxFirestore, getFirestore } from 'redux-firestore'; 	 		//1. this library is need in crud operation
+	import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'; 	//2. this library is need in crud operation
+	import fbConfig from './config/fbConfig'
+
+	const store = createStore(rootReducer,
+	  compose(
+	    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
+	    reactReduxFirebase(fbConfig), 											//3. use reactReduxFirebase
+	    reduxFirestore(fbConfig) 												//4. use reduxFirebase
+	  )
+	);
+
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+2. rootReducer.js
+
+	import authReducer from './authReducer'
+	import projectReducer from './projectReducer'
+	import { combineReducers } from 'redux'
+	import { firestoreReducer } from 'redux-firestore'; 	//1. firestoreReducer - this library will access firebase data
+
+	const rootReducer = combineReducers({
+	  auth: authReducer,
+	  project: projectReducer,
+	  firestore: firestoreReducer 	//19.4 store data to state
+	});
+
+	export default rootReducer
+
+3. Dashboard.js
+
+	import React, { Component } from 'react'
+	import ProjectList from '../projects/ProjectList'
+	import Notifications from './Notifications'
+	import { connect } from 'react-redux' 									//1. connect to database
+	import { firestoreConnect } from 'react-redux-firebase'   				//2. firestoreConnect or retrieve data from database
+	import { compose } from 'redux'   //19.5 import compose from index.js 	//3. compose-1
+
+	class Dashboard extends Component {
+	  render() {
+
+	    // console.log(this.props); 					//9. display data in the console
+	    const { projects } = this.props; 				//10. display data in the page
+
+	    return (
+	      <div className="dashboard container">
+	        <div className="row">
+	          <div className="col s12 m6">
+	            <ProjectList projects={projects} />
+	          </div>
+	          <div className="col s12 m5 offset-m1">
+	            <Notifications />
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {
+	  // console.log(state); 							//8. try to display database data in the console
+	  return {
+	    projects: state.firestore.ordered.projects
+	  }
+	}
+
+	export default compose( 							//4. compose-2 - is use when calling 1 or more store enhancer
+	  connect(mapStateToProps),     					//5. higher order component
+	  firestoreConnect([            					//6. firestoreConnect - this array contain an series of object
+	    { collection: 'projects' } 						//7. collection and projects is seen in the firebase
+	  ])
+	)(Dashboard)
+
+20. (ok/review) when click link from ProjectLink.js direct to ProjectDetails.js and display data, if, else
+----------------------------------------------------------------------------------------
+1. ProjectList.js
+
+	import React from 'react'
+	import ProjectSummary from './ProjectSummary'
+	import { Link } from 'react-router-dom'   							//1.
+
+	const ProjectList = ({projects}) => {
+	  return (
+	    <div className="project-list section">
+	      { projects && projects.map(project => {
+	        return (
+	          <Link to={'/project/' + project.id} key={project.id}>   	//2. + is called concatenate, project.id - is the id in firebase
+	            <ProjectSummary project={project} />
+	          </Link>
+	        )
+	      })}
+	    </div>
+	  )
+	}
+
+	export default ProjectList
+
+2. ProjectDetails.js
+
+	import React from 'react'
+	import { connect } from 'react-redux'    					//1. connect to database
+	import { firestoreConnect } from 'react-redux-firebase'   	//2. get data from firestore
+	import { compose } from 'redux'   							//3. 
+
+	const ProjectDetails = (props) => {
+	  const { project } = props; 								//9.
+	  if (project) {
+	    return (
+	      <div className="container section project-details">
+	        <div className="card z-depth-0">
+	          <div className="card-content">
+	            <span className="card-title">{project.title}</span> 	//10.
+	            <p>{project.content}</p> 								//11.
+	          </div>
+	          <div className="card-action grey lighten-4 grey-text">
+	            <div>Posted by {project.authorFirstName} {project.authorLastName}</div> 	//12.
+	            <div>2nd September, 2am</div> 												//13.
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  } else {
+	    return (
+	      <div className="container center">
+	        <p>Loading project...</p>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state, ownProps) => {  		//4.
+	  // console.log(state);
+	  const id = ownProps.match.params.id; 					//7. this will march id from firebase and display to page
+	  const projects = state.firestore.data.projects;
+	  const project = projects ? projects[id] : null 		//8. if has project or data in firebase or null
+	  return {
+	    project: project
+	  }
+	}
+
+	export default compose(   								//5.
+	  connect(mapStateToProps),
+	  firestoreConnect([{
+	    collection: 'projects' 								//6. you can see this in firebase
+	  }])
+	)(ProjectDetails)
+
+21. create dummy email and passwrod in firebase
+----------------------------------------------------------------------------------------
+1. firebase, authentication, set-up sign-in method, that's all the media you can use in firebase authentication
+   - enable the email not the password, save
+   - Users on the navbar, Add user, username: test@lema.com, password: test1234
+
+22. connect your app to authentation in firebase or username, password, login etc
+----------------------------------------------------------------------------------------
+1. rootReducer.js
+
+	import authReducer from './authReducer'
+	import projectReducer from './projectReducer'
+	import { combineReducers } from 'redux'
+	import { firestoreReducer } from 'redux-firestore';
+	import { firebaseReducer } from 'react-redux-firebase' 		//1. this is use for authentication or login, signup, user, password
+
+	const rootReducer = combineReducers({
+	  auth: authReducer,
+	  project: projectReducer,
+	  firestore: firestoreReducer,
+	  firebase: firebaseReducer 								//2. create firebase: property (this will connect authentication and redux)
+	});
+
+	export default rootReducer
+
+	// the key name will be the data property on the state object
+
+2. Navbar.js
+
+	import React from 'react'
+	import { Link } from 'react-router-dom'
+	import SignedInLinks from './SignedInLinks'
+	import SignedOutLinks from './SignedOutLinks'
+	import { connect } from 'react-redux' 						//3. connect to firebase
+
+	const Navbar = (props) => {
+	  const { auth } = props;
+	  return (
+	    <nav className="nav-wrapper grey darken-3">
+	      <div className="container">
+	        <Link to='/' className="brand-logo">MarioPlan</Link>
+	        <SignedInLinks />
+	        <SignedOutLinks />
+	      </div>
+	    </nav>
+	  )
+	}
+
+	const mapStateToProps = (state) => { 						//4. get the data
+	  // console.log(state);
+	  return{
+	    auth: state.firebase.auth
+	  }
+	}
+
+	export default connect(mapStateToProps)(Navbar)
+
+to run: localhost:3000 - console, you will see that your app is connected now to authentication in fire base
+
+3. ProjectList.js
+
+	import React from 'react'
+	import ProjectSummary from './ProjectSummary'
+	import { Link } from 'react-router-dom'
+
+	const ProjectList = ({projects}) => {
+	  return (
+	    <div className="project-list section">
+	      { projects && projects.map(project => {
+	        return (
+	          <Link to={'/project/' + project.id} key={project.id}>   //22.5
+	            <ProjectSummary project={project} />
+	          </Link>
+	        )
+	      })}
+	    </div>
+	  )
+	}
+
+	export default ProjectList
+
+23. login(singIn page) and display error message, if success display to console, user/pass are in firebase authentication
+----------------------------------------------------------------------------------------
+1. create marioplan\src\store\actions\authActions.js
+
+	export const signIn = (credentials) => { 			//1. export credentials outside
+	  return (dispatch, getState, {getFirebase}) => { 	//2. dispatch/send user/pass, getState is the user/pass in forms, {getFirebase} connect to firebase
+	    const firebase = getFirebase(); 				//3. getFirebase() get the data of database and assign to firebase
+
+	    firebase.auth().signInWithEmailAndPassword( 	//4. connect your project to the authentication in firebase
+	      credentials.email, 							//   store email and password to credentials
+	      credentials.password
+	    ).then(() => {									//5. login message
+	      dispatch({ type: 'LOGIN_SUCCESS' }); 			//   console message
+	    }).catch((err) => {
+	      dispatch({ type: 'LOGIN_ERROR', err });
+	    });
+
+	  }
+	}
+
+2. authReducer.js
+
+	const initState = { 									//3.1 empty variable ni siya sa authError: null
+	  authError: null 										//    masudlan ni siya sa ubos
+	}
+
+	const authReducer = (state = initState, action) => { 	//1. create state, action mao ng mga authActions.js, basta mga action
+	  switch(action.type){ 									//2. action.type is the type in authActions.js
+	    case 'LOGIN_ERROR':
+	      console.log('login error');
+	      return {
+	        ...state, 										//3. ...state will take whatever data in here const initState = {
+	        authError: 'Login failed'
+	      }
+	    case 'LOGIN_SUCCESS':
+	      console.log('login success');
+	      return {
+	        authError: null 								//3.2 if no error empty again the authError
+	      }
+	    default:
+	      return state 										//3.3 return the state message
+	  }
+	};
+
+	export default authReducer;
+
+3. SignIn.js
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux'   						//1. connect to database
+	import { signIn } from '../../store/actions/authActions'  		//2. {signIn} is the, export const signIn = (credentials) => {, in authActions.js (database data)
+
+	class SignIn extends Component {
+	  state = {
+	    email: '',
+	    password: ''
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+	  handleSubmit = (e) => {   									//8. when forms is sumbit, e detect when forms is submitted
+	    e.preventDefault();
+	    //console.log(this.state);
+	    this.props.signIn(this.state);								//5. class signIn, state email, pass
+	  }
+	  render() {
+	    const { authError } = this.props;							//9. if props = authError
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Sign In</h5>
+	          <div className="input-field">
+	            <label htmlFor="email">Email</label>
+	            <input type="email" id='email' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="password">Password</label>
+	            <input type="password" id='password' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1 z-depth-0">Login</button>
+	            <div className="center red-text">
+	              { authError ? <p>{authError}</p> : null }								//10. if error display message
+	            </div>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {  									//6. mapStateToProps - meaning pangitaa si State sa authReducer.js para himoong Props
+	  return{
+	    authError: state.auth.authError 									//7. kohaa ang data ni auth: naa sa rootReducer.js and authError: sa authReducer.js
+	  } 																		
+	}																			 
+
+	const mapDispatchToProps = (dispatch) => {  							//4. mapDispatchToProps - meaning pangitaa si Dispatch sa authActions.js para himoong Props
+	  return {
+	    signIn: (creds) => dispatch(signIn(creds))							// 	 creds is the (credentials) in authActions.js (pwede ra dili siya pariha og pangalan)
+	  }
+	}
+
+	export default connect(mapStateToProps, mapDispatchToProps)(SignIn)   	//3. get the data of mapStateToProps and mapDispatchToProps and send to SignIn.js UI
+
+to run: - copy user username and password to authentication firebase and enter to singIn page
+		- log success or error to console
+
+24. (ok/review) logout and display logout message to console
+----------------------------------------------------------------------------------------
+1. authAction.js
+
+	export const signIn = (credentials) => { 				//sign-in
+	  return (dispatch, getState, {getFirebase}) => {
+	    const firebase = getFirebase();
+
+	    firebase.auth().signInWithEmailAndPassword(
+	      credentials.email,
+	      credentials.password
+	    ).then(() => {
+	      dispatch({ type: 'LOGIN_SUCCESS' });
+	    }).catch((err) => {
+	      dispatch({ type: 'LOGIN_ERROR', err });
+	    });
+
+	  }
+	}
+
+	export const signOut = () => { 							//1. sign-out
+	  return (dispatch, getState, {getFirebase}) => { 		//2. dispatch/send user/pass, getState is the user/pass in forms, {getFirebase} connect to firebase
+	    const firebase = getFirebase();						//3. getFirebase() get the data of database and assign to firebase
+
+	    firebase.auth().signOut().then(() => {
+	      dispatch({ type: 'SIGNOUT_SUCCESS' })
+	    });
+	  }
+	}
+
+2. authReducer.js
+
+	const initState = {
+	  authError: null
+	}
+
+	const authReducer = (state = initState, action) => {
+	  switch(action.type){
+	    case 'LOGIN_ERROR':
+	      console.log('login error');
+	      return {
+	        ...state,
+	        authError: 'Login failed'
+	      }
+	    case 'LOGIN_SUCCESS':
+	      console.log('login success');
+	      return {
+	        ...state,
+	        authError: null
+	      }
+	    case 'SIGNOUT_SUCCESS': 							//1. when sign-out log the message to console
+	      console.log('signout success');
+	      return state
+	    default:
+	      return state
+	  }
+	};
+
+	export default authReducer;
+
+3. SignedInLinks.js
+
+	import React from 'react'
+	import { NavLink } from 'react-router-dom'
+	import { connect } from 'react-redux' 															//1. connect to database
+	import { signOut } from '../../store/actions/authActions' 										//2. signOut is in authActions.js
+
+	const SignedInLinks = (props) => {
+	  return (
+	    <div>
+	      <ul className="right">
+	        <li><NavLink to='/create'>New Project</NavLink></li>
+	        <li><a onClick={props.signOut}>Log Out</a></li> 										//3. when click sign-out link
+	        <li><NavLink to='/' className="btn btn-floating pink lighten-1">NN</NavLink></li>
+	      </ul>
+	    </div>
+	  )
+	}
+
+	const mapDispatchToProps = (dispatch) => { 														//4.
+	  return {
+	    signOut: () => dispatch(signOut()) 															//6. signOut() is the { signOut }
+	  }
+	}
+
+	export default connect(null, mapDispatchToProps)(SignedInLinks) 								//5.
+
+25. (ok/review) if login display logout link or if logout display login in the navbar (no redirect to home page)
+----------------------------------------------------------------------------------------
+1. Navbar.js
+
+	import React from 'react'
+	import { Link } from 'react-router-dom'
+	import SignedInLinks from './SignedInLinks' 							//1.
+	import SignedOutLinks from './SignedOutLinks' 							//2.
+	import { connect } from 'react-redux'
+
+	const Navbar = (props) => {   											
+	  const { auth } = props;												//3.
+	  // console.log(auth);
+	  const links = auth.uid ? <SignedInLinks /> : <SignedOutLinks />; 		//4. if user has no data in the database ? <SignedInLinks /> if has display : <SignedOutLinks />;
+
+	  return (
+	    <nav className="nav-wrapper grey darken-3">
+	      <div className="container">
+	        <Link to='/' className="brand-logo">MarioPlan</Link>
+	        {links} 														//5. display links
+	      </div>
+	    </nav>
+	  )
+	}
+
+	const mapStateToProps = (state) => {  									
+	  // console.log(state);
+	  return{
+	    auth: state.firebase.auth 											//6. connect to firebase authentication
+	  }
+	}
+
+	export default connect(mapStateToProps)(Navbar)
+
+26. (ok/review) fix error: mag change change ang login and logout sa nav inig ka refresh sa page
+----------------------------------------------------------------------------------------
+1. index.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import registerServiceWorker from './registerServiceWorker';
+	import { createStore, applyMiddleware, compose } from 'redux'
+	import rootReducer from './store/reducers/rootReducer'
+	import { Provider } from 'react-redux'
+	import thunk from 'redux-thunk'
+	import { reduxFirestore, getFirestore } from 'redux-firestore';
+	import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+	import fbConfig from './config/fbConfig'
+
+	const store = createStore(rootReducer,
+	  compose(
+	    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
+	    reactReduxFirebase(fbConfig, {attachAuthIsReady: true}),  										
+	    reduxFirestore(fbConfig) 																		//1. {attachAuthIsReady: true} user is already in firestore
+	  )
+	);
+
+	store.firebaseAuthIsReady.then(() => {    															//2.
+	  ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+	  registerServiceWorker();
+	});
+
+27. (ok/review) redirect to login page if not login and redirect to homepage after login. if, else
+----------------------------------------------------------------------------------------
+1. Dashboard.js
+
+	import React, { Component } from 'react'
+	import ProjectList from '../projects/ProjectList'
+	import Notifications from './Notifications'
+	import { connect } from 'react-redux'
+	import { firestoreConnect } from 'react-redux-firebase'
+	import { compose } from 'redux'
+	import { Redirect } from 'react-router-dom'   			//4. redirect library
+
+
+
+	class Dashboard extends Component {
+	  render() {
+	    const { projects, auth } = this.props; 				//2. get the property of this auth
+	    if (!auth.uid) return <Redirect to='/signin' /> 	//3. if !auth.uid is not exists redirect to signin, else redirect to return(
+	    return (
+	      <div className="dashboard container">
+	        <div className="row">
+	          <div className="col s12 m6">
+	            <ProjectList projects={projects} />
+	          </div>
+	          <div className="col s12 m5 offset-m1">
+	            <Notifications />
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {
+	  // console.log(state);
+	  return {
+	    projects: state.firestore.ordered.projects,
+	    auth: state.firebase.auth 							//1. create property auth:, access same state data from firebase authentication
+	  }
+	}
+
+	export default compose(
+	  connect(mapStateToProps),
+	  firestoreConnect([
+	    { collection: 'projects' }
+	  ])
+	)(Dashboard)
+
+2. CreateProject.js
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux'
+	import { createProject } from '../../store/actions/projectActions'
+	import { Redirect } from 'react-router-dom'   									//5. redirect library
+
+	class CreateProject extends Component {
+	  state = {
+	    title: '',
+	    content: ''
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    // console.log(this.state);
+	    this.props.createProject(this.state);
+	    this.props.history.push('/');
+	  }
+	  render() {
+	    const { auth } = this.props;           										//3. get the property of this auth
+	    if (!auth.uid) return <Redirect to='/signin' />   							//4. if !auth.uid is not exists redirect to signin, else redirect to return(
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Create a New Project</h5>
+	          <div className="input-field">
+	            <input type="text" id='title' onChange={this.handleChange} />
+	            <label htmlFor="title">Project Title</label>
+	          </div>
+	          <div className="input-field">
+	            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
+	            <label htmlFor="content">Project Content</label>
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1">Create</button>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {       										//1. create property auth:, access same state data from firebase authentication 
+	  return {
+	    auth: state.firebase.auth
+	  }
+	}
+
+	const mapDispatchToProps = dispatch => {
+	  return {
+	    createProject: (project) => dispatch(createProject(project))
+	  }
+	}
+
+	export default connect(mapStateToProps, mapDispatchToProps)(CreateProject)       //2.
+
+3. ProjectDetails.js
+
+	import React from 'react'
+	import { connect } from 'react-redux'
+	import { firestoreConnect } from 'react-redux-firebase'
+	import { compose } from 'redux'
+	import { Redirect } from 'react-router-dom'   						//3. get the property of this auth
+
+	const ProjectDetails = (props) => {
+	  const { project, auth } = props;
+	  if (!auth.uid) return <Redirect to='/signin' />   				//4. if !auth.uid is not exists redirect to signin, else redirect to return(
+	  if (project) {
+	    return (
+	      <div className="container section project-details">
+	        <div className="card z-depth-0">
+	          <div className="card-content">
+	            <span className="card-title">{project.title}</span>
+	            <p>{project.content}</p>s
+	          </div>
+	          <div className="card-action grey lighten-4 grey-text">
+	            <div>Posted by {project.authorFirstName} {project.authorLastName}</div>
+	            <div>2nd September, 2am</div>
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  } else {
+	    return (
+	      <div className="container center">
+	        <p>Loading project...</p>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state, ownProps) => {			//1. create property auth:, access same state data from firebase authentication 
+	  // console.log(state);
+	  const id = ownProps.match.params.id;
+	  const projects = state.firestore.data.projects;
+	  const project = projects ? projects[id] : null
+	  return {
+	    project: project,
+	    auth: state.firebase.auth
+	  }
+	}
+
+	export default compose( 								//2.
+	  connect(mapStateToProps),
+	  firestoreConnect([{
+	    collection: 'projects'
+	  }])
+	)(ProjectDetails)
+
+4. SignIn.js
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux'
+	import { signIn } from '../../store/actions/authActions'
+	import { Redirect } from 'react-router-dom'   					//3. get the property of this auth
+
+	class SignIn extends Component {
+	  state = {
+	    email: '',
+	    password: ''
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    this.props.signIn(this.state)
+	  }
+	  render() {
+	    const { authError, auth } = this.props;      				
+	    if (auth.uid) return <Redirect to='/' />     				//4. if !auth.uid is not exists redirect to signin, else redirect to return(
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Sign In</h5>
+	          <div className="input-field">
+	            <label htmlFor="email">Email</label>
+	            <input type="email" id='email' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="password">Password</label>
+	            <input type="password" id='password' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1 z-depth-0">Login</button>
+	            <div className="center red-text">
+	              { authError ? <p>{authError}</p> : null }
+	            </div>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {       						//1. create property auth:, access same state data from firebase authentication 
+	  return{
+	    authError: state.auth.authError,
+	    auth: state.firebase.auth
+	  }
+	}
+
+	const mapDispatchToProps = (dispatch) => { 						//2.
+	  return {
+	    signIn: (creds) => dispatch(signIn(creds))
+	  }
+	}
+
+	export default connect(mapStateToProps, mapDispatchToProps)(SignIn)
+
+5. SignUp.js
+
+	import React, { Component } from 'react'
+	import { Redirect } from 'react-router-dom'   						//1.
+	import { connect } from 'react-redux'   							//2.
+
+	class SignUp extends Component {
+	  state = {
+	    email: '',
+	    password: '',
+	    firstName: '',
+	    lastName: '',
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    console.log(this.state);
+	  }
+	  render() {
+	    const { auth } = this.props;
+	    if (auth.uid) return <Redirect to='/' />  						//5.
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Sign Up</h5>
+	          <div className="input-field">
+	            <label htmlFor="email">Email</label>
+	            <input type="email" id='email' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="password">Password</label>
+	            <input type="password" id='password' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="firstName">First Name</label>
+	            <input type="text" id='firstName' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="lastName">Last Name</label>
+	            <input type="text" id='lastName' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1 z-depth-0">Sign Up</button>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {  								//3.
+	  return {
+	    auth: state.firebase.auth
+	  }
+	}
+
+	export default connect(mapStateToProps)(SignUp)   					//4.
+
+28. (ok/review) - sign up and redirect to the home page, add data to authentication and database table or collection in firebase, 
+                - error if data already exists, form trapping, 6 character required
+----------------------------------------------------------------------------------------
+1. authActions.js
+
+	export const signIn = (credentials) => {
+	  return (dispatch, getState, {getFirebase}) => {
+	    const firebase = getFirebase();
+
+	    firebase.auth().signInWithEmailAndPassword(
+	      credentials.email,
+	      credentials.password
+	    ).then(() => {
+	      dispatch({ type: 'LOGIN_SUCCESS' });
+	    }).catch((err) => {
+	      dispatch({ type: 'LOGIN_ERROR', err });
+	    });
+
+	  }
+	}
+
+	export const signOut = () => {
+	  return (dispatch, getState, {getFirebase}) => {
+	    const firebase = getFirebase();
+
+	    firebase.auth().signOut().then(() => {
+	      dispatch({ type: 'SIGNOUT_SUCCESS' })
+	    });
+	  }
+	}
+
+	export const signUp = (newUser) => {    								//1. newUser - is the email, pass, firstname, username
+	  return (dispatch, getState, {getFirebase, getFirestore}) => {    		//2 sendout, get data, connect to firebase, insert to firestore
+	    const firebase = getFirebase();
+	    const firestore = getFirestore();
+
+	    firebase.auth().createUserWithEmailAndPassword(    					//3. pass here the email and pass
+	      newUser.email,
+	      newUser.password
+	    ).then(resp => {
+	      return firestore.collection('users').doc(resp.user.uid).set({    //4. doc() - this will create new user id, insert data to database
+	        firstName: newUser.firstName,
+	        lastName: newUser.lastName,
+	        initials: newUser.firstName[0] + newUser.lastName[0] 			//4.1 concatinate the firstname and lastname and position to [0]
+	      });
+	    }).then(() => {
+	      dispatch({ type: 'SIGNUP_SUCCESS' });    							//5. message
+	    }).catch((err) => {
+	      dispatch({ type: 'SIGNUP_ERROR', err}); 							//this has 2 parameters the SIGNUP_ERROR, err
+	    });
+	  }
+	}
+
+2. authReducer.js
+
+	const initState = {
+	  authError: null
+	}
+
+	const authReducer = (state = initState, action) => {
+	  switch(action.type){
+	    case 'LOGIN_ERROR':
+	      console.log('login error');
+	      return {
+	        ...state,
+	        authError: 'Login failed'
+	      }
+
+	    case 'LOGIN_SUCCESS':
+	      console.log('login success');
+	      return {
+	        ...state,
+	        authError: null
+	      }
+
+	    case 'SIGNOUT_SUCCESS':
+	      console.log('signout success');
+	      return state;
+
+	    case 'SIGNUP_SUCCESS':    				//1.
+	      console.log('signup success')
+	      return {
+	        ...state,
+	        authError: null
+	      }
+
+	    case 'SIGNUP_ERROR':    				//2.
+	      console.log('signup error')
+	      return {
+	        ...state,
+	        authError: action.err.message
+	      }
+
+	    default:
+	      return state
+	  }
+	};
+
+	export default authReducer;
+
+3. SignUp.js
+
+	import React, { Component } from 'react'
+	import { Redirect } from 'react-router-dom'
+	import { connect } from 'react-redux'
+	import { signUp } from '../../store/actions/authActions'    	//1.
+
+	class SignUp extends Component {
+	  state = {
+	    email: '',
+	    password: '',
+	    firstName: '',
+	    lastName: '',
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+	  handleSubmit = (e) => {     									//3.
+	    e.preventDefault();
+	    this.props.signUp(this.state);
+	  }
+	  render() {
+	    const { auth, authError } = this.props;        				//6.
+	    if (auth.uid) return <Redirect to='/' />
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Sign Up</h5>
+	          <div className="input-field">
+	            <label htmlFor="email">Email</label>
+	            <input type="email" id='email' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="password">Password</label>
+	            <input type="password" id='password' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="firstName">First Name</label>
+	            <input type="text" id='firstName' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <label htmlFor="lastName">Last Name</label>
+	            <input type="text" id='lastName' onChange={this.handleChange} />
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1 z-depth-0">Sign Up</button>
+	            <div className="center red-text">
+	              { authError ? <p>{authError}</p> : null }   								//7.
+	            </div>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {
+	  return {
+	    auth: state.firebase.auth,
+	    authError: state.auth.authError     			//5. authentication error if data already exists
+	  }
+	}
+
+	const mapDispatchToProps = (dispatch)=> {     		//2.
+	  return {
+	    signUp: (creds) => dispatch(signUp(creds))		//new credentials data
+	  }
+	}
+
+	export default connect(mapStateToProps, mapDispatchToProps)(SignUp)     //4.
+
+29. (ok/review) display firstname and lastname first letter of the user in the navbar
+----------------------------------------------------------------------------------------
+1. index.js
+	/*
+	1. useFirestoreForProfile: true
+	2. userProfile: 'users'
+	*/
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import registerServiceWorker from './registerServiceWorker';
+	import { createStore, applyMiddleware, compose } from 'redux'
+	import rootReducer from './store/reducers/rootReducer'
+	import { Provider } from 'react-redux'
+	import thunk from 'redux-thunk'
+	import { reduxFirestore, getFirestore } from 'redux-firestore';
+	import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+	import fbConfig from './config/fbConfig'
+
+	const store = createStore(rootReducer,
+	  compose(
+	    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
+	    reactReduxFirebase(fbConfig, {userProfile: 'users', useFirestoreForProfile: true, attachAuthIsReady: true}),
+	    reduxFirestore(fbConfig) // redux bindings for firestore
+	  )
+	);
+
+	store.firebaseAuthIsReady.then(() => {
+	  ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+	  registerServiceWorker();
+	});
+
+2. Navbar.js
+
+	import React from 'react'
+	import { Link } from 'react-router-dom'
+	import SignedInLinks from './SignedInLinks'
+	import SignedOutLinks from './SignedOutLinks'
+	import { connect } from 'react-redux'
+
+	const Navbar = (props) => {
+	  const { auth, profile } = props;     													//1. profile
+	  // console.log(auth);
+	  const links = auth.uid ? <SignedInLinks profile={profile} /> : <SignedOutLinks />;    //2. profile={profile}
+
+	  return (
+	    <nav className="nav-wrapper grey darken-3">
+	      <div className="container">
+	        <Link to='/' className="brand-logo">MarioPlan</Link>
+	        {links}
+	      </div>
+	    </nav>
+	  )
+	}
+
+	const mapStateToProps = (state) => {
+	  // console.log(state);
+	  return{
+	    auth: state.firebase.auth,
+	    profile: state.firebase.profile     												//3.
+	  }
+	}
+
+	export default connect(mapStateToProps)(Navbar)
+
+3. SignedInLinks.js
+
+	import React from 'react'
+	import { NavLink } from 'react-router-dom'
+	import { connect } from 'react-redux'
+	import { signOut } from '../../store/actions/authActions'
+
+	const SignedInLinks = (props) => {
+	  return (
+	    <div>
+	      <ul className="right">
+	        <li><NavLink to='/create'>New Project</NavLink></li>
+	        <li><a onClick={props.signOut}>Log Out</a></li>
+	        <li><NavLink to='/' className="btn btn-floating pink lighten-1">
+	          {props.profile.initials}    													//1.
+	        </NavLink></li>
+	      </ul>
+	    </div>
+	  )
+	}
+
+	const mapDispatchToProps = (dispatch) => {
+	  return {
+	    signOut: () => dispatch(signOut())
+	  }
+	}
+
+	export default connect(null, mapDispatchToProps)(SignedInLinks)
+
+30. (ok) insert data to firebase, display firstname and lastname in the ProjectSummary.js, redirect to home page
+----------------------------------------------------------------------------------------
+HOW THIS WORK: 	1. when "create button" in componenets/CreateProject.js
+				2. export const createProject = (project) => { 	//createPrject will fired in projectActions.js
+				3. you can check all the data in console/object/
+
+1. projectActions.js
+ 														//1. createProject will fired when "create button" in componenets/CreateProject.js is click
+	export const createProject = (project) => { 		//   (project) - is the data if the forms
+	  return (dispatch, getState, {getFirestore}) => {  //   sulod ani mao nana ang mga data na i return
+	    const firestore = getFirestore(); 				//2. connect to database
+	    const profile = getState().firebase.profile;    //   get profile data in firebase/profile
+	    const authorId = getState().firebase.auth.uid;  //   get user id data in firebase/profile
+	    firestore.collection('projects').add({ 			//3. insert in the firebase, collection, projects the data below
+	      ...project, 									//   spread the data of (project) in ...project this array
+	      authorFirstName: profile.firstName,   		// 	 insert the firstname in profile
+	      authorLastName: profile.lastName,     		//   insert the lastname in profile
+	      authorId: authorId,                   		//   id
+	      createdAt: new Date() 						//   date inserted
+	    }).then(() => { 								//4. then display a message
+	      dispatch({ type: 'CREATE_PROJECT_SUCCESS' });
+	    }).catch(err => {
+	      dispatch({ type: 'CREATE_PROJECT_ERROR' }, err);
+	    });
+	  }
+	};
+
+2. ProjectSummary.js
+
+	import React from 'react'
+
+	const ProjectSummary = ({project}) => { 	//1. (project) - is the data if the forms
+	  return (
+	    <div className="card z-depth-0 project-summary">
+	      <div className="card-content grey-text text-darken-3">
+	        <span className="card-title ">{project.title}</span>
+	        <p>Posted by {project.authorFirstName} {project.authorLastName}</p>   //2. display firstname and lastname from firebase
+	        <p className="grey-text">3rd September, 2am</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default ProjectSummary
+
+3. CreateProject.js
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux'
+	import { createProject } from '../../store/actions/projectActions'
+	import { Redirect } from 'react-router-dom'
+
+	class CreateProject extends Component {
+	  state = {
+	    title: '',
+	    content: ''
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    })
+	  }
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    // console.log(this.state);
+	    this.props.createProject(this.state);
+	    this.props.history.push('/'); 												//1. redirect to home page
+	  }
+	  render() {
+	    const { auth } = this.props;
+	    if (!auth.uid) return <Redirect to='/signin' />   							
+	    return (
+	      <div className="container">
+	        <form className="white" onSubmit={this.handleSubmit}>
+	          <h5 className="grey-text text-darken-3">Create a New Project</h5>
+	          <div className="input-field">
+	            <input type="text" id='title' onChange={this.handleChange} />
+	            <label htmlFor="title">Project Title</label>
+	          </div>
+	          <div className="input-field">
+	            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
+	            <label htmlFor="content">Project Content</label>
+	          </div>
+	          <div className="input-field">
+	            <button className="btn pink lighten-1">Create</button>
+	          </div>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {
+	  return {
+	    auth: state.firebase.auth
+	  }
+	}
+
+	const mapDispatchToProps = dispatch => {
+	  return {
+	    createProject: (project) => dispatch(createProject(project))
+	  }
+	}
+
+	export default connect(mapStateToProps, mapDispatchToProps)(CreateProject)
+
+31. display date, time, moment from firebase
+----------------------------------------------------------------------------------------
+https://momentjs.com/
+
+1. cmd\Desktop\REACT-REDUX-APP\marioplan> npm install moment 	//1. date format package (site: momentjs.com)
+
+2. ProjectSummary.js
+
+	import React from 'react'
+	import moment from 'moment' 								//2.
+
+	const ProjectSummary = ({project}) => {
+	  return (
+	    <div className="card z-depth-0 project-summary">
+	      <div className="card-content grey-text text-darken-3">
+	        <span className="card-title ">{project.title}</span>
+	        <p>Posted by {project.authorFirstName} {project.authorLastName}</p> 			
+	        <p className="grey-text">{moment(project.createdAt.toDate()).calendar()}</p> 	//3. project, created is seen in firebase
+	      </div> 																			//   use moment here
+	    </div>
+	  )
+	}
+
+	export default ProjectSummary
+
+ProjectDetails.js
+
+	import React from 'react'
+	import { connect } from 'react-redux'
+	import { firestoreConnect } from 'react-redux-firebase'
+	import { compose } from 'redux'
+	import { Redirect } from 'react-router-dom'
+	import moment from 'moment'
+
+	const ProjectDetails = (props) => {
+	  const { project, auth } = props;
+	  if (!auth.uid) return <Redirect to='/signin' />
+	  if (project) {
+	    return (
+	      <div className="container section project-details">
+	        <div className="card z-depth-0">
+	          <div className="card-content">
+	            <span className="card-title">{project.title}</span>
+	            <p>{project.content}</p>s
+	          </div>
+	          <div className="card-action grey lighten-4 grey-text">
+	            <div>Posted by {project.authorFirstName} {project.authorLastName}</div>
+	            <div>{moment(project.createdAt.toDate()).calendar()}</div>
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  } else {
+	    return (
+	      <div className="container center">
+	        <p>Loading project...</p>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state, ownProps) => {
+	  // console.log(state);
+	  const id = ownProps.match.params.id;
+	  const projects = state.firestore.data.projects;
+	  const project = projects ? projects[id] : null
+	  return {
+	    project: project,
+	    auth: state.firebase.auth
+	  }
+	}
+
+	export default compose(
+	  connect(mapStateToProps),
+	  firestoreConnect([{
+	    collection: 'projects'
+	  }])
+	)(ProjectDetails)
+
+32. security rules in firebase, para walay maka edit sa imong database, you can practice query in the firebase,
+    kinsa ray maka login, or display of edit etc.
+----------------------------------------------------------------------------------------
+1. firebase, database, rules
+
+	//Anyone can Read and Write
+	service cloud.firestore { 						//stop this rule for firestore only
+		match /database/{database}/documents { 		//firestore and your database should match
+			match /{document=**} { 					//match any documents in the database
+				allow read, write; 					//allow anyone to read and write access (good for test only)
+			}
+		}
+	}
+
+	//Allow Only Authenticated User (or has account)
+	service cloud.firestore { 										//stop this rule for firestore only
+		match /database/{database}/documents { 						//firestore and your database should match
+			match /projects/{project} {								//name of your database, {project} is a variable
+				allow read, write: if request.auth.uid != null 		//allow only authenticated user (or has account)
+			}
+			match /users/{userId}{
+				allow create 										//anyone can sign-up
+				allow read: if request.auth.uid != null
+				allow write: if request.auth.uid == userId
+			}
+			match /notifications/(notification) {
+				allow read: if request.auth.uid != null
+			}
+		}
+	}
+
+33-34. cloud functions - pwede sad ka mag setup security dili gamit firebase, gamit ra terminal	
+					   - you create local firebase using text editor then upload to firebase
+----------------------------------------------------------------------------------------
+1. firebase setup - functions, get started, npm install -g firebase-tools, click continue
+2. terminal setup - 1. npm install -g firebase-tools 	//install firebase
+					2. firebase login 					//(gmail use in firebase)
+					3. firebase init 					//run firebase
+					4. firebase deploy 					//lunch
+
+   example: - cmd\Desktop\REACT-REDUX-APP\marioplan> firebase login
+            - cmd\Desktop\REACT-REDUX-APP\marioplan> firebase init, y, Functions, Hosting, choose your project (or database),
+            - javascript, n, y, dist, y (this will create dist folder)
+            - cmd\Desktop\REACT-REDUX-APP\marioplan\functions\index.js>  	//creating cloud functions
+
+	const functions = require('firebase-functions');
+
+	// // Create and Deploy Your First Cloud Functions
+	// // https://firebase.google.com/docs/functions/write-firebase-functions
+	//
+	// cmd/marioplan> firebase deploy --only functions - run or deploy cloud functions below, cntrl click the link to display in the browser
+													   - you will see the data in firebase, functions, log
+	// exports.helloWorld = functions.https.onRequest((request, response) => {
+	//  response.send("Hello from Firebase!");
+	// });
+
+35. create notification component ui
+----------------------------------------------------------------------------------------
+1. src/components/dashboard/Notifications.js
+
+	import React from 'react'
+
+	const Notifications = (props) => {
+	  return (
+	    <div className="section">
+	      <div className="card z-depth-0">
+	        <div className="card-content">
+	          <span className="card-title">Notifications</span>
+	          <ul className="online-users">
+	            <li>Notification</li>
+	          </ul>
+	        </div>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default Notifications
+	© 2020 GitHub, Inc.
+
+36-37. Cloud Function Firestore Triggers
+----------------------------------------------------------------------------------------
+1. cmd\Desktop\REACT-REDUX-APP\marioplan\functions\index.js>
+
+	const functions = require('firebase-functions'); 	//import firebase functions
+	const admin = require('firebase-admin'); 			//import firebase admin
+	admin.initializeApp(functions.config().firebase); 	//start configuration
+
+	/*
+	cmd/marioplan> firebase deploy --only functions - run or deploy cloud functions below, cntrl click the link to display in the browser
+													- you will see the data in firebase, functions, log
+	*/
+
+	exports.helloWorld = functions.https.onRequest((request, response) => { 	//this is https request
+		response.send("Hello, ninjas!");
+	});
+
+	const createNotification = (notification => { 				//36. tutorial
+		return admin.firestore().collection('notifications')
+		.add(notification)
+		.then(doc => console.log('notification added', doc));
+	});
+
+	exports.projectCreated = functions.firestore 	//export the data in the database
+		.document('projects/{projectId}')
+		.onCreate(doc => {
+			const project = doc.data();
+			const notification = {
+				content: 'Added a new project',
+				user: `${project.authorFirstName} ${project.authorLastName}`, 	// `` or backtext to output variable inside the strings
+				time: admin.firestore.FieldValue.serverTimestamp()
+		}
+		return createNotification(notification);
+	})
+
+	/*
+	to run: cmd/marioplan> firebase deploy --only functions
+	- you will see the data in firebase, functions, log
+	- add data to Create new project page, notification will log in firebase, Functions, log also in the Database
+	*/
+
+	exports.userJoined = functions.auth.user() 		//37. tutorial - this will trigger when new user are signing up
+		.onCreate(user => {
+
+		return admin.firestore().collection('users')
+			.doc(user.uid).get().then(doc => {
+			const newUser = doc.data();
+			const notification = {
+				content: 'Joined the party',
+				user: `${newUser.firstName} ${newUser.lastName}`,
+				time: admin.firestore.FieldValue.serverTimestamp()
+			}
+			return createNotification(notification);
+		})
+
+	})
+
+	/*
+	to run: cmd/marioplan> firebase deploy --only functions
+	- you will see the data in firebase, functions, log
+	- sign-up new user in the sign-up page, notification will log in firebase, Functions, log also in the Database
+	*/
+
+38. Showing Notifications - display notification to page
+----------------------------------------------------------------------------------------
+1. Dashboard.js
+
+	import React, { Component } from 'react'
+	import ProjectList from '../projects/ProjectList'
+	import Notifications from './Notifications'
+	import { connect } from 'react-redux'
+	import { firestoreConnect } from 'react-redux-firebase'
+	import { compose } from 'redux'
+	import { Redirect } from 'react-router-dom'
+
+
+
+	class Dashboard extends Component {
+	  render() {
+	    const { projects, auth, notifications } = this.props;    //38.1
+	    if (!auth.uid) return <Redirect to='/signin' />
+
+	    return (
+	      <div className="dashboard container">
+	        <div className="row">
+	          <div className="col s12 m6">
+	            <ProjectList projects={projects} />
+	          </div>
+	          <div className="col s12 m5 offset-m1">
+	            <Notifications notifications={notifications} />   //38.4
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {
+	  // console.log(state);
+	  return {
+	    projects: state.firestore.ordered.projects,
+	    auth: state.firebase.auth,
+	    notifications: state.firestore.ordered.notifications    //38.2
+	  }
+	}
+
+	export default compose(
+	  connect(mapStateToProps),
+	  firestoreConnect([
+	    { collection: 'projects' },
+	    { collection: 'notifications', limit: 3}    //38.3 display only 3 notification in the page
+	  ])
+	)(Dashboard)
+
+2. Notifications.js
+
+	import React from 'react'
+	import moment from 'moment' 	//28.3
+
+	const Notifications = (props) => {
+	  const { notifications } = props; 		//28.1
+	  return (
+	    <div className="section">
+	      <div className="card z-depth-0">
+	        <div className="card-content">
+	          <span className="card-title">Notifications</span>
+	          <ul className="online-users">
+	            { notifications && notifications.map(item =>{ 		//28.2 display database notification
+	              return <li key={item.id}>
+	                <span className="pink-text">{item.user} </span>
+	                <span>{item.content}</span>
+	                <div className="note-date grey-text">{moment(item.time.toDate()).fromNow()}</div> 	//28.4
+	              </li>
+	            })}
+	          </ul>
+	        </div>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default Notifications
+
+3. firebase, database, rules
+
+	//Anyone can Read and Write
+	service cloud.firestore { 						//stop this rule for firestore only
+		match /database/{database}/documents { 		//firestore and your database should match
+			match /{document=**} { 					//match any documents in the database
+				allow read, write; 					//allow anyone to read and write access (good for test only)
+			}
+		}
+	}
+
+	//Allow Only Authenticated User (or has account)
+	service cloud.firestore { 										//stop this rule for firestore only
+		match /database/{database}/documents { 						//firestore and your database should match
+			match /projects/{project} {								//name of your database, {project} is a variable
+				allow read, write: if request.auth.uid != null 		//allow only authenticated user (or has account)
+			}
+			match /users/{userId}{
+				allow create 										//anyone can sign-up
+				allow read: if request.auth.uid != null
+				allow write: if request.auth.uid == userId
+			}
+			match /notifications/(notification) { 			//38.1
+				allow read: if request.auth.uid != null
+			}
+		}
+	}
+
+39. Ordering Firestore Data - or display order the post
+----------------------------------------------------------------------------------------
+1. Dashboard.js
+
+	import React, { Component } from 'react'
+	import ProjectList from '../projects/ProjectList'
+	import Notifications from './Notifications'
+	import { connect } from 'react-redux'
+	import { firestoreConnect } from 'react-redux-firebase'
+	import { compose } from 'redux'
+	import { Redirect } from 'react-router-dom'
+
+
+
+	class Dashboard extends Component {
+	  render() {
+	    const { projects, auth, notifications } = this.props;
+	    if (!auth.uid) return <Redirect to='/signin' />
+
+	    return (
+	      <div className="dashboard container">
+	        <div className="row">
+	          <div className="col s12 m6">
+	            <ProjectList projects={projects} />
+	          </div>
+	          <div className="col s12 m5 offset-m1">
+	            <Notifications notifications={notifications} />
+	          </div>
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {
+	  // console.log(state);
+	  return {
+	    projects: state.firestore.ordered.projects,
+	    auth: state.firebase.auth,
+	    notifications: state.firestore.ordered.notifications
+	  }
+	}
+
+	export default compose(
+	  connect(mapStateToProps),
+	  firestoreConnect([
+	    { collection: 'projects', orderBy: ['createdAt', 'desc']}, 				//39.2
+	    { collection: 'notifications', limit: 3, orderBy: ['time', 'desc']} 	//39.1
+	  ])
+	)(Dashboard)
+
+40. Deploying to Firebase Hosting
+----------------------------------------------------------------------------------------
+1. firebase, Hosting, Get Started, finish
+2. npm run build 	//this will create 'build' in your app project
+					//NOTE: move all data inside the build folder to dist folder, because dist folder is the folder to deploy
+3. cmd/marioplan> firebase deploy
+4. firebase, Hosting, click the link to open your live app
+
+
+----------------------- DONE / REVIEW / NO CRUD / April 13, 2020-----------------------
+
+HOW FIND PAGE IN REACT
+----------------------------------------------------------------------------------------
+1. view the page in the browser check the content
+2. find that page in the components
