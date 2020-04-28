@@ -1,0 +1,416 @@
+April 28, 2020
+https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial-building-firestore-crud-web-application
+
+1. firebase/database: Djamware
+   app name: 		  redux-firebase-crud
+   collection: 		  boards
+   fields: 			  author, description, title
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+	     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+	<script>
+	  // Your web app's Firebase configuration
+	  var firebaseConfig = {
+	    apiKey: "AIzaSyArmCcdn36RGF7T3MmhAaOeiDF4jskQIDg",
+	    authDomain: "djamware-7820d.firebaseapp.com",
+	    databaseURL: "https://djamware-7820d.firebaseio.com",
+	    projectId: "djamware-7820d",
+	    storageBucket: "djamware-7820d.appspot.com",
+	    messagingSenderId: "81829535947",
+	    appId: "1:81829535947:web:105a610a5d821f54d5bb4e"
+	  };
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
+	</script>
+
+2. sudo npm install -g create-react-app 		//install npm
+   create-react-app react-firestore-crud 		//create app
+   npm install --save firebase 					//install firebase
+
+3. create file in src/Firebase.js paste this code and change the firebase key from apiKey: to messagingSenderId:
+
+	import * as firebase from 'firebase';
+	import firestore from 'firebase/firestore'
+
+	const settings = {timestampsInSnapshots: true};
+
+	const config = {
+	  apiKey: "YOUR_API_KEY",
+	  authDomain: "YOUR_AUTH_DOMAIN",
+	  databaseURL: "YOUR_DATABASE_URL",
+	  projectId: "YOUR_PROJECT_ID",
+	  storageBucket: "YOUR_STORAGE_BUCKET",
+	  messagingSenderId: "YOUR_MESSAGING_ID"
+	};
+	firebase.initializeApp(config);
+
+	firebase.firestore().settings(settings);
+
+	export default firebase;
+
+4. npm install --save react-router-dom
+   npm install --save-dev bootstrap
+
+5. create folder and file src/components/Create.js, Show.js, Edit.js
+
+6. index.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import { BrowserRouter as Router, Route } from 'react-router-dom';
+	import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+	import './index.css';
+	import App from './App';
+	import * as serviceWorker from './serviceWorker';
+	import Edit from './components/Edit';
+	import Create from './components/Create';
+	import Show from './components/Show';
+
+	ReactDOM.render(
+	  <Router>
+	      <div>
+	        <Route exact path='/' component={App} />
+	        <Route path='/edit/:id' component={Edit} />
+	        <Route path='/create' component={Create} />
+	        <Route path='/show/:id' component={Show} />
+	      </div>
+	  </Router>,
+	  document.getElementById('root')
+	);
+
+	// If you want your app to work offline and load faster, you can change
+	// unregister() to register() below. Note this comes with some pitfalls.
+	// Learn more about service workers: http://bit.ly/CRA-PWA
+	serviceWorker.unregister();
+
+6. App.js
+
+	import React, { Component } from 'react';
+	import { Link } from 'react-router-dom';
+	import './App.css';
+	import firebase from './Firebase';
+
+	class App extends Component {
+	  constructor(props) {
+	    super(props);
+	    this.ref = firebase.firestore().collection('boards');
+	    this.unsubscribe = null;
+	    this.state = {
+	      boards: []
+	    };
+	  }
+
+	  onCollectionUpdate = (querySnapshot) => {
+	    const boards = [];
+	    querySnapshot.forEach((doc) => {
+	      const { title, description, author } = doc.data();
+	      boards.push({
+	        key: doc.id,
+	        doc, // DocumentSnapshot
+	        title,
+	        description,
+	        author,
+	      });
+	    });
+	    this.setState({
+	      boards
+	   });
+	  }
+
+	  componentDidMount() {
+	    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+	  }
+
+	  render() {
+	    return (
+	      <div class="container">
+	        <div class="panel panel-default">
+	          <div class="panel-heading">
+	            <h3 class="panel-title">
+	              BOARD LIST
+	            </h3>
+	          </div>
+	          <div class="panel-body">
+	            <h4><Link to="/create">Add Board</Link></h4>
+	            <table class="table table-stripe">
+	              <thead>
+	                <tr>
+	                  <th>Title</th>
+	                  <th>Description</th>
+	                  <th>Author</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                {this.state.boards.map(board =>
+	                  <tr>
+	                    <td><Link to={`/show/${board.key}`}>{board.title}</Link></td>
+	                    <td>{board.description}</td>
+	                    <td>{board.author}</td>
+	                  </tr>
+	                )}
+	              </tbody>
+	            </table>
+	          </div>
+	        </div>
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+7. src/components/Show.js
+
+	import React, { Component } from 'react';
+	import firebase from '../Firebase';
+	import { Link } from 'react-router-dom';
+
+	class Show extends Component {
+
+	  constructor(props) {
+	    super(props);
+	    this.state = {
+	      board: {},
+	      key: ''
+	    };
+	  }
+
+	  componentDidMount() {
+	    const ref = firebase.firestore().collection('boards').doc(this.props.match.params.id);
+	    ref.get().then((doc) => {
+	      if (doc.exists) {
+	        this.setState({
+	          board: doc.data(),
+	          key: doc.id,
+	          isLoading: false
+	        });
+	      } else {
+	        console.log("No such document!");
+	      }
+	    });
+	  }
+
+	  delete(id){
+	    firebase.firestore().collection('boards').doc(id).delete().then(() => {
+	      console.log("Document successfully deleted!");
+	      this.props.history.push("/")
+	    }).catch((error) => {
+	      console.error("Error removing document: ", error);
+	    });
+	  }
+
+	  render() {
+	    return (
+	      <div class="container">
+	        <div class="panel panel-default">
+	          <div class="panel-heading">
+	          <h4><Link to="/">Board List</Link></h4>
+	            <h3 class="panel-title">
+	              {this.state.board.title}
+	            </h3>
+	          </div>
+	          <div class="panel-body">
+	            <dl>
+	              <dt>Description:</dt>
+	              <dd>{this.state.board.description}</dd>
+	              <dt>Author:</dt>
+	              <dd>{this.state.board.author}</dd>
+	            </dl>
+	            <Link to={`/edit/${this.state.key}`} class="btn btn-success">Edit</Link>&nbsp;
+	            <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
+	          </div>
+	        </div>
+	      </div>
+	    );
+	  }
+	}
+
+	export default Show;
+
+8. src/components/Create.js
+
+	import React, { Component } from 'react';
+	import ReactDOM from 'react-dom';
+	import firebase from '../Firebase';
+	import { Link } from 'react-router-dom';
+
+	class Create extends Component {
+
+	  constructor() {
+	    super();
+	    this.ref = firebase.firestore().collection('boards');
+	    this.state = {
+	      title: '',
+	      description: '',
+	      author: ''
+	    };
+	  }
+	  onChange = (e) => {
+	    const state = this.state
+	    state[e.target.name] = e.target.value;
+	    this.setState(state);
+	  }
+
+	  onSubmit = (e) => {
+	    e.preventDefault();
+
+	    const { title, description, author } = this.state;
+
+	    this.ref.add({
+	      title,
+	      description,
+	      author
+	    }).then((docRef) => {
+	      this.setState({
+	        title: '',
+	        description: '',
+	        author: ''
+	      });
+	      this.props.history.push("/")
+	    })
+	    .catch((error) => {
+	      console.error("Error adding document: ", error);
+	    });
+	  }
+
+	  render() {
+	    const { title, description, author } = this.state;
+	    return (
+	      <div class="container">
+	        <div class="panel panel-default">
+	          <div class="panel-heading">
+	            <h3 class="panel-title">
+	              ADD BOARD
+	            </h3>
+	          </div>
+	          <div class="panel-body">
+	            <h4><Link to="/" class="btn btn-primary">Book List</Link></h4>
+	            <form onSubmit={this.onSubmit}>
+	              <div class="form-group">
+	                <label for="title">Title:</label>
+	                <input type="text" class="form-control" name="title" value={title} onChange={this.onChange} placeholder="Title" />
+	              </div>
+	              <div class="form-group">
+	                <label for="description">Description:</label>
+	                <textArea class="form-control" name="description" onChange={this.onChange} placeholder="Description" cols="80" rows="3">{description}</textArea>
+	              </div>
+	              <div class="form-group">
+	                <label for="author">Author:</label>
+	                <input type="text" class="form-control" name="author" value={author} onChange={this.onChange} placeholder="Author" />
+	              </div>
+	              <button type="submit" class="btn btn-success">Submit</button>
+	            </form>
+	          </div>
+	        </div>
+	      </div>
+	    );
+	  }
+	}
+
+	export default Create;
+
+9. src/components/Edit.js
+
+	import React, { Component } from 'react';
+	import firebase from '../Firebase';
+	import { Link } from 'react-router-dom';
+
+	class Edit extends Component {
+
+	  constructor(props) {
+	    super(props);
+	    this.state = {
+	      key: '',
+	      title: '',
+	      description: '',
+	      author: ''
+	    };
+	  }
+
+	  componentDidMount() {
+	    const ref = firebase.firestore().collection('boards').doc(this.props.match.params.id);
+	    ref.get().then((doc) => {
+	      if (doc.exists) {
+	        const board = doc.data();
+	        this.setState({
+	          key: doc.id,
+	          title: board.title,
+	          description: board.description,
+	          author: board.author
+	        });
+	      } else {
+	        console.log("No such document!");
+	      }
+	    });
+	  }
+
+	  onChange = (e) => {
+	    const state = this.state
+	    state[e.target.name] = e.target.value;
+	    this.setState({board:state});
+	  }
+
+	  onSubmit = (e) => {
+	    e.preventDefault();
+
+	    const { title, description, author } = this.state;
+
+	    const updateRef = firebase.firestore().collection('boards').doc(this.state.key);
+	    updateRef.set({
+	      title,
+	      description,
+	      author
+	    }).then((docRef) => {
+	      this.setState({
+	        key: '',
+	        title: '',
+	        description: '',
+	        author: ''
+	      });
+	      this.props.history.push("/show/"+this.props.match.params.id)
+	    })
+	    .catch((error) => {
+	      console.error("Error adding document: ", error);
+	    });
+	  }
+
+	  render() {
+	    return (
+	      <div class="container">
+	        <div class="panel panel-default">
+	          <div class="panel-heading">
+	            <h3 class="panel-title">
+	              EDIT BOARD
+	            </h3>
+	          </div>
+	          <div class="panel-body">
+	            <h4><Link to={`/show/${this.state.key}`} class="btn btn-primary">Board List</Link></h4>
+	            <form onSubmit={this.onSubmit}>
+	              <div class="form-group">
+	                <label for="title">Title:</label>
+	                <input type="text" class="form-control" name="title" value={this.state.title} onChange={this.onChange} placeholder="Title" />
+	              </div>
+	              <div class="form-group">
+	                <label for="description">Description:</label>
+	                <input type="text" class="form-control" name="description" value={this.state.description} onChange={this.onChange} placeholder="Description" />
+	              </div>
+	              <div class="form-group">
+	                <label for="author">Author:</label>
+	                <input type="text" class="form-control" name="author" value={this.state.author} onChange={this.onChange} placeholder="Author" />
+	              </div>
+	              <button type="submit" class="btn btn-success">Submit</button>
+	            </form>
+	          </div>
+	        </div>
+	      </div>
+	    );
+	  }
+	}
+
+	export default Edit;
+
+10. npm start
