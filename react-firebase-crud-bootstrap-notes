@@ -15,7 +15,7 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	<script>
 	  // Your web app's Firebase configuration
 	  var firebaseConfig = {
-	    apiKey: "AIzaSyArmCcdn36RGF7T3MmhAaOeiDF4jskQIDg",
+	    apiKey: "AIzaSyArmCcdn36RGF7T3MmhAaOeiDF4jskQIDg",			
 	    authDomain: "djamware-7820d.firebaseapp.com",
 	    databaseURL: "https://djamware-7820d.firebaseio.com",
 	    projectId: "djamware-7820d",
@@ -33,10 +33,10 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 
 3. create file in src/Firebase.js paste this code and change the firebase key from apiKey: to messagingSenderId:
 
-	import * as firebase from 'firebase';
-	import firestore from 'firebase/firestore'
+	import * as firebase from 'firebase'; 				//use module library in firebase
+	import firestore from 'firebase/firestore' 			//use module library in firestore
 
-	const settings = {timestampsInSnapshots: true};
+	const settings = {timestampsInSnapshots: true}; 	//add also timestamp
 
 	const config = {
 	  apiKey: "YOUR_API_KEY",
@@ -82,35 +82,37 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	  document.getElementById('root')
 	);
 
-	// If you want your app to work offline and load faster, you can change
+	// If you want your app to work offline and load faster, you can change ---------------------------------------
 	// unregister() to register() below. Note this comes with some pitfalls.
 	// Learn more about service workers: http://bit.ly/CRA-PWA
-	serviceWorker.unregister();
+	serviceWorker.register();
 
 6. App.js
+
+	NOTE: - display data from the database
 
 	import React, { Component } from 'react';
 	import { Link } from 'react-router-dom';
 	import './App.css';
 	import firebase from './Firebase';
 
-	class App extends Component {
+	class App extends Component { 									//instance of components
 	  constructor(props) {
 	    super(props);
-	    this.ref = firebase.firestore().collection('boards');
-	    this.unsubscribe = null;
+	    this.ref = firebase.firestore().collection('boards'); 		//connect to database
+	    this.unsubscribe = null; 									//empty unsubscribe variable, masudlan ni siya sa ubos
 	    this.state = {
-	      boards: []
+	      boards: []  												//empty array variable, masudlan ni siya sa ubos
 	    };
 	  }
 
-	  onCollectionUpdate = (querySnapshot) => {
+	  onCollectionUpdate = (querySnapshot) => { 					//this function is for update
 	    const boards = [];
 	    querySnapshot.forEach((doc) => {
 	      const { title, description, author } = doc.data();
 	      boards.push({
 	        key: doc.id,
-	        doc, // DocumentSnapshot
+	        doc, 													// DocumentSnapshot
 	        title,
 	        description,
 	        author,
@@ -122,7 +124,7 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	  }
 
 	  componentDidMount() {
-	    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+	    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate); 		//sa update ni siya na part
 	  }
 
 	  render() {
@@ -145,10 +147,10 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	                </tr>
 	              </thead>
 	              <tbody>
-	                {this.state.boards.map(board =>
+	                {this.state.boards.map(board => 										//locate the data in firebase
 	                  <tr>
-	                    <td><Link to={`/show/${board.key}`}>{board.title}</Link></td>
-	                    <td>{board.description}</td>
+	                    <td><Link to={`/show/${board.key}`}>{board.title}</Link></td> 		//show id in the url
+	                    <td>{board.description}</td> 										//display data in firebase, board(table), title(field)
 	                    <td>{board.author}</td>
 	                  </tr>
 	                )}
@@ -180,7 +182,7 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	  }
 
 	  componentDidMount() {
-	    const ref = firebase.firestore().collection('boards').doc(this.props.match.params.id);
+	    const ref = firebase.firestore().collection('boards').doc(this.props.match.params.id); 		//display query in firebase (id)
 	    ref.get().then((doc) => {
 	      if (doc.exists) {
 	        this.setState({
@@ -194,9 +196,9 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	    });
 	  }
 
-	  delete(id){
-	    firebase.firestore().collection('boards').doc(id).delete().then(() => {
-	      console.log("Document successfully deleted!");
+	  delete(id){  																		//2.delete - when click delete button, get the id															
+	    firebase.firestore().collection('boards').doc(id).delete().then(() => { 		//  delete query in firebase
+	      console.log("Document successfully deleted!"); 								//  display message in console
 	      this.props.history.push("/")
 	    }).catch((error) => {
 	      console.error("Error removing document: ", error);
@@ -210,7 +212,7 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	          <div class="panel-heading">
 	          <h4><Link to="/">Board List</Link></h4>
 	            <h3 class="panel-title">
-	              {this.state.board.title}
+	              {this.state.board.title} 						//display title
 	            </h3>
 	          </div>
 	          <div class="panel-body">
@@ -220,8 +222,8 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	              <dt>Author:</dt>
 	              <dd>{this.state.board.author}</dd>
 	            </dl>
-	            <Link to={`/edit/${this.state.key}`} class="btn btn-success">Edit</Link>&nbsp;
-	            <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>
+	            <Link to={`/edit/${this.state.key}`} class="btn btn-success">Edit</Link>&nbsp; 						//edit1 - when click edit button
+	            <button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button> 	//1.delete - when click delete button
 	          </div>
 	        </div>
 	      </div>
@@ -238,9 +240,9 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	import firebase from '../Firebase';
 	import { Link } from 'react-router-dom';
 
-	class Create extends Component {
+	class Create extends Component { 								//1.insert - Component is the ui
 
-	  constructor() {
+	  constructor() { 												//2.insert - empty variable and connect to firebase
 	    super();
 	    this.ref = firebase.firestore().collection('boards');
 	    this.state = {
@@ -249,7 +251,7 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 	      author: ''
 	    };
 	  }
-	  onChange = (e) => {
+	  onChange = (e) => { 											//3.insert - get the forms data
 	    const state = this.state
 	    state[e.target.name] = e.target.value;
 	    this.setState(state);
@@ -260,7 +262,7 @@ https://www.djamware.com/post/5bc50ea680aca7466989441d/reactjs-firebase-tutorial
 
 	    const { title, description, author } = this.state;
 
-	    this.ref.add({
+	    this.ref.add({ 												//4.insert - insert forms data to firebase 
 	      title,
 	      description,
 	      author
