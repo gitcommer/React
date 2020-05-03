@@ -1,0 +1,799 @@
+31 March 2020
+https://www.youtube.com/watch?v=6RhOzQciVwI&list=PL4cUxeGkcC9hNokByJilPg5g9m2APUePI
+
+1. create prohect, run, display components, css
+2-3. context api (alternative to redux), most use only in sharing state globally
+     example: - in this program <ThemeContextProvider> </ThemeContextProvider> has the state attach from ThemeContext.js
+              - meaning kani sila na mga components kay maka access sa state ni ThemeContext.js
+4-5. ACCESSING CONTEXT - inside context is the component and inside component is the data, if, else, inline css
+					   - designing page using context
+					   - 5. Context Consumer - another way of accessing context, naasa sa Navbar.js (same output)
+6. UPDATING CONTEXT DATA - when button is click, background will change
+7-8. MULTIPLE CONTEXTS - contect inside context
+					   - 8. Consuming Multiple Context - change text when update in inspect element
+9. HOOKS - display simple text
+		 - new react library
+		 - special functions, allow us to do additional functional components, state
+		 - access state in functional components
+10. useState Hook - when button is click, add new <li>
+
+NOTES
+------------------------------------------------------------------------------------
+Context API - clean & easy way to share state between components (murag pariha og redux)
+            - alternative to redux, most use only in sharing state to components globally
+Hooks - tap into the inner workings of react in functions(same of php cruds) components
+Context + Hooks = is like redux(local database), they can do state management
+App.js - mao ni siya mo simble(compile) sa tanang components(web page or data)
+CSS - inline
+
+CSS
+---
+inline (overiding css) - <nav style={{ background: theme.ui, color: theme.syntax }}>
+
+1. create prohect, run, display components, css
+------------------------------------------------------------------------------------
+- cmd/npx create-react-app contextapp 							
+- cmd/cd contextapp/npm start 									
+- delete file in src(folder)/App.test.js, logo.svg, App.css, 
+- create new file inside src/components/Navbar.js
+- add css src/index.css
+
+1. project folder/src/App.js
+
+        import React from 'react';
+        import BookList from './components/BookList';     
+        import Navbar from './components/Navbar';         
+
+        function App() {
+        return (
+            <div className="App">
+            <Navbar /> 
+            <BookList />                                 
+            </div>
+        );
+        }
+
+        export default App;
+
+2. project folder/src/components/Navbar.js
+
+        import React, { Component } from 'react'; 		
+
+        class Navbar extends Component { 				
+        render() { 									
+            return ( 
+            <nav>
+                <h1>Context App</h1>
+                <ul>
+                <li>Home</li>
+                <li>About</li>
+                <li>Contact</li>
+                </ul>
+            </nav>
+            );
+        }
+        }
+        
+        export default Navbar; 							
+
+3. project folder/src/components/BookList.js
+
+        class BookList extends Component {
+        render() { 
+            return ( 
+            <div className="book-list">
+                <ul>
+                <li>the way of kings</li>
+                <li>the name of the wind</li>
+                <li>the final empire</li>
+                </ul>
+            </div>
+            );
+        }
+        }
+        
+        export default BookList;
+
+4. project folder/src/index.css
+
+        body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* app styles */
+        .App { 						/*App.js, <div className="App">*/
+        max-width: 400px;
+        margin: 30px auto;
+        text-align: center;
+        }
+        nav{ 						/*Navbar.js, <nav>*/
+        padding: 5px;
+        }
+        nav ul {
+        padding: 0;
+        }
+        nav ul li {
+        display: inline-block;
+        margin: 0 10px;
+        }
+        .book-list { 				/*BookList.js, <div className="book-list">*/
+        padding: 20px;
+        margin-bottom: 20px;
+        }
+        .book-list ul{
+        padding: 0;
+        list-style-type: none;
+        }
+        .book-list li {
+        padding: 10px;
+        margin: 10px auto;
+        border-radius: 10px;
+        }
+
+
+2-3. context api (alternative to redux), most use only in sharing state globally
+     example: - in this program <ThemeContextProvider> </ThemeContextProvider> has the state attach from ThemeContext.js
+              - meaning kani sila na mga components kay maka access sa state ni ThemeContext.js
+------------------------------------------------------------------------------------
+note - docs - https://reactjs.org/docs/context.html
+     - share state within a "component tree"
+     - add react developer tools on your browser
+     - state is the data you want to share from the different component
+     - properties is the data inside state
+
+1. create src/contexts/ThemeContext.js
+2. App.js
+
+        import React from 'react';
+        import BookList from './components/BookList';                 
+        import Navbar from './components/Navbar';                     
+        import ThemeContextProvider from './contexts/ThemeContext';         //7.src/contexts/ThemeContext.js, class ThemeContextProvider
+
+        function App() {
+        return (
+            <div className="App">
+                <ThemeContextProvider>                                      //8.now wrap Navbar and BookList - this components has the access of the state in ThemeContext.js
+                    <Navbar />
+                    <BookList />
+                </ThemeContextProvider>                              
+            </div>
+        );
+        }
+
+        export default App;
+
+4. Navbar.js
+
+        import React, { Component } from 'react'; 		
+
+        class Navbar extends Component { 				
+        render() { 									
+            return ( 
+            <nav>
+                <h1>Context App</h1>
+                <ul>
+                <li>Home</li>
+                <li>About</li>
+                <li>Contact</li>
+                </ul>
+            </nav>
+            );
+        }
+        }
+        
+        export default Navbar; 							
+
+5. BookList.js
+
+        import React, { Component } from 'react';     
+
+        class BookList extends Component {
+        render() { 
+            return ( 
+            <div className="book-list">
+                <ul>
+                <li>the way of kings</li>
+                <li>the name of the wind</li>
+                <li>the final empire</li>
+                </ul>
+            </div>
+            );
+        }
+        }
+        
+        export default BookList;
+
+6. ThemeContext.js
+
+        import React, { Component, createContext } from 'react';                            //1.createContext - library		
+                                                                        
+        export const ThemeContext = createContext();                                        //2.createContext - use context					
+                                                                        
+        class ThemeContextProvider extends Component {                                      //3.create class ThemeContextProvider					
+            state = {                                                                       //4.state and property 													    
+                isLightTheme: true, 										
+                light: { syntax: '#555', ui: '#ddd', bg: '#eee' },
+                dark: { syntax: '#ddd', ui: '#333', bg: '#555'}
+            }
+            render() { 
+                return (                                                                    //5.Provider - mao ni siya ang mo share the data sa ThemeContext.js into other components outside
+                <ThemeContext.Provider value={{...this.state}}>                             //6.{...this.state} - meaning store in the array the data of state isLightTheme:, light:, dark:
+                    {this.props.children}                                                   //9.{this.props.children} - this is the components display in App.js the <Navbar /> and <BookList />
+                </ThemeContext.Provider>                                                        children kay sulod man sila sa <ThemeContextProvider> </ThemeContextProvider>  
+                );
+            }
+        }
+        
+        export default ThemeContextProvider;
+
+7. - check in console, <ThemeContextProvider> </ThemeContextProvider> has the state attach from ThemeContext.js
+   - meaning kani sila na mga components kay maka access sa state ni ThemeContext.js
+
+4-5. ACCESSING CONTEXT ---------------------------------------------------
+- inside context is the component and inside component is the data, if, else, inline css
+- designing page using context
+- 5. Context Consumer - another way of accessing context (same output)
+
+1. App.js
+
+	/*
+	---NOTE---
+	<Navbar /> - //this will display the data of Navbar.js (components)
+	<BookList />
+	*/
+
+	import React from 'react';
+	import BookList from './components/BookList';                 //src/components/BookList.js
+	import Navbar from './components/Navbar';                     //src/components/Navbar.js
+	import ThemeContextProvider from './contexts/ThemeContext';   //src/contexts/ThemeContext.js
+
+	function App() {
+	  return (
+	    <div className="App">
+	       <ThemeContextProvider>
+	        <Navbar />
+	        <BookList />
+	      </ThemeContextProvider>                              
+	    </div>
+	  );
+	}
+
+	export default App;
+
+2. Navbar.js
+
+	/*
+	import React, { Component } from 'react'; - importing react and component
+	class Navbar extends Component { - this is called components
+	render() { - render() returns data
+	export default Navbar; - use this outside
+	import { ThemeContext } from '../contexts/ThemeContext'; - src/contexts/ThemeContext.js
+	static contextType = ThemeContext; - this wil call export const ThemeContext = createContext(); in ThemeContext.js
+	console.log(this.context) - this will access the data of the ThemeContext and display to console
+	const { isLightTheme, light, dark } = this.context; - access the property of the context
+	const theme = isLightTheme ? light : dark; - ?(if), :(else) in ThemeContext.js
+	5.1 - meaning tutorial 5 comments
+	*/
+
+
+	import React, { Component } from 'react'; 		
+	import { ThemeContext } from '../contexts/ThemeContext'; 			//1
+
+	class Navbar extends Component { 	
+	  //static contextType = ThemeContext; 								//2, 5.1 delete this code				
+	  render() {
+	    //console.log(this.context);  									//3, 5.2 delete this code 
+	    //const { isLightTheme, light, dark } = this.context; 			//4
+	    //const theme = isLightTheme ? light : dark; 					//5									
+	    return( 
+	      <ThemeContext.Consumer>{(context) => { 						//5.3 add this
+	      	const { isLightTheme, light, dark } = context; 				//5.4 add this
+	    	const theme = isLightTheme ? light : dark; 					//5.5 add this	
+	      	return (
+	  			<nav style={{ background: theme.ui, color: theme.syntax }}>
+		        <h1>Context App</h1>
+		        <ul>
+		          <li>Home</li>
+		          <li>About</li>
+		          <li>Contact</li>
+		        </ul>
+		      </nav>
+	  		)
+	      }}</ThemeContext.Consumer>
+	    );
+	  }
+	}
+	 
+	export default Navbar;  
+
+3. BookList.js
+
+	import React, { Component } from 'react';                   //importing react and component
+	import { ThemeContext } from '../contexts/ThemeContext';    //1
+
+	class BookList extends Component {
+	  static contextType = ThemeContext;                        //2 
+	  render() {
+	    console.log(this.context);                              //3 
+	    const { isLightTheme, light, dark } = this.context;     //4
+	    const theme = isLightTheme ? light : dark;              //5  
+	    return ( 
+	      <div className="book-list" style={{ background: theme.bg, color: theme.syntax }}>
+	        <ul>
+	          <li style={{ background: theme.ui }}>the way of kings</li>
+	          <li style={{ background: theme.ui }}>the name of the wind</li>
+	          <li style={{ background: theme.ui }}>the final empire</li>
+	        </ul>
+	      </div>
+	    );
+	  }
+	}
+	 
+	export default BookList;
+
+4. ThemeContext.js
+
+	import React, { Component, createContext } from 'react'; 		//function of Component and createContext (library)
+																	//import or call outside to inside
+	export const ThemeContext = createContext(); 					//access createContext(); and store to ThemeContext 
+																	//export or send inside to outside
+	class ThemeContextProvider extends Component { 					//this is component
+	  state = { 													//this is state
+	    isLightTheme: true, 										//this is properties
+	    light: { syntax: '#555', ui: '#ddd', bg: '#eee' },
+	    dark: { syntax: '#ddd', ui: '#333', bg: '#555'}
+	  }
+	  render() { 
+	    return (
+	      <ThemeContext.Provider value={{...this.state}}> 	
+	        {this.props.children}
+	      </ThemeContext.Provider>
+	    );
+	  }
+	}
+	 
+	export default ThemeContextProvider;
+
+
+	6. UPDATING CONTEXT DATA --------------------------------------
+	- when button is click, background will change
+
+	1. create file src/components/ThemeToggle.js
+	2. ThemeToggle.js
+
+		/*
+		import { ThemeContext } from '../contexts/ThemeContext'; - ThemeToggle.js
+		class ThemeToggle extends Component { - component or class
+		static contextType = ThemeContext; - static or property handles data
+		*/
+
+		import React, { Component } from 'react';
+		import { ThemeContext } from '../contexts/ThemeContext';
+
+		class ThemeToggle extends Component {			
+		  static contextType = ThemeContext; 			
+		  render() { 
+		    const { toggleTheme } = this.context;
+		    return ( <button onClick={toggleTheme}>Toggle the theme</button>);
+		  }
+		}
+		 
+		export default ThemeToggle;
+
+3. ThemeContext.js
+
+	/*
+	isLightTheme: true, - if true the theme is light, if false the theme is dark
+	syntax - all text in the app
+	ui - button element etc.
+	bg - background of different elements
+	<ThemeContext.Provider value={{...this.state}}> - this will wrap the data of the state
+	... - is called spread syntax
+	{this.props.children} - this will display the data of <Navbar /> and <BookList /> or the 2 children components
+	props - means property of the state
+	*/
+
+	import React, { Component, createContext } from 'react'; 		
+																	
+	export const ThemeContext = createContext(); 					 
+																	
+	class ThemeContextProvider extends Component { 					
+	  state = { 													
+	    isLightTheme: true, 								//6.2 this will "update" to true or false
+	    light: { syntax: '#555', ui: '#ddd', bg: '#eee' },
+	    dark: { syntax: '#ddd', ui: '#333', bg: '#555'}
+	  }
+
+	  toggleTheme = () => { 																
+	    this.setState({ isLightTheme: !this.state.isLightTheme }); 	//6.1 when button is clicked change true to false
+	  }
+
+	  render() { 
+	    return (
+	      <ThemeContext.Provider value={{...this.state, toggleTheme: this.toggleTheme}}>  	//6.3 change the bg	color
+	        {this.props.children}
+	      </ThemeContext.Provider>
+	    );
+	  }
+	}
+	 
+	export default ThemeContextProvider;
+
+4. App.js
+
+	/*
+	---NOTE---
+	<Navbar /> - //this will display the data of Navbar.js (components)
+	<BookList />
+	*/
+
+	import React from 'react';
+	import BookList from './components/BookList';                 //src/components/BookList.js
+	import Navbar from './components/Navbar';                     //src/components/Navbar.js
+	import ThemeContextProvider from './contexts/ThemeContext';   //src/contexts/ThemeContext.js
+	import ThemeToggle from './components/ThemeToggle';
+
+	function App() {
+	  return (
+	    <div className="App">
+	       <ThemeContextProvider>
+	        <Navbar />
+	        <BookList />
+	        <ThemeToggle />         //6.1 display result
+	      </ThemeContextProvider>                              
+	    </div>
+	  );
+	}
+
+	export default App;
+
+5. Navbar.js (wala ray i update na code diri)
+
+	/*
+	import React, { Component } from 'react'; - importing react and component
+	class Navbar extends Component { - this is called components
+	render() { - render() returns data
+	export default Navbar; - use this outside
+	import { ThemeContext } from '../contexts/ThemeContext'; - src/contexts/ThemeContext.js
+	static contextType = ThemeContext; - this wil call export const ThemeContext = createContext(); in ThemeContext.js
+	console.log(this.context) - this will access the data of the ThemeContext and display to console
+	const { isLightTheme, light, dark } = this.context; - access the property of the context
+	const theme = isLightTheme ? light : dark; - ?(if), :(else) in ThemeContext.js
+	5.1 - meaning tutorial 5 comments
+	*/
+
+
+	import React, { Component } from 'react'; 		
+	import { ThemeContext } from '../contexts/ThemeContext'; 			//1
+
+	class Navbar extends Component { 	
+	  //static contextType = ThemeContext; 								//2, 5.1 delete this code				
+	  render() {
+	    //console.log(this.context);  									//3, 5.2 delete this code 
+	    //const { isLightTheme, light, dark } = this.context; 			//4
+	    //const theme = isLightTheme ? light : dark; 					//5									
+	    return( 
+	      <ThemeContext.Consumer>{(context) => { 						//5.3 add this
+	      	const { isLightTheme, light, dark } = context; 				//5.4 add this
+	    	const theme = isLightTheme ? light : dark; 					//5.5 add this	
+	      	return (
+	  			<nav style={{ background: theme.ui, color: theme.syntax }}>
+		        <h1>Context App</h1>
+		        <ul>
+		          <li>Home</li>
+		          <li>About</li>
+		          <li>Contact</li>
+		        </ul>
+		      </nav>
+	  		)
+	      }}</ThemeContext.Consumer>
+	    );
+	  }
+	}
+	 
+	export default Navbar;
+
+6. BookList.js (wala ray i update na code diri)
+
+	import React, { Component } from 'react';                   //importing react and component
+	import { ThemeContext } from '../contexts/ThemeContext';    //1
+
+	class BookList extends Component {
+	  static contextType = ThemeContext;                        //2 
+	  render() {
+	    console.log(this.context);                              //3 
+	    const { isLightTheme, light, dark } = this.context;     //4
+	    const theme = isLightTheme ? light : dark;              //5  
+	    return ( 
+	      <div className="book-list" style={{ background: theme.bg, color: theme.syntax }}>
+	        <ul>
+	          <li style={{ background: theme.ui }}>the way of kings</li>
+	          <li style={{ background: theme.ui }}>the name of the wind</li>
+	          <li style={{ background: theme.ui }}>the final empire</li>
+	        </ul>
+	      </div>
+	    );
+	  }
+	}
+	 
+	export default BookList;
+
+
+7. MULTIPLE CONTEXTS --------------------------------------------------
+- change text to logout or login when update in inspect element
+- When click text change to Login or Logout
+
+1. create file src/contexts/AuthContext.js
+
+	import React, { Component, createContext } from 'react'; 
+
+	export const AuthContext = createContext();
+
+	class AuthContextProvider extends Component {
+	  state = {
+	    isAuthenticated: false
+	  }
+
+	  toggleAuth = () => {
+	    this.setState({ isAuthenticated: !this.state.isAuthenticated }); 	//7.1 if true or false
+	  }
+
+	  render() { 
+	    return (
+	      <AuthContext.Provider value={{...this.state, toggleAuth: this.toggleAuth}}>
+	        {this.props.children}
+	      </AuthContext.Provider>
+	    );
+	  }
+	}
+	 
+	export default AuthContextProvider;
+
+2. Navbar.js
+
+	/*
+	8.3 { isAuthenticated ? 'Logged in' : 'Logged out' } - when button is clicked change text to login or logout
+	*/
+
+	import React, { Component } from 'react';
+	import { ThemeContext } from '../contexts/ThemeContext';
+	import { AuthContext } from '../contexts/AuthContext';
+
+	class Navbar extends Component {
+	  render() {
+	    return (
+	      <AuthContext>{(authContext) => (                            //8.1 first context
+	        <ThemeContext.Consumer>{(themeContext) => {               //8.1 second context
+	          const { isAuthenticated, toggleAuth } = authContext;    //8.2 
+	          const { isLightTheme, light, dark } = themeContext;     //8.2 
+	          const theme = isLightTheme ? light : dark;
+	          return (
+	            <nav style={{ background: theme.ui, color: theme.syntax }}>
+	              <h1>Context App</h1>
+	              <div onClick={() => toggleAuth()}>                  
+	                { isAuthenticated ? 'Logged in' : 'Logged out' }  
+	              </div>
+	              <ul>
+	                <li>Home</li>
+	                <li>About</li>
+	                <li>Contact</li>
+	              </ul>
+	            </nav>
+	          )
+	        }}</ThemeContext.Consumer>
+	      )}</AuthContext>
+	    );
+	  }
+	}
+	 
+	export default Navbar;
+
+ThemeContext.js
+
+	/*
+	isLightTheme: true, - if true the theme is light, if false the theme is dark
+	syntax - all text in the app
+	ui - button element etc.
+	bg - background of different elements
+	<ThemeContext.Provider value={{...this.state}}> - this will wrap the data of the state
+	... - is called spread syntax
+	{this.props.children} - this will display the data of <Navbar /> and <BookList /> or the 2 children components
+	props - means property of the state
+	*/
+
+	import React, { Component, createContext } from 'react'; 		
+																	
+	export const ThemeContext = createContext(); 					 
+																	
+	class ThemeContextProvider extends Component { 					
+	  state = { 													
+	    isLightTheme: true, 								//6.2 this will "update" to true or false
+	    light: { syntax: '#555', ui: '#ddd', bg: '#eee' },
+	    dark: { syntax: '#ddd', ui: '#333', bg: '#555'}
+	  }
+
+	  toggleTheme = () => { 																
+	    this.setState({ isLightTheme: !this.state.isLightTheme }); 	//6.1 when button is clicked change true to false
+	  }
+
+	  render() { 
+	    return (
+	      <ThemeContext.Provider value={{...this.state, toggleTheme: this.toggleTheme}}>  	//6.3 change the bg	color
+	        {this.props.children}
+	      </ThemeContext.Provider>
+	    );
+	  }
+	}
+	 
+	export default ThemeContextProvider;
+
+BookList.js
+
+	import React, { Component } from 'react';                   //importing react and component
+	import { ThemeContext } from '../contexts/ThemeContext';    //1
+
+	class BookList extends Component {
+	  static contextType = ThemeContext;                        //2 
+	  render() {
+	    console.log(this.context);                              //3 
+	    const { isLightTheme, light, dark } = this.context;     //4
+	    const theme = isLightTheme ? light : dark;              //5  
+	    return ( 
+	      <div className="book-list" style={{ background: theme.bg, color: theme.syntax }}>
+	        <ul>
+	          <li style={{ background: theme.ui }}>the way of kings</li>
+	          <li style={{ background: theme.ui }}>the name of the wind</li>
+	          <li style={{ background: theme.ui }}>the final empire</li>
+	        </ul>
+	      </div>
+	    );
+	  }
+	}
+	 
+	export default BookList;
+
+App.js
+
+	/*
+	NOTE
+	----
+
+	*/
+
+	import React from 'react';
+	import BookList from './components/BookList';                 
+	import Navbar from './components/Navbar';                     
+	import ThemeContextProvider from './contexts/ThemeContext';   
+	import ThemeToggle from './components/ThemeToggle';
+	import AuthContextProvider from './contexts/AuthContext';
+
+	function App() {
+	  return (
+	    <div className="App">
+	      <ThemeContextProvider>
+	        <AuthContextProvider>     //7.1 wrap with multiple context
+	          <Navbar />
+	          <BookList />
+	          <ThemeToggle />
+	        </AuthContextProvider>
+	      </ThemeContextProvider>
+	    </div>
+	  );
+	}
+
+	export default App;
+
+
+9. HOOKS 
+--------
+- display simple text
+- new react library
+- special functions, allow us to do additional functional components, state
+- access state in functional components
+
+1. create new app cmd/npx create-react-app hooksapp
+2. create folder and file src/compenents/SongList.js
+
+	/*
+	import React from 'react'; - react library
+	*/
+
+	import React from 'react';
+
+	const SongList = () => { 			//9.1
+	  return (
+	    <div className="song-list">
+	      <ul>
+	        <li>this wild darkness</li>
+	        <li>memory gospel</li>
+	      </ul>
+	    </div>
+	  );
+	}
+
+	export default SongList;
+
+3. App.js
+
+	/*
+	<SongList /> - //9.3 display data of SongList.js
+	*/
+
+	import React from 'react';
+	import SongList from './components/SongList';   //9.2
+
+	function App() {
+	  return (
+	    <div className="App">
+	      <SongList />         
+	    </div>
+	  );
+	}
+
+	export default App;
+
+
+10. useState Hook
+-----------------
+ - when button is click, add new <li>
+
+ 1. SongList.js
+
+ 	/*
+	import React from 'react'; - react library
+	//10.3 return ( <li key={song.id}>{song.title}</li> ); - display id and song title
+	//10.4 install package uuid -  C:\Users\TAE\Desktop\hooksapp> npm install uuid
+	map - new array
+	...songs - this spread syntax, it will spread or get the data to array
+	*/
+
+	import React, { useState } from 'react'; 	//10.1 useState is a hook
+	import uuid from 'uuid/v1'; 				//10.5 use uuid version 1, library of unique id
+
+	const SongList = () => { 
+	  const [songs, setSongs] = useState([ 		//10.2 array of songs with 3 objects
+	    { title: 'almost home', id: 1 },
+	    { title: 'memory gospel', id: 2 },
+	    { title: 'this wild darkness', id: 3 }
+	  ]);
+	  //console.log(songs);
+	  const addSong = () => {
+	    setSongs([...songs, { title: 'new song', id: uuid() }]); 	//10.6 uuid unique id
+	  }; 															//10.7 when button is click, display data here			
+	  return (
+	    <div className="song-list">
+	      <ul>
+	        {songs.map(song => {
+	          return ( <li key={song.id}>{song.title}</li> );
+	        })}
+	      </ul>
+	      <button onClick={addSong}>Add a song</button>
+	    </div>
+	  );
+	}
+
+	export default SongList;
+
+2. App.js
+
+	/*
+	<SongList /> - //9.3 display data of SongList.js
+	*/
+
+	import React from 'react';
+	import SongList from './components/SongList';   //9.2
+
+	function App() {
+	  return (
+	    <div className="App">
+	      <SongList />         
+	    </div>
+	  );
+	}
+
+	export default App;
