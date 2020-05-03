@@ -49,14 +49,14 @@ VISUAL STUDIO CODE, EXTENSIONS, SHORTCUT
 30. Route Parameters 1 - http://localhost:3000/12345, http://localhost:3000/yoshi, displaying id, or text, numbers etc. in the url
 		  			   - match
 31. Route Parameters - display to url http://localhost:3000/12345 and the data of this url on the page
-32. Switch Tag - if localhost:3000/contact ang page display kay contact sad walay sagol
+32. Switch Tag - if localhost:3000/contact contact page rapud ang i display, wala nay lain data
 33. Importing Images with CSS
 34-38. Introduction of Redux (redux explain)
 35. Redux Store Sample Code
 36. Redux Action Sample Code
 37. Redux Reducer Sample Code
-38. Redux Store Subscriptions Sample Code
-39-44. Setting Redux in React - use redux in react or connect react to redux store
+38. Redux Store Subscriptions Sample Code - subscribe(), getState(), mag add add og data sa array
+39-44. Setting up Redux in React - use redux in react or connect react to redux store
 40. Mapping State to Props - connect component to redux store
 
 NOTES
@@ -1414,13 +1414,13 @@ NOTE: exact - para ma link siya exactly sa home page
 
 	export default Post
 
-31. Route Parameters 2 - display to url http://localhost:3000/12345 and the data of this url on the page
+31. Route Parameters 2 - when click in the list display to url http://localhost:3000/12345 and the data of this url on the page
 -----------------------------------------------------------------------------------
 1. Home.js (update 30)
 
 	import React, { Component } from 'react'
 	import axios from 'axios'
-	import { Link } from 'react-router-dom' 	//31.1
+	import { Link } from 'react-router-dom' 	                                //31.1
 
 	class Home extends Component {
 	  state = {
@@ -1442,7 +1442,7 @@ NOTE: exact - para ma link siya exactly sa home page
 	        return (
 	          <div className="post card" key={post.id}>
 	            <div className="card-content">
-	              <Link to={'/' + post.id}> 	//31.2 localhost:3000/1
+	              <Link to={'/' + post.id}> 	                                //31.2 localhost:3000/1 - inig click sa list
 	                <span className="card-title red-text">{post.title}</span>
 	              </Link>
 	              <p>{post.body}</p>
@@ -1470,16 +1470,16 @@ NOTE: exact - para ma link siya exactly sa home page
 2. Post.js (update 30)
 
 	import React, { Component } from 'react'
-	import axios from 'axios'   //31.1
+	import axios from 'axios'                                               //31.1
 
 	class Post extends Component {
 	  state = {
-	    post: null  //31.3
+	    post: null                                                          //31.3
 	  }
 	  componentDidMount(){
 	    let id = this.props.match.params.post_id;
-	    axios.get('https://jsonplaceholder.typicode.com/posts/' + id)   //31.2 or get json data/id
-	      .then(res => {      //31.4 update the state data
+	    axios.get('https://jsonplaceholder.typicode.com/posts/' + id)       //31.2 or get json data/id
+	      .then(res => {                                                    //31.4 update the state data
 	        this.setState({
 	          post: res.data
 	        });
@@ -1488,7 +1488,7 @@ NOTE: exact - para ma link siya exactly sa home page
 	  }
 	  render() {
 
-	    const post = this.state.post ? (  //31.5 check if post exists
+	    const post = this.state.post ? (                                    //31.5 check if post exists
 	      <div className="post">
 	        <h4 className="center">{this.state.post.title}</h4>
 	        <p>{this.state.post.body}</p>
@@ -1507,18 +1507,13 @@ NOTE: exact - para ma link siya exactly sa home page
 
 	export default Post
 
-32. Switch Tag - if localhost:3000/contact ang page display kay contact sad walay sagol
+32. Switch Tag - if localhost:3000/contact contact page rapud ang i display, wala nay lain data
 -----------------------------------------------------------------------------------
 1. App.js
 
-	/*
-	1. import { Route, BrowserRouter, Switch } from 'react-router-dom'
-	2. <Switch>
-	*/
-
 	import React, { Component } from 'react';
 	import Navbar from './components/Navbar'
-	import { Route, BrowserRouter, Switch } from 'react-router-dom'
+	import { Route, BrowserRouter, Switch } from 'react-router-dom'         //1.Switch
 	import Home from './components/Home'
 	import About from './components/About'
 	import Contact from './components/Contact'
@@ -1530,7 +1525,7 @@ NOTE: exact - para ma link siya exactly sa home page
 	      <BrowserRouter>
 	        <div className="App">
 	          <Navbar />
-	          <Switch>
+	          <Switch>                                                      //2.Switch - this will match route, like if contact, contact rapud i display
 	            <Route exact path='/' component={Home}/>
 	            <Route path='/about' component={About} />
 	            <Route path='/contact' component={Contact} />
@@ -1551,7 +1546,7 @@ NOTE: exact - para ma link siya exactly sa home page
 	import React, { Component } from 'react'
 	import axios from 'axios'
 	import { Link } from 'react-router-dom'
-	import Pokeball from '../pokeball.png' 		//33.1
+	import Pokeball from '../pokeball.png' 		                                    //33.1 img src={Pokeball}
 
 	class Home extends Component {
 	  state = {
@@ -1572,7 +1567,7 @@ NOTE: exact - para ma link siya exactly sa home page
 	      posts.map(post => {
 	        return (
 	          <div className="post card" key={post.id}>
-	            <img src={Pokeball} alt="A Pokeball" /> 	//33.2 display image
+	            <img src={Pokeball} alt="A Pokeball" /> 	                        //33.2 display image
 	            <div className="card-content">
 	              <Link to={'/' + post.id}>
 	                <span className="card-title red-text">{post.title}</span>
@@ -1607,7 +1602,7 @@ NOTE: exact - para ma link siya exactly sa home page
 	  font-family: sans-serif;
 	}
 
-	.home .post img{ 	/*<div className="container home">, <div className="post card" key={post.id}>, <img src={Pokeball} alt="A Pokeball" />*/
+	.home .post img{ 	                /*<div className="container home">, <div className="post card" key={post.id}>, <img src={Pokeball} alt="A Pokeball" />*/
 		position: absolute;
 		top: 20px;
 		left: -100px;
@@ -1619,46 +1614,49 @@ NOTE: exact - para ma link siya exactly sa home page
 		padding-left: 80px;
 	}
 
-34. Introduction of Redux
+34. EXPLAIN REDUX - store(database), reducer(is a function that update or query data in redux), dispatch (action or crud)
 -----------------------------------------------------------------------------------
+- central data store for all app data (all data are stored in redux)
+- any component can access data from it
+- make state management easy
 
-35. Redux Action
+35. SET-UP REDUX
 -----------------------------------------------------------------------------------
 1. redux store sample code
 
-	const {createStore} = redux; 								//access createStore from redux library
+	const {createStore} = redux; 							//1.create store or database inside redux
 
-	const initState = { 										//empty state
-		todos:[];
-		posts:[]
+	const initState = { 									//3.empty state - mao in ang mo update sa data
+		todos:[],                                           //  todos - is unsay buhaton sa data like i create ba or retrieve or i update or i delete
+		posts:[]                                            //  posts - store now the data
 	}
 
-	function myreducer(state = initState, action){ 				//reducer function
+	function myreducer(state = initState, action){ 			//2.myreducer() - create reducer or (robot/action) function
 
 	}
 
-	const store = createStore(myreducer);
+	const store = createStore(myreducer);                   //4.interact the reducer to the store
 
-36. Redux Action 	
+36. Redux Action - type(crud), todo, action	
 -----------------------------------------------------------------------------------
 1. redux action sample code
 
-	const {createStore} = redux; 								//access createStore from redux library
+	const {createStore} = redux; 								
 
-	const initState = { 										//empty state
+	const initState = { 										
 		todos:[];
 		posts:[]
 	}
 
-	function myreducer(state = initState, action){ 				//reducer function
-		console.log(action, state);
+	function myreducer(state = initState, action){ 				//1.action - this will fire the todoAction
+		console.log(action, state);                             //5.display the data
 	}
 
 	const store = createStore(myreducer);
 
-	const todoAction  = {type: 'ADD_TODO', todo: 'buy milk'} 	//action parameter
+	const todoAction  = {type: 'ADD_TODO', todo: 'buy milk'}    //2.this is the query method - ADD_TODO(insert), buy milk - is the data to insert in redux
 
-	store.dispatch(todoAction)	 								//ditpatch is use to update the state
+	store.dispatch(todoAction)                                  //3.fire or run the action or send in to the reducer	 								
 
 37. Redux Reducers
 -----------------------------------------------------------------------------------
@@ -1673,9 +1671,9 @@ NOTE: exact - para ma link siya exactly sa home page
 
 	function myreducer(state = initState, action){ 				//initState - when first state is run, action - action wiil dispatch
 		//console.log(action, state);
-		if(action.type == 'ADD_TODO'){ 
+		if(action.type == 'ADD_TODO'){  						//1.if action is equal to ADD_TODO
 			return{
-				todos: [...state.todos, action.todo]
+				todos: [...state.todos, action.todo] 			//2.insert the data to ...state.todos array, and the data is todo: 'buy milk'
 			}
 		}
 	}
@@ -1686,69 +1684,70 @@ NOTE: exact - para ma link siya exactly sa home page
 
 	store.dispatch(todoAction)	 								//ditpatch is use to update the state
 
-38. Redux Store Subscriptions Sample Code
+38. Redux Store Subscriptions Sample Code - subscribe(), getState(), mag add add og data sa array
 -----------------------------------------------------------------------------------
 const {createStore} = redux; 								//access createStore from redux library
 
 const initState = { 										//empty state
-	todos:[];
+	todos:[],
 	posts:[]
 }
 
-function myreducer(state = initState, action){ 				//initState - when first state is run, action - action wiil dispatch
+function myreducer(state = initState, action){ 				
 	//console.log(action, state);
-	if(action.type == 'ADD_TODO'){ 
+	if(action.type == 'ADD_TODO'){  						//2.if action is equal ADD_TODO
 		return{
-			...state,
-			todos: [...state.todos, action.todo]
+			...state, 										
+			todos: [...state.todos, action.todo] 			//3.insert data to todos:[]; array
 		}
 	}
-	if(action.type == 'ADD_POST'){ 
+	if(action.type == 'ADD_POST'){  						//4.if action is equal ADD_POST
 		return{
 			...state,
-			posts: [...state.posts, action.post]
+			posts: [...state.posts, action.post] 			//5.insert data to posts:[] array
 		}
 	}
 }
 
 const store = createStore(myreducer); 						//const store - create store, createStore(myreducer) - passing store to reducer
 
-store.subscribe(() => { 									//this function will fire everytime the state changes
-	console.log('state update');
-	console.log(store.getState());
+store.subscribe(() => { 									//6.this function will fire everytime the state changes
+	console.log('state update'); 							//7.update the data of the state if there is inserted, updated, deleted etc.
+	console.log(store.getState()); 							//8.save the state to store
 })
 
-store.dispatch({type: 'ADD_TODO', todo: 'buy milk'});
+store.dispatch({type: 'ADD_TODO', todo: 'buy milk'}); 				//1.dispatch or run when page is refresh
 store.dispatch({type: 'ADD_TODO', todo: 'sleep some more'});
 store.dispatch({type: 'ADD_POST', post: 'Egg hunt with yushi'});
 
-39. Setting Redux in React - use redux in react or connect react to redux store
+39. Setting up Redux in React - use redux in react or connect react to redux store
 -----------------------------------------------------------------------------------
-1. cmd\Desktop\react-and-redux-notes\poketimes> npm install redux react-redux
-2. create src\reducers\rootReducer.js
+1. cmd\Desktop\react-and-redux-notes\poketimes> npm install redux react-redux 			//1.when you use redux in react
+
+2. src/index.js 
 
 	import React from 'react';
 	import ReactDOM from 'react-dom';
 	import './index.css';
 	import App from './App';
 	import registerServiceWorker from './registerServiceWorker';
-	import { createStore } from 'redux' 							//39.1 redux library
-	import { Provider } from 'react-redux'							//39.2 wrapper
-	import rootReducer from './reducers/rootReducer' 				//39.3
+	import { createStore } from 'redux' 								//2.createStore - redux store library
+	import { Provider } from 'react-redux' 								//1.Provider - 
+	import rootReducer from './reducers/rootReducer'
 
-	const store = createStore(rootReducer);
+	const store = createStore(rootReducer); 							//3.createStore() function
 
-	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
-	registerServiceWorker();
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root')); 					//2.Provider
+	registerServiceWorker(); 																						//4.createStore - store={store} - passing store to App.js
 
-3. rootReducer.js
+3. create src\reducers\rootReducer.js
 
-	const initState = {
+	const initState = { 										//1.initState - define and empty function
 	  posts: []
 	}
 
 	const rootReducer = (state = initState, action) => {
-	  return state;
+	  return state; 											//2.state - if state receive data send it outside
 	}
 
 	export default rootReducer
@@ -1762,9 +1761,9 @@ store.dispatch({type: 'ADD_POST', post: 'Egg hunt with yushi'});
 	import './index.css';
 	import App from './App';
 	import registerServiceWorker from './registerServiceWorker';
-	import { createStore } from 'redux' 							//39.1 redux library
-	import { Provider } from 'react-redux'							//39.2 wrapper
-	import rootReducer from './reducers/rootReducer' 				//39.3
+	import { createStore } from 'redux' 							//1. redux library
+	import { Provider } from 'react-redux'							//2. wrapper
+	import rootReducer from './reducers/rootReducer' 				//3.
 
 	const store = createStore(rootReducer);
 
@@ -1773,7 +1772,7 @@ store.dispatch({type: 'ADD_POST', post: 'Egg hunt with yushi'});
 
 2. rootReducer.js
 
-	const initState = {
+	const initState = { 		
 	  posts: [
 	    {id: '1', title: 'Squirtle Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
 	    {id: '2', title: 'Charmander Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
@@ -1792,11 +1791,11 @@ store.dispatch({type: 'ADD_POST', post: 'Egg hunt with yushi'});
 	import React, { Component } from 'react'
 	import { Link } from 'react-router-dom'
 	import Pokeball from '../pokeball.png'
-	import { connect } from 'react-redux'       //1. connect is a higher order component
+	import { connect } from 'react-redux'       									//1.connect - is a for higher order component
 
 	class Home extends Component {
 	  render(){
-	    const { posts } = this.props
+	    const { posts } = this.props 												//4.this.props  - 
 	    const postList = posts.length ? (
 	      posts.map(post => {
 	        return (
@@ -1828,11 +1827,11 @@ store.dispatch({type: 'ADD_POST', post: 'Egg hunt with yushi'});
 
 	const mapStateToProps = (state) => {
 	  return {
-	    posts: state.posts                          //3. naa ni sa rootReducer.js
+	    posts: state.posts                          									//3.posts: [ - naa ni sa rootReducer.js
 	  }
 	}
 
-	export default connect(mapStateToProps)(Home)   //2. connect is a higher order component
+	export default connect(mapStateToProps)(Home)   									//2.connect - find props data and send it to home
 
 
 	41
