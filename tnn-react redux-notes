@@ -1833,6 +1833,181 @@ store.dispatch({type: 'ADD_POST', post: 'Egg hunt with yushi'});
 
 	export default connect(mapStateToProps)(Home)   									//2.connect - find props data and send it to home
 
+41. Blog Detail Page - 
+-----------------------------------------------------------------------------------
+1. src/components/Post.js
 
-	41
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux' 							//1.connect this Post.js components to redux
+
+	class Post extends Component {
+	render() {
+
+		const post = this.props.post ? ( 							//5.onst post = this.props.post ? ( is the post:
+		<div className="post">
+			<h4 className="center">{this.props.post.title}</h4> 	//6.display
+			<p>{this.props.post.body}</p>
+		</div>
+		) : (
+		<div className="center">Loading post...</div>
+		);
+
+		return (
+		<div className="container">
+			{post}
+		</div>
+		)
+	}
+	}
+
+	const mapStateToProps = (state, ownProps) => { 					//3.ownProps - is the props on this page
+	let id = ownProps.match.params.post_id; 						//4.this will get info in the route parameter like localhost:3000/1
+	return { 														//  post_id - is in App.js <Route path='/:post_id' component={Post} />
+		post: state.posts.find(post => post.id === id) 				//  post: is the copy state, state.posts.find(post => post.id === id) this means find the id of the state and
+	} 																    match this id to this parameter let id = ownProps.match.params.post_id; 
+	}
+
+	export default connect(mapStateToProps)(Post) 					//2.connect to state to props this Post.js
+
+42. Map Dispatch To Props
+-----------------------------------------------------------------------------------
+1. src/components/Post.js
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux'
+
+	class Post extends Component {
+	handleClick = () => { 												//3.handleClick - delete query
+		this.props.deletePost(this.props.post.id);
+		this.props.history.push('/'); 									//  redirect to homepage after after deleting a post
+	}
+	render() {
+
+		const post = this.props.post ? (
+		<div className="post">
+			<h4 className="center">{this.props.post.title}</h4>
+			<p>{this.props.post.body}</p>
+			<div className="center">
+			<button className="btn grey" onClick={this.handleClick}> 	//2.handleClick - delete button
+				Delete Post
+			</button>
+			</div>
+		</div>
+		) : (
+		<div className="center">Loading post...</div>
+		);
+
+		return (
+		<div className="container">
+			{post}
+		</div>
+		)
+	}
+	}
+
+	const mapStateToProps = (state, ownProps) => {
+	let id = ownProps.match.params.post_id;
+	return {
+		post: state.posts.find(post => post.id === id)
+	}
+	}
+
+	const mapDispatchToProps = (dispatch) => { 							//1.(dispatch) - or dispatch a delete post action
+	return {
+		deletePost: (id) => dispatch({type: 'DELETE_POST', id: id})
+	}
+	}
+
+	export default connect(mapStateToProps, mapDispatchToProps)(Post)
+
+2. src/reducers/rootReducers.js - when click delete button, delete the data
+
+	const initState = {
+		posts: [
+		{id: '1', title: 'Squirtle Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+		{id: '2', title: 'Charmander Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+		{id: '3', title: 'a Helix Fossil was Found', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'}
+		]
+	}
+	
+	const rootReducer = (state = initState, action) => {
+		console.log(action);
+		if(action.type === 'DELETE_POST'){ 					//1.check if query is equal to DELETE_POST
+			let newPosts = state.posts.filter(post => { 	//  check if delete id exists
+			return post.id !== action.id
+		});
+		return {
+		...state,
+		posts: newPosts 									//  update the data in the state
+		}
+		}
+		return state;
+	}
+	
+	export default rootReducer
+
+42. Action Creators - like mura ni siyag php functions naa didto ang mga code sa cruds
+-----------------------------------------------------------------------------------
+1. src/actions/postActions.js
+
+	export const deletePost = (id) => { 								//42.1 get the id and delete post
+		return {
+		type: 'DELETE_POST',
+		id
+		}
+	}
+
+2. src/components/Post.js 
+
+	import React, { Component } from 'react'
+	import { connect } from 'react-redux'
+	import { deletePost } from '../actions/postActions' 				//42.2 
+
+	class Post extends Component {
+	handleClick = () => {
+		this.props.deletePost(this.props.post.id);
+		this.props.history.push('/');
+	}
+	render() {
+
+		const post = this.props.post ? (
+		<div className="post">
+			<h4 className="center">{this.props.post.title}</h4>
+			<p>{this.props.post.body}</p>
+			<div className="center">
+			<button className="btn grey" onClick={this.handleClick}>
+				Delete Post
+			</button>
+			</div>
+		</div>
+		) : (
+		<div className="center">Loading post...</div>
+		);
+
+		return (
+		<div className="container">
+			{post}
+		</div>
+		)
+	}
+	}
+
+	const mapStateToProps = (state, ownProps) => {
+	let id = ownProps.match.params.post_id;
+		return {
+			post: state.posts.find(post => post.id === id)
+		}
+	}
+
+	const mapDispatchToProps = (dispatch) => {
+		return {
+			deletePost: (id) => dispatch(deletePost(id)) 				//42.3
+		}
+	}
+
+	export default connect(mapStateToProps, mapDispatchToProps)(Post)
+
+
+	
+---- DONE ---- REVIEW 39-43 -----------------------------------------
 
