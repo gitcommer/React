@@ -1,0 +1,1839 @@
+April 8, 2020
+https://www.youtube.com/watch?v=OxIDLw0M-m0&list=PL4cUxeGkcC9ij8CfkAY2RAGb-tmkNwQHG
+https://github.com/iamshaunjp/react-redux-complete-playlist
+docs: https://reactjs.org/docs/cdn-links.html
+
+NOTES
+VISUAL STUDIO CODE, EXTENSIONS, SHORTCUT
+4. CLASS COMPONENTS - display text and ramdom number
+5. STATE - or the data inside the object
+6. how to use react developers tool
+7. DOM EVENT - click button(onClick), hover(onMouseOver), right click(handleCopy) and copy event, e.target
+8. using ARROW FUNCTION para dili mo error and .this sa console, arrow function has special behavior
+   how to CHANGE STATE VALUE and log to console
+9. FORMS - input to form and when submit change display data to console and the display text
+10. CREATE REACT APP - is use if you want to create a complete project setup
+                     - cmd/desktop\react-and-redux-notes> npx create-react-app my-app
+	CSS - index.css
+	index.js - render data to the dom
+11. SINGLE PAGE EXPLAIN - react kaosa ra siya mo query sa server, then and data i save niya sa js cache or sa component
+							whenever your query again adto na siya sa cache dili na mo adto sa server maong pass pass kaau siya
+12. Nesting Component - or display Ninjas.js component data to App.js root component (home page) 
+13. Props and Distructure Method - <Ninjas name="Ryu" age="25" belt="black"/>
+14. Displaying MAP Data - state, props, map(means creating new array), loop display
+15. Virtual DOM or difference and when to use CLASS BASE COMPONENTS & FUNCTIONAL BASE COMPONENTS
+16. if, else or using ternary operator ?(if), :(else), in 3 different ways
+17. Forms - input to form and display to console
+18. Props Function - not the normal props, spread operator or (...), input data to forms and add new data in the array
+19. Delete Data - delete data from array
+20. watch again
+21. CSS Files - 
+22. lifecycle method explain - http://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
+23-24. todoapp project - insert, display, delete (frontend)
+25. React Router - (or link to page) dili na mag sige request sa server if and data naara sa component
+				 - link home, about, contact, navbar, BrowserRouter, Route
+				 - exact - kong walay exact inig link nimo sa home page doha ang mo display na data and home og about
+26. Links & NavLinks - Link to"/" - same of <a href=""> and dili mo load ang page
+					 - NavLink - class="active" same siya sa bootstrap inig tan-aw nimo sa console
+27. Programmatic Redirects 	- like props.history.push('/about'); - if naaka sa home page, after 2 seconds moredirect siya ra about page
+							- like in the console props-->history-->push-->about
+							- const Contact = () => { if you add props like const Contact = (props) => { it will automatically added to the props the router info
+							- you check the added data of the props in the console like location, history, match, staticContext etc.
+							- history - keep tracts of the router history
+							- higher order component meaning it give extra power to the component
+28. Higher Order Components or (withRouter) - (give extra features to the component) when you refrest the about page the text change color
+											- meaning if mao rani ang mabuhat ni props, pun-an ni (withRouter)
+29. Axios - it's like http:// request use to grab data in other website or app
+		  - it's like api, like mokoha ka og some dummy data sa lain na website unya i display nimo sa imong page in json format or etc.
+		  - axios, slice, 
+30. Route Parameters 1 - http://localhost:3000/12345, http://localhost:3000/yoshi, displaying id, or text, numbers etc. in the url
+		  			   - match
+31. Route Parameters - display to url http://localhost:3000/12345 and the data of this url on the page
+32. Switch Tag - if localhost:3000/contact ang page display kay contact sad walay sagol
+33. Importing Images with CSS
+34-38. Introduction of Redux (redux explain)
+35. Redux Store Sample Code
+36. Redux Action Sample Code
+37. Redux Reducer Sample Code
+38. Redux Store Subscriptions Sample Code
+39-44. Setting Redux in React - use redux in react or connect react to redux store
+40. Mapping State to Props - connect component to redux store
+
+NOTES
+-----------------------------------------------------------------------------------
+- you can use cdn(link) or npm(package) to use the react
+virtual dom - or the representaion of a dom
+			- update only part of the page and not the whole page
+dynamic - changeable
+spa or single page app - osa ra ka html page ang magamit and the rest kay js na
+                       - ang resquest dili na mo adto sa server, didto ra sa component
+<div id="root"></div>  - where all component pass
+CSS - index.css
+index.js - render data to the dom
+App.js - root compoent or the mother of all components
+render() - mao ni magpadala sa component didto sa page
+react basics - components, events, templates, props and forms
+react router - routes, route parameters, redirects 
+react redux - stores, actions and reducers
+redux - 'central data store' for all app data, any component can access data from it, makes state management easy
+	  - state management or management of data in your app or a werehouse of functions
+reducer - is the robot guard in redux or werehouse (or a function)
+		- if some action came in, reducer will take that action and inquire to redux and take back again
+store - or the redux werehouse
+state - data 
+props - is the property inside the state
+class - blue print
+{Math.random() * 10} - random number times 10
+<div id="app"></div> is connected to class App extends React.Component { and React.Component meaning access the react library from cdn
+ReactDOM.render(<App />, document.getElementById('app')); - this is a render() that will display data or jsx to browser
+{} - object 
+[] - array
+setState() - this is use when changing the value of the state
+
+VISUAL STUDIO CODE, EXTENSIONS, SHORTCUT
+-----------------------------------------------------------------------------------
+- install react snippets in visual studio code para maka shortcut ka (extensions)
+- es7 react/redux/graglql/react-native snippets (extensions), shortcut of import, functional component, class component etc.
+- sublime babel (extensions), highlight the open and close of a function
+- live server - (extensions) - right click the code and open to live server to display in the browser
+- doc+tab - shortcut for html
+- div.#pp - div with id
+
+4. CLASS COMPONENTS - display text and ramdom number
+-----------------------------------------------------------------------------------
+- class base components, 
+
+1. index.html
+
+	<html lang="en">
+	<head>
+	  <meta charset="UTF-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	  <title>React Basics</title>
+	  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> 	                        //1.babel - use para mo display ang js sa browser bisan unsa na version 
+	  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+	  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+	</head>
+	<body>
+	<div id="app"></div>
+	  <script type="text/babel"> 									//2.babel
+	    class App extends React.Component {  						//   this will access react library from cdn
+	      render(){ 												//1.render - mao ni magpadala sa component didto sa page
+	        return( 			
+	          <div className="app-content">
+	            <h1>Hello, ninjas!</h1>
+	            <p>Random number: { Math.random() * 10 }</p>
+	          </div>
+	        )
+	      }
+	    }
+
+	    ReactDOM.render(<App />, document.getElementById('app')); 	//2.render - this will access react dom library from cdn
+	    															//<App /> is the class App
+	    															//app - meaning run the data in <div id="app">
+	  </script>
+	  </body>
+	</html>
+
+NOTE: if no display add babel cdn
+OUTPUT: Hello, ninjas!
+		Random number: 4.257725945432851
+
+5. STATE - or the data inside the object
+-----------------------------------------------------------------------------------
+1. index.html
+
+	<body>
+	  <div id="app"></div>
+	  <script type="text/babel">
+	    class App extends React.Component {
+	      state = {
+	        name: 'Ryu',
+	        age: 30
+	      }
+	      render(){
+	        return(
+	          <div className="app-content">
+	            <h1>Hello, ninjas!</h1>
+	            <p>My name is: { this.state.name } and I am { this.state.age }</p>
+	          </div>
+	        )
+	      }
+	    }
+
+	    ReactDOM.render(<App />, document.getElementById('app'));
+	  </script>
+	</body>
+
+OUTPUT: Hello, ninjas!
+        My name is: Ryu and I am 30
+
+7. DOM EVENTS - click button(onClick), hover(onMouseOver), right click(handleCopy) and copy event, e.target
+-----------------------------------------------------------------------------------
+NOTE: you can find other event sample in the console
+
+1. index.html
+
+	<body>
+	  <div id="app"></div>
+	  <script type="text/babel">
+	    class App extends React.Component {
+	      state = {
+	        name: 'Ryu',
+	        age: 30
+	      }
+	      handleMouseOver(e){															//2.handleMouseOver
+	        console.log(e.target, e.pageX); 											//   e.pageX or mouse position
+	      }
+	      handleClick(e){																//2.handleClick - e is a listener
+	        console.log(e.target); 														//	 e.target is the result or output when button clicked
+	        // console.log(this.state);	 //will not work, see next video 				//   like when button is click display to the console <button>Click me</button> 
+	      }
+	      handleCopy(e){ 																//2.handleCopy
+	        console.log('Try being original for once');
+	      }
+	      render(){
+	        return(
+	          <div className="app-content">
+	            <h1>Hello, ninjas!</h1>
+	            <p>My name is: { this.state.name } and I am { this.state.age }</p>
+	            <button onClick={this.handleClick}>Click me</button> 					//1.handleClick - when someone click the button
+	            <button onMouseOver={this.handleMouseOver}>Hover me</button>			//1.handleMouseOver
+	            <p onCopy={this.handleCopy}>What we think, we become</p> 				//1.handleCopy
+	          </div>
+	        )
+	      }
+	    }
+
+	    ReactDOM.render(<App />, document.getElementById('app'));
+	  </script>
+	</body>
+
+OUTPUT: click button, display console <button>Hover me</button>
+		hover log data to console
+		right click and copy will log to console
+
+8. using ARROW FUNCTION para dili mo error and .this sa console, arrow function has special behavior
+   how to CHANGE STATE VALUE and log to console
+-----------------------------------------------------------------------------------
+1. index.html
+	
+	<body>
+	  <div id="app"></div>
+	  <script type="text/babel">
+	    class App extends React.Component {
+	      state = { 										//1.state - normal value of the state
+	        name: 'Ryu',
+	        age: 30
+	      }
+	      handleMouseOver = (e) => {
+	        console.log(e.target, e.pageX);
+	      }
+		  //handleClick(e){ 								//1.  instead of using normal function use arrow function
+	      handleClick = (e) => { 							//1.1 use arrow function when updating value in the state para dili mo error and .this sa console, arrow function has special behavior
+	        //console.log(e.target);
+	        console.log(this.state);
+			//this.state.name = 'yoshi' 					//2.state - wrong way of changing state value (error in console)
+	        this.setState({ 								//3.state - right way of changing state
+	          name: 'Yoshi',
+			  age: 25
+	        });
+	      }
+	      handleCopy = (e) => {
+	        console.log('Try being original for once');
+	      }
+	      render(){
+	        return(
+	          <div className="app-content">
+	            <h1>Hello, ninjas!</h1>
+	            <p>My name is: { this.state.name } and I am { this.state.age }</p>
+	            <button onClick={this.handleClick}>Click me</button>
+	            <button onMouseOver={this.handleMouseOver}>Hover me</button>
+	            <p onCopy={this.handleCopy}>What we think, we become</p>
+	          </div>
+	        )
+	      }
+	    }
+
+	    ReactDOM.render(<App />, document.getElementById('app'));
+	  </script>
+	</body>
+
+9. FORMS - input to form and when submit change display data to console and the display text
+-----------------------------------------------------------------------------------
+1. index.html
+
+	<body>
+	  <div id="app"></div>
+	  <script type="text/babel">
+	    class App extends React.Component {
+	      state = { 										//state - define data
+	        name: 'Ryu',
+	        age: 30
+	      }
+	      handleChange = (e) => {							//2.handleChange - when submit get the data of the forms
+	        this.setState({
+	          name: e.target.value 							//3.handleChange - change the name: 'Ryu' to the data in input
+	        })
+	      }
+	      handleSubmit = (e) => { 							
+	        e.preventDefault();
+	        console.log('form submitted', this.state); 		//2.handleSubmit - get the data
+	      }
+	      render(){
+	        return(
+	          <div className="app-content">
+	            <h1>My name is {this.state.name}</h1> 					//dynamic display text
+	            <form onSubmit={this.handleSubmit}>  					//1.handleSubmit - when submit					
+	              <input type="text" onChange={this.handleChange} /> 	//1.handleChange - input data
+	              <button>Submit</button>
+	            </form>
+	          </div>
+	        )
+	      }
+	    }
+
+	    ReactDOM.render(<App />, document.getElementById('app'));
+	  </script>
+	</body>
+
+CONSOLE OUTPUT: format submitted: name: "Igita", age: 30
+NOTE: - ma change ang value ni name: 'Ryu', pero si age: 30 same ra
+
+10. CREATE REACT APP - is use if you want to create a complete project setup
+-----------------------------------------------------------------------------------
+1. cmd/desktop\react-and-redux-notes> npx create-react-app my-app
+
+11. SINGLE PAGE EXPLAIN - react kaosa ra siya mo query sa server, then and data i save niya sa js cache or sa component
+						  whenever your query again adto na siya sa cache dili na mo adto sa server maong pass pass kaau siya
+-----------------------------------------------------------------------------------
+
+12. Nesting Component - or display Ninjas.js component data to App.js root component (home page) 
+-----------------------------------------------------------------------------------
+error: Module not found: Can't resolve './Ninjas' in '/home/dummy/Desktop/myapp/src'
+
+1. App.js
+
+	import React, { Component } from 'react';   //1.component - this is the library when create UI or component
+	import Ninjas from './components/Ninjas';   //2.component -  ./ Ninjas.js
+
+	class App extends Component {  				//3.component - name of this class component is App              
+	  render() {
+	    return (                                
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <p>Welcome :)</p>
+	        <Ninjas /> 							//4.component - display <div className="ninja"> data in Ninjas.js (normal display rani dili ni loop)             
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Ninjas.js
+
+	import React, { Component } from 'react';   
+                                            	
+	class Ninjas extends Component {            
+	  render() {
+	    return ( 								
+	      <div className="ninja">
+	        <div>Name: Ryu</div>
+	        <div>Age: 30</div>
+	        <div>Belt: Black</div>
+	      </div>
+	    );
+	  }
+	}
+
+	export default Ninjas;
+
+output: My first React app
+		Welcome :)
+		Name: Ryu
+		Age: 30
+		Belt: Black
+
+13. Props and Distructure Method - <Ninjas name="Ryu" age="25" belt="black"/>
+-----------------------------------------------------------------------------------
+1. App.js (sample 1)
+
+	import React, { Component } from 'react';                                 	
+	import Ninjas from './components/Ninjas';            
+
+	class App extends Component {               
+	  render() {
+	    return (                               
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <p>Welcome :)</p>
+	        <Ninjas name="Ryu" age="25" belt="black"/>  	//1.props - define props data name="Ryu" age="25" belt="black"
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Ninjas.js
+	
+	import React, { Component } from 'react';   
+                                            	
+	class Ninjas extends Component {            
+	  render() {
+	  	console.log(this.props); 						//2.props - display props to console 
+	    return ( 										//  return jsx template
+	      <div className="ninja">
+	        <div>Name: {this.props.name}</div> 			//3.props - display props in html tags
+	        <div>Age: {this.props.age}</div>
+	        <div>Belt: {this.props.belt}</div>
+	      </div>
+	    );
+	  }
+	}
+
+	export default Ninjas;
+
+questions: nganong nahimong man siya na props?
+answer: <Ninjas name="Ryu" age="25" belt="black"/> - naa gali ingon ani, automatic nana iyang instance kay props
+
+1. App.js (sample 2)
+
+	import React, { Component } from 'react';                                 	
+	import Ninjas from './components/Ninjas';            
+
+	class App extends Component {               
+	  render() {
+	    return (                               
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <p>Welcome :)</p>
+	        <Ninjas name="Ryu" age="25" belt="black"/>  //1. props - name="Ryu" age="25" belt="black" (props data)
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Ninjas.js (distructure method)
+	
+	import React, { Component } from 'react';   
+
+	class Ninjas extends Component {           
+	  render() {
+	  	//console.log(this.props); 				
+	  	const {name, age, belt} = this.props; 	//1. props - distructure method
+	    return ( 								//   return jsx template
+	      <div className="ninja">
+	        <div>Name: name</div> 	
+	        <div>Age: age</div>
+	        <div>Belt: belt</div>
+	      </div>
+	    );
+	  }
+	}
+
+	export default Ninjas;
+
+output: My first React app
+		Welcome :)
+		Name: name
+		Age: age
+		Belt: belt
+		Name: name
+		Age: age
+		Belt: belt
+
+14. Displaying MAP Data - state, props, map(means creating new array), loop display
+-----------------------------------------------------------------------------------
+1. App.js
+
+	import React, { Component } from 'react';                                  	
+	import Ninjas from './Ninjas';             
+
+	class App extends Component {               
+	  state = {                                 				//1.state
+	    ninjas : [                                          	//2.object array
+	      {name: 'Ryu', age: 30, belt: 'black', id: 1},     	//3.property inig ka called ani kay props na iyang name
+	      {name: 'Yoshi', age: 20, belt: 'green', id: 2},
+	      {name: 'Crystal', age: 25, belt: 'pink', id: 3}
+	    ]
+	  }
+	  render() {
+	    return (                                  				
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <p>Welcome :)</p>
+	        <Ninjas ninjas={this.state.ninjas}/>  				//4.props - state = {, ninjas : [, ar array dapit i display ang data ni Ninjas.js
+	      </div> 												//<Ninjas ninjas={this.state.ninjas}/>  - state, object array
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Ninjas.js
+
+	import React, { Component } from 'react';   			
+	                                            			
+	class Ninjas extends Component {            			
+	  render() {
+	  	const {ninjas} = this.props;	 					//5.const {ninjas} = this.props; - <Ninjas ninjas={this.state.ninjas}/> 
+	  	const ninjaslist = ninjas.map(ninja => { 			//6.ninjas is the ninjas : [, map( means create new array) and store the data of name, age, belt then assign to ninjaslist
+	  		return ( 										//  ninja - is the new create array using map
+	  			<div className="ninja" key={ninja.id}> 		//8.get the id data, if error sa console - add key={ninja.id}
+		        <div>Name: {ninja.name}</div> 	
+		        <div>Age: {ninja.age}</div>
+		        <div>Belt: {ninja.belt}</div>
+		      </div>
+	  		)
+	  	})
+	    return ( 											
+	      <div className="ninja-list"> 						//ninja-list - and sulod ani kay and data sa map(or new array) or copy sa ninjas : [ 
+	      	{ninjaslist} 									
+	      </div>
+	    )
+	  }
+	}
+
+	export default Ninjas;
+
+output: My first React app
+		Welcome :)
+		Name: Ryu
+		Age: 30
+		Belt: black
+		Name: Yoshi
+		Age: 20
+		Belt: green
+		Name: Crystal
+		Age: 25
+		Belt: pink
+
+15. difference and when to use CLASS BASE COMPONENTS & FUNCTIONAL BASE COMPONENTS
+-----------------------------------------------------------------------------------
+--NOTE--
+questions: what is the difference and when to use class or functional components?
+1. container or class base components:
+	- uses import React, { Component } from 'react'; 
+	- contain state
+	- contain lifecycle hooks
+	- not concerned with ui
+	- use classes to create
+2. ui or functional base components:
+	- uses import React from 'react';
+	- dont contain state
+	- receive data from props 
+	- only concerned with ui
+	- use functions to create
+
+1. App.js (sample 1)
+
+	import React, { Component } from 'react';   			                                   			
+	import Ninjas from './Ninjas';              			
+
+	class App extends Component {               			//use import component
+	  state = {                                 			//state
+	    ninjas : [                                          //object
+	      {name: 'Ryu', age: 30, belt: 'black', id: 1},     //property
+	      {name: 'Yoshi', age: 20, belt: 'green', id: 2},
+	      {name: 'Crystal', age: 25, belt: 'pink', id: 3}
+	    ]
+	  }
+	  render() {
+	    return (                                  			//return jsx template
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <p>Welcome :)</p>
+	        <Ninjas ninjas={this.state.ninjas}/> 			//props  
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+1. Ninjas.js
+
+	import React from 'react';  						 			
+                                            			
+	//class Ninjas extends Component {  				//class component method - this is use only in the component that has state
+	//const Ninjas = (props) => { 						//functional component method, props is from <Ninjas ninjas={this.state.ninjas}/> 			
+	//  	const {ninjas} = props;	 	
+	//or
+	const Ninjas = ({ninjas}) => {  					//distructure style - ninjas is from <Ninjas ninjas={this.state.ninjas}/>										
+	  	const ninjaslist = ninjas.map(ninja => { 			
+	  		return ( 										
+	  			<div className="ninja" key={ninja.id}> 	
+		        <div>Name: {ninja.name}</div> 	
+		        <div>Age: {ninja.age}</div>
+		        <div>Belt: {ninja.belt}</div>
+		      </div>
+	  		)
+	  	})
+	    return ( 									
+	      <div className="ninja-list">
+	      	{ninjaslist} 							
+	      </div>
+	    )
+	}
+
+	export default Ninjas;
+
+output: My first React app
+		Welcome :)
+		Name: Ryu
+		Age: 30
+		Belt: black
+		Name: Yoshi
+		Age: 20
+		Belt: green
+		Name: Crystal
+		Age: 25
+		Belt: pink
+
+16. if, else or using ternary operator ?(if), :(else), in 3 different ways
+-----------------------------------------------------------------------------------
+1. App.js
+
+	import React, { Component } from 'react';   
+	import Ninjas from './Ninjas';             
+
+	class App extends Component {              
+	  state = {                                 			
+	    ninjas : [                                         
+	      {name: 'Ryu', age: 30, belt: 'black', id: 1},     
+	      {name: 'Yoshi', age: 20, belt: 'green', id: 2},
+	      {name: 'Crystal', age: 25, belt: 'pink', id: 3}
+	    ]
+	  }
+	  render() {
+	    return (                                  
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <p>Welcome :)</p>
+	        <Ninjas ninjas={this.state.ninjas}/>  			//props
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Ninjas.js
+
+	import React from 'react';  									
+                                            			
+	 const Ninjas = ({ninjas}) => { 						
+	 	//---------- sample 1 ----------     									 					
+	  	// const ninjaslist = ninjas.map(ninja => { 
+	  	// 	if(ninja.age > 20){ 								//1.if age in the state is greater than 20							
+		// 		return ( 										
+		// 			<div className="ninja" key={ninja.id}> 	
+		//        		<div>Name: {ninja.name}</div> 	
+		//        		<div>Age: {ninja.age}</div>
+		//        		<div>Belt: {ninja.belt}</div>
+		//      	</div>
+		// 		)
+	  	// 	}else{ 												//2.
+	  	// 		return null
+	  	// 	}
+	  	// })
+
+//or (same result)
+
+sample 2 delete this if uncomment sample 1 -------------------------------------------------
+
+	  	const ninjaList = ninjas.map(ninja => { 			
+	  		return ninja.age > 20 ? ( 						//using ternary operator ?(if), :(else)
+	  			<div className="ninja" key={ninja.id}> 	
+		       		<div>Name: {ninja.name}</div> 	
+		       		<div>Age: {ninja.age}</div>
+		       		<div>Belt: {ninja.belt}</div>
+		     	</div>
+	  		) : null; 				
+	  	});
+
+	    return ( 									
+	      <div className="ninja-list">
+	      	{ninjaList} 							
+	      </div>
+	    )
+	}
+
+	export default Ninjas;
+
+//or (same result)
+
+sample 3 delete sample 1 and 2  -------------------------------------------------
+
+		return ( 									
+	      <div className="ninja-list">
+	      	{
+	      		ninjas.map(ninja => { 							
+		  		return ninja.age > 20 ? ( 						//using ternary operator ?(if), :(else)
+		  			<div className="ninja" key={ninja.id}> 	
+			       		<div>Name: {ninja.name}</div> 	
+			       		<div>Age: {ninja.age}</div>
+			       		<div>Belt: {ninja.belt}</div>
+			     	</div>
+		  		) : null; 				
+		  	})
+	      	} 							
+	      </div>
+	    )
+	}
+
+	export default Ninjas;
+
+	OUPUT: 	My first React app
+			Welcome :)
+			Name: Ryu
+			Age: 30
+			Belt: black
+			Name: Crystal
+			Age: 25
+			Belt: pink
+
+17. Forms - input to form and display to console
+-----------------------------------------------------------------------------------
+1. create src/AddNinja.js
+
+	import React, { Component } from 'react'
+
+	class AddNinja extends Component {
+	  state = { 									
+	    name: null,
+	    age: null,
+	    belt: null
+	  }
+	  handleChange = (e) => { 												
+	    // console.log(e.target.id, e.target.value);
+	    this.setState({
+	      [e.target.id]: e.target.value 									//2.handleChange - update the date of state = { 
+	    }); 												 				 				 - id is the id in the state, and value in the fomrs data
+	  }
+	  handleSubmit = (e) => { 												//2.handleSubmit - when submit	
+	    e.preventDefault();
+	    console.log(this.state); 											//3.handleSubmit - display data to console
+	  }
+	  render() {
+	    return (
+	      <div>
+	        <form onSubmit={this.handleSubmit}>  							//1.handleSubmit - when submit							
+	          <label htmlFor="name">Name:</label> 							
+	          <input type="text" id="name" onChange={this.handleChange} /> 	//1.handleChange - id="name" is the name: null,
+	          <label htmlFor="age">Age:</label>
+	          <input type="text" id="age" onChange={this.handleChange} />
+	          <label htmlFor="belt">Belt:</label>
+	          <input type="text"id="belt" onChange={this.handleChange} />
+	          <button>Submit</button>
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	export default AddNinja
+
+2. App.js
+
+	import React, { Component } from 'react';   
+	//import Ninjas from './Ninjas';              				
+	import AddNinja from './AddNinja';          				
+
+	class App extends Component {               				
+	  state = {                                 				
+	    ninjas : [                                          	
+	      {name: 'Ryu', age: 30, belt: 'black', id: 1},     	
+	      {name: 'Yoshi', age: 20, belt: 'green', id: 2},
+	      {name: 'Crystal', age: 25, belt: 'pink', id: 3}
+	    ]
+	  }
+	  render() {
+	    return (                  							
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <p>Welcome :)</p>
+	        <!--<Ninjas ninjas={this.state.ninjas}/>-->  
+	        <AddNinja />    								
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+18. Props Function - not the normal props, spread operator or (...), input data to forms and add new data in the array
+-----------------------------------------------------------------------------------
+Props Function, spread operator or (...)
+
+1. App.js 
+
+	import React, { Component } from 'react';
+	import Ninjas from './Ninjas'
+	import AddNinja from './AddNinja'
+
+	class App extends Component {
+	  state = {
+	    ninjas: [
+	      { name: 'Ryu', age: 30, belt: 'black', id: 1 },
+	      { name: 'Yoshi', age: 20, belt: 'green', id: 2 },
+	      { name: 'Crystal', age: 25, belt: 'pink', id: 3 }
+	    ]
+	  }
+	  addNinja = (ninja) => {                                 //2.props-function - (ninja) is a copy of ninjas: [
+	    ninja.id = Math.random();                             //  what is the id in the ninjas: [ convert to random      
+	    let ninjas = [...this.state.ninjas, ninja];           //  spread operator(...) - or 'let' new array copy (ninja) add or push new data to ninjas: [
+	    this.setState({ 									  //  update the data in the state.ninjas
+	      ninjas: ninjas									  //  stored the new data of the copy array (ninja) ninjas: [
+	    });
+	  }
+	  render() {
+	    return (
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <Ninjas ninjas={this.state.ninjas}/>
+	        <AddNinja addNinja={this.addNinja} />             //4.this this now a props-function not a normal props
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. AddNinja.js
+
+	import React, { Component } from 'react'
+
+	class AddNinja extends Component {
+	  state = {
+	    name: null,
+	    age: null,
+	    belt: null,
+	  }
+	  handleChange = (e) => {
+	    this.setState({
+	      [e.target.id]: e.target.value
+	    });
+	  }
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    this.props.addNinja(this.state); 										//3.props-function - add or push data to state, ninjas: [
+	  }
+	  render() {
+	    return (
+	      <div>
+	        <form onSubmit={this.handleSubmit}>
+	          <label htmlFor="name">Name:</label>
+	          <input type="text" id="name" onChange={this.handleChange} />
+	          <label htmlFor="age">Age:</label>
+	          <input type="text" id="age" onChange={this.handleChange} />
+	          <label htmlFor="belt">Belt:</label>
+	          <input type="text"id="belt" onChange={this.handleChange} />
+	          <button>Submit</button> 											//1.props-function
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	export default AddNinja
+
+output: "{age: 30, belt: \"black\", id: 1, name: \"Ryu\"}",
+	    "{age: 20, belt: \"green\", id: 2, name: \"Yoshi\"}",
+	    "{age: 25, belt: \"pink\", id: 3, name: \"Crystal\"}",
+	    "{age: \"67\", belt: \"clear\", id: 0.314632591687967, n…}" 	//5.new added data or the ...
+
+
+19. Delete Data - delete data from array
+-----------------------------------------------------------------------------------
+1. App.js
+
+	import React, { Component } from 'react';
+	import Ninjas from './Ninjas'
+	import AddNinja from './AddNinja'
+
+	class App extends Component {
+	  state = {
+	    ninjas: [
+	      { name: 'Ryu', age: 30, belt: 'black', id: 1 },
+	      { name: 'Yoshi', age: 20, belt: 'green', id: 2 },
+	      { name: 'Crystal', age: 25, belt: 'pink', id: 3 }
+	    ]
+	  }
+	  addNinja = (ninja) => {
+	    ninja.id = Math.random();
+	    let ninjas = [...this.state.ninjas, ninja];
+	    this.setState({
+	      ninjas: ninjas
+	    });
+	  }
+	  deleteNinja = (id) => {                                   //2.delete - (id) is a copy of id in state, ninjas: [
+	    // console.log(id);
+	    let ninjas = this.state.ninjas.filter(ninja => {        //  search the id to delete and return
+	      return ninja.id !== id
+	    });
+	    this.setState({											//  if id not for return default
+	      ninjas: ninjas
+	    });
+	  }
+	  render() {
+	    return (
+	      <div className="App">
+	        <h1>My first React app</h1>
+	        <Ninjas ninjas={this.state.ninjas} deleteNinja={this.deleteNinja} />  	//3.delete
+	        <AddNinja addNinja={this.addNinja} />
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. Ninjas.js
+
+	import React from 'react'
+
+	const Ninjas = ({ninjas, deleteNinja}) => {
+	  return (
+	    <div className="ninja-list">
+	      { 
+	        ninjas.map(ninja => {
+	          return (
+	            <div className="ninja" key={ninja.id}>
+	              <div>Name: { ninja.name }</div>
+	              <div>Age: { ninja.age }</div>
+	              <div>Belt: { ninja.belt }</div>
+	              <button onClick={() => {deleteNinja(ninja.id)}}>Delete ninja</button> 	//1.delete with id
+	              <hr />
+	            </div>
+	          )
+	        })
+	      }
+	    </div>
+	  );
+	}
+
+	export default Ninjas
+
+21. CSS Files - 
+-----------------------------------------------------------------------------------
+1. src/Ninjas.css
+
+	.ninjas form{ 				//1.this will affect in every form that has class="ninjas" bisan wala naka import './Ninjas.css'
+		background: #fff;
+	}
+
+2. src/Ninjas.js
+
+	import React from 'react'
+	import './Ninjas.css' 		//2.
+
+3. index.css - apply everywhere, no need to import anything
+
+23-24. todoapp project - insert, display, delete (frontend)
+-----------------------------------------------------------------------------------
+- cmd/create-react-app todoapp
+
+1. App.js
+
+	import React, { Component } from 'react';
+	import Todos from './Todos'
+	import AddTodo from './AddTodo'
+
+	class App extends Component {
+	  state = {
+	    todos: [
+	      {id: 1, content: 'buy some milk'},
+	      {id: 2, content: 'play mario kart'}
+	    ]
+	  }
+	  deleteTodo = (id) => { 								//2.delete - get the id
+	    const todos = this.state.todos.filter(todo => { 	//  find the id
+	      return todo.id !== id 							//  if id is not equal to state id
+	    });
+	    this.setState({ 									//  update state
+	      todos
+	    });
+	  }
+	  addTodo = (todo) => {
+	    todo.id = Math.random();
+	    let todos = [...this.state.todos, todo];
+	    this.setState({
+	      todos
+	    });
+	  }
+	  render() {
+	    return (
+	      <div className="todo-app container">
+	        <h1 className="center blue-text">Todo's</h1>
+	        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo} /> 	//props
+	        <AddTodo addTodo={this.addTodo} />
+	      </div>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. src/Todos.js (delete)
+
+	import React from 'react';
+
+	const Todos = ({todos, deleteTodo}) => {										//1.display - todos, deleteTodo is a new copy of the state
+	  const todoList = todos.length ? ( 											//2.display - if todos(state) has number link 1, 2, 3, etc. in array display the data
+	    todos.map(todo => {
+	      return (
+	        <div className="collection-item" key={todo.id}>
+	          <span onClick={() => {deleteTodo(todo.id)}}>{todo.content}</span> 	//3.display - props, content is the array state
+	        </div>																	//1.delete - when text is click
+	      )
+	    })
+	  ) : ( 																		//else
+	    <p className="center">You have no todo's left, yay!</p>
+	  );
+
+	  return (
+	    <div className="todos collection">
+	      {todoList} 																//{todoList} - is in const todoList = todos.length ? ( 
+	    </div>
+	  )
+	}
+
+	export default Todos;
+
+3. src/AddTodo.js
+
+	import React, { Component } from 'react'
+
+	class AddTodo extends Component {
+	  state = {
+	    content: ''
+	  }
+	  handleChange = (e) => { 																	//2.handleChange - get the input value
+	    this.setState({
+	      content: e.target.value
+	    });
+	  }
+	  handleSubmit = (e) => {
+	    e.preventDefault();
+	    // call function to add a todo
+	    this.props.addTodo(this.state);
+	    this.setState({ 																		//3.handleChange - add to array the content
+	      content: ''
+	    })
+	  }
+	  render() {
+	    return (
+	      <div>
+	        <form onSubmit={this.handleSubmit}> 												//1.handleSubmit - enter ra, no form button
+	          <label>Add a new todo:</label>
+	          <input type="text" onChange={this.handleChange} value={this.state.content} /> 	//1.handleChange
+	        </form>
+	      </div>
+	    )
+	  }
+	}
+
+	export default AddTodo
+
+25. React Router - (or link to page) dili na mag sige request sa server if and data naara sa component
+				 - link home, about, contact, navbar, BrowserRouter, Route
+				 - exact - kong walay exact inig link nimo sa home page doha ang mo display na data and home og about
+-----------------------------------------------------------------------------------
+NOTE: exact - para ma link siya exactly sa home page
+
+1. cmd/desktop/react-and-redux-notes/poketimes> npm install react-router-dom 	//1. react-router - route or link to page
+2. App.js
+
+	import React, { Component } from 'react';
+	import Navbar from './components/Navbar' 					//navbar1
+	import { Route, BrowserRouter } from 'react-router-dom'   	//BrowserRouter1 - import
+	import Home from './components/Home' 						//home1 - call Home.js
+	import About from './components/About'
+	import Contact from './components/Contact'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>                                     	//BrowserRouter1 - this is use para maka route or maka link sa component
+	        <div className="App">
+	          <Navbar />										//navbar2 - call the Navbar.js and display to this part of the home page
+	          <Route exact path='/' component={Home}/>        	//home2 -  localhost:3000/about
+	          <Route path='/about' component={About} />
+	          <Route path='/contact' component={Contact} />
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+3. components/Home.js
+
+	import React from 'react'
+
+	const Home = () => {
+	  return (
+	    <div>
+	      <div className="container">
+	        <h4 className="center">Home</h4>
+	        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae repudiandae repellat illo magni eligendi cupiditate voluptates eius nam voluptate. Incidunt nihil ullam quae quia officia quaerat, deserunt eligendi explicabo totam?</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default Home
+
+4. components/About.js
+
+	import React from 'react'
+
+	const About = () => {
+	  return (
+	    <div>
+	      <div className="container">
+	        <h4 className="center">About</h4>
+	        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae repudiandae repellat illo magni eligendi cupiditate voluptates eius nam voluptate. Incidunt nihil ullam quae quia officia quaerat, deserunt eligendi explicabo totam?</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default About
+
+5. components/Contact.js
+
+ 	import React from 'react'
+
+	const Contact = () => {
+	  return (
+	    <div>
+	      <div className="container">
+	        <h4 className="center">Contact</h4>
+	        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae repudiandae repellat illo magni eligendi cupiditate voluptates eius nam voluptate. Incidunt nihil ullam quae quia officia quaerat, deserunt eligendi explicabo totam?</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default Contact
+
+6. Navbar.js
+
+	import React from 'react';
+
+	const Navbar = () => {
+	  return (
+	    <nav className="nav-wrapper red darken-3">
+	      <div className="container">
+	        <a className="brand-logo">Poke' Times</a>
+	        <ul className="right">
+	          <li><a href="/">Home</a></li>
+	          <li><a href='/about'>About</a></li>
+	          <li><a href='/contact'>Contact</a></li>
+	        </ul>
+	      </div>
+	    </nav> 
+	  )
+	}
+
+	export default Navbar
+
+26. Links & NavLinks - Link to"/" - same of <a href=""> and dili mo load ang page
+					 - NavLink - class="active" same siya sa bootstrap inig tan-aw nimo sa console
+-----------------------------------------------------------------------------------
+1. Navbar.js (just change the Navbar.js in 25)
+
+	import React from 'react';
+	import { Link, NavLink } from 'react-router-dom' 
+
+	const Navbar = () => {
+	  return (
+	    <nav className="nav-wrapper red darken-3">
+	      <div className="container">
+	        <Link className="brand-logo" to="/">Poke' Times</Link> 		//Link to"/" - same of <a href="">
+	        <ul className="right">
+	          <li><NavLink exact to="/">Home</NavLink></li>   
+	          <li><NavLink to='/about'>About</NavLink></li>
+	          <li><NavLink to='/contact'>Contact</NavLink></li>
+	        </ul>
+	      </div>
+	    </nav> 
+	  )
+	}
+
+	export default Navbar
+
+27. Programmatic Redirects - like props.history.push('/about'); - if naaka sa home page, after 2 seconds moredirect siya ra about page
+																- like in the console props-->history-->push-->about
+	- const Contact = () => { if you add props like const Contact = (props) => { it will automatically added to the props the router info
+			- you check the added data of the props in the console like location, history, match, staticContext etc.
+	- history - keep tracts of the router history
+	- higher order component meaning it give extra power to the component
+-----------------------------------------------------------------------------------
+1. Navbar.js (just change the Navbar.js in 26)
+
+	/*
+	import { Link, NavLink } from 'react-router-dom'  					//1.
+	<li><NavLink exact to="/">Home</NavLink></li>   					//2.<NavLink exact to="/">Home</NavLink>
+
+	<li><Link to='/about'>About</Link></li>         					//kong Link kay "a" tag ang makita sa inspect element
+	<li><NavLink to='/about'>About</NavLink></li>   					//kong NavLink kay class"active" tag ang makita sa inspect element
+
+	import { Link, NavLink, withRouter } from 'react-router-dom'  		//withRouter1 - is a "higher order component" meaning it give extra power to the component
+
+	- setTimeout(() => {                								//if naaka sa home page, after 2 seconds moredirect siya ra about page
+	    props.history.push('/about');
+	  }, 2000);
+	*/
+
+	import React from 'react';
+	import { Link, NavLink, withRouter } from 'react-router-dom'
+
+	const Navbar = (props) => {
+
+	  // console.log(props);
+	  // setTimeout(() => {
+	  //   props.history.push('/about');
+	  // }, 2000);
+
+	  return (
+	    <nav className="nav-wrapper red darken-3">
+	      <div className="container">
+	        <Link className="brand-logo" to="/">Poke' Times</Link>
+	        <ul className="right">
+	          <li><NavLink exact to="/">Home</NavLink></li>
+	          <li><NavLink to='/about'>About</NavLink></li>
+	          <li><NavLink to='/contact'>Contact</NavLink></li>
+	        </ul>
+	      </div>
+	    </nav> 
+	  )
+	}
+
+	export default withRouter(Navbar) 									//withRouter2
+
+1. Navbar.js (just change the Contact.js in 26)
+
+	NOTE:
+	- const Contact = () => { if you add props like const Contact = (props) => { it will automatically added to the props the router info
+	  like <Route path='/about' component={About} /> home, about and contact
+
+	- console.log(props); 					//you will see in inspect element the attach props
+
+	- setTimeout(() => { 					//if naaka sa home page, after 2 seconds moredirect siya ra about page
+	    props.history.push('/about'); 		//props.history.push('/about'); - 
+	  }, 2000);
+
+	*/
+
+	import React from 'react'
+
+	const Contact = (props) => {
+		
+	  // console.log(props);
+	  // setTimeout(() => {
+	  //   props.history.push('/about');
+	  // }, 2000);
+
+	  return (
+	    <div>
+	      <div className="container">
+	        <h4 className="center">Contact</h4>
+	        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae repudiandae repellat illo magni eligendi cupiditate voluptates eius nam voluptate. Incidunt nihil ullam quae quia officia quaerat, deserunt eligendi explicabo totam?</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default Contact
+
+28. Higher Order Components or (withRouter) - (give extra features to the component) when you refrest the about page the text change color
+											- meaning if mao rani ang mabuhat ni props, pun-an ni (withRouter)
+-----------------------------------------------------------------------------------
+1. create src/hoc/Rainbow.js
+
+	import React from 'react'
+
+	const Rainbow = (WrappedComponent) => { 									//1.WrappedComponent - like wrap the (About) component or (Navbar) etc.
+
+	  const colours = ['red', 'pink', 'orange', 'blue', 'green', 'yellow']; 	//create arrya with the data of difference colours
+	  const randomColour = colours[Math.floor(Math.random() * 6)]; 				//get the data of array and attact radom numbers
+	  const className = randomColour + '-text'; 								//randomColour + '-text' - concatenate the array colours to <div className={className}>
+
+	  return (props) => ( 														
+	    <div className={className}> 											//data that pass in (WrappedComponent) will store also in (props)
+	      <WrappedComponent {...props} /> 										//get the data of <WrappedComponent {...props} /> and store to ...props
+	    </div>  
+	  )
+	  
+	}
+
+	export default Rainbow 														//2.send data of (WrappedComponent) outside using Rainbow 
+
+2. About.js (just change the About.js in 27)
+
+	import React from 'react'
+	import Rainbow from '../hoc/Rainbow' 										//3.
+
+	const About = () => {
+	  return (
+	    <div>
+	      <div className="container">
+	        <h4 className="center">About</h4>
+	        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae repudiandae repellat illo magni eligendi cupiditate voluptates eius nam voluptate. Incidunt nihil ullam quae quia officia quaerat, deserunt eligendi explicabo totam?</p>
+	      </div>
+	    </div>
+	  )
+	}
+
+	export default Rainbow(About) 												//4.this is the higher order component
+
+29. Axios - it's like http:// request use to grab data in other website or app
+		  - it's like api, like mokoha ka og some dummy data sa lain na website unya i display nimo sa imong page in json format or etc.
+		  - axios, slice, 
+-----------------------------------------------------------------------------------
+3rd party rest api - https://jsonplaceholder.typicode.com/posts
+
+1. cmd\desktop\react-and-redux-notes\poketimes> npm install axios
+
+2. Home.js (just change the Home.js in 29)
+
+	import React, { Component } from 'react'
+	import axios from 'axios' 										//1.axios - import
+
+	class Home extends Component {
+	  state = {
+	    posts: [] 													//posts: []  - will get the data of posts: res.data.slice(0,10) 
+	  }
+	  componentDidMount(){
+	    axios.get('https://jsonplaceholder.typicode.com/posts/') 	//2.axios - get('') - get data on this site or app
+	      .then(res => { 											//then get the response object or .then(res => {, res - copy array
+	        console.log(res);
+	        this.setState({
+	          posts: res.data.slice(0,10) 							//posts, 0, 10 - meaning display only 0 to 10 data in the webpage
+	        });
+	      })
+	  }
+	  render(){
+	    const { posts } = this.state 								//get the data of state = {
+	    const postList = posts.length ? ( 							//if has lenght or data
+	      posts.map(post => {
+	        return (
+	          <div className="post card" key={post.id}>
+	            <div className="card-content">
+	              <span className="card-title">{post.title}</span> 	//display
+	              <p>{post.body}</p>
+	            </div>
+	          </div>
+	        )
+	      })
+	    ) : (														//else
+	      <div className="center">No posts to show</div>
+	    );
+
+	    return (
+	      <div>
+	        <div className="container">
+	          <h4 className="center">Home</h4>
+	          {postList}
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	export default Home
+
+30. Route Parameters 1 - http://localhost:3000/12345, http://localhost:3000/yoshi, displaying id, or text, numbers etc. in the url
+					   - match
+-----------------------------------------------------------------------------------
+1. App.js (update 29)
+
+	/*
+	1. import Post from './components/Post'
+	2. <Route path='/:post_id' component={Post} />    //path='/:post_id' - this is called route parameter
+	                                                  //component={Post} - component/Post.js
+	*/
+
+	import React, { Component } from 'react';
+	import Navbar from './components/Navbar'
+	import { Route, BrowserRouter } from 'react-router-dom'
+	import Home from './components/Home'
+	import About from './components/About'
+	import Contact from './components/Contact'
+	import Post from './components/Post'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>
+	        <div className="App">
+	          <Navbar />
+	          <Route exact path='/' component={Home}/>
+	          <Route path='/about' component={About} />
+	          <Route path='/contact' component={Contact} />
+	          <Route path='/:post_id' component={Post} />
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+2. create components/Post.js
+
+	import React, { Component } from 'react'
+
+	class Post extends Component {
+	  state = {
+	    id: null
+	  }
+	  componentDidMount(){
+	    let id = this.props.match.params.post_id; 	//if id exists or match
+	    this.setState({
+	      id
+	    })
+	  }
+	  render() {
+	    return (
+	      <div className="container">
+	        <h4>{this.state.id}</h4>
+	      </div>
+	    )
+	  }
+	}
+
+	export default Post
+
+31. Route Parameters 2 - display to url http://localhost:3000/12345 and the data of this url on the page
+-----------------------------------------------------------------------------------
+1. Home.js (update 30)
+
+	import React, { Component } from 'react'
+	import axios from 'axios'
+	import { Link } from 'react-router-dom' 	//31.1
+
+	class Home extends Component {
+	  state = {
+	    posts: []
+	  }
+	  componentDidMount(){
+	    axios.get('https://jsonplaceholder.typicode.com/posts/')
+	      .then(res => {
+	        console.log(res);
+	        this.setState({
+	          posts: res.data.slice(0,10)
+	        });
+	      })
+	  }
+	  render(){
+	    const { posts } = this.state
+	    const postList = posts.length ? (
+	      posts.map(post => {
+	        return (
+	          <div className="post card" key={post.id}>
+	            <div className="card-content">
+	              <Link to={'/' + post.id}> 	//31.2 localhost:3000/1
+	                <span className="card-title red-text">{post.title}</span>
+	              </Link>
+	              <p>{post.body}</p>
+	            </div>
+	          </div>
+	        )
+	      })
+	    ) : (
+	      <div className="center">No posts to show</div>
+	    );
+
+	    return (
+	      <div>
+	        <div className="container">
+	          <h4 className="center">Home</h4>
+	          {postList}
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	export default Home
+
+2. Post.js (update 30)
+
+	import React, { Component } from 'react'
+	import axios from 'axios'   //31.1
+
+	class Post extends Component {
+	  state = {
+	    post: null  //31.3
+	  }
+	  componentDidMount(){
+	    let id = this.props.match.params.post_id;
+	    axios.get('https://jsonplaceholder.typicode.com/posts/' + id)   //31.2 or get json data/id
+	      .then(res => {      //31.4 update the state data
+	        this.setState({
+	          post: res.data
+	        });
+	        //console.log(res.data);
+	      });
+	  }
+	  render() {
+
+	    const post = this.state.post ? (  //31.5 check if post exists
+	      <div className="post">
+	        <h4 className="center">{this.state.post.title}</h4>
+	        <p>{this.state.post.body}</p>
+	      </div>
+	    ) : (
+	      <div className="center">Loading post...</div>
+	    );
+
+	    return (
+	      <div className="container">
+	        {post}
+	      </div>
+	    )
+	  }
+	}
+
+	export default Post
+
+32. Switch Tag - if localhost:3000/contact ang page display kay contact sad walay sagol
+-----------------------------------------------------------------------------------
+1. App.js
+
+	/*
+	1. import { Route, BrowserRouter, Switch } from 'react-router-dom'
+	2. <Switch>
+	*/
+
+	import React, { Component } from 'react';
+	import Navbar from './components/Navbar'
+	import { Route, BrowserRouter, Switch } from 'react-router-dom'
+	import Home from './components/Home'
+	import About from './components/About'
+	import Contact from './components/Contact'
+	import Post from './components/Post'
+
+	class App extends Component {
+	  render() {
+	    return (
+	      <BrowserRouter>
+	        <div className="App">
+	          <Navbar />
+	          <Switch>
+	            <Route exact path='/' component={Home}/>
+	            <Route path='/about' component={About} />
+	            <Route path='/contact' component={Contact} />
+	            <Route path='/:post_id' component={Post} />
+	          </Switch>
+	        </div>
+	      </BrowserRouter>
+	    );
+	  }
+	}
+
+	export default App;
+
+33. Importing Images with CSS
+-----------------------------------------------------------------------------------
+1. Home.js (update 32)
+
+	import React, { Component } from 'react'
+	import axios from 'axios'
+	import { Link } from 'react-router-dom'
+	import Pokeball from '../pokeball.png' 		//33.1
+
+	class Home extends Component {
+	  state = {
+	    posts: []
+	  }
+	  componentDidMount(){
+	    axios.get('https://jsonplaceholder.typicode.com/posts/')
+	      .then(res => {
+	        console.log(res);
+	        this.setState({
+	          posts: res.data.slice(0,10)
+	        });
+	      })
+	  }
+	  render(){
+	    const { posts } = this.state
+	    const postList = posts.length ? (
+	      posts.map(post => {
+	        return (
+	          <div className="post card" key={post.id}>
+	            <img src={Pokeball} alt="A Pokeball" /> 	//33.2 display image
+	            <div className="card-content">
+	              <Link to={'/' + post.id}>
+	                <span className="card-title red-text">{post.title}</span>
+	              </Link>
+	              <p>{post.body}</p>
+	            </div>
+	          </div>
+	        )
+	      })
+	    ) : (
+	      <div className="center">No posts to show</div>
+	    );
+
+	    return (
+	      <div>
+	        <div className="container home">
+	          <h4 className="center">Home</h4>
+	          {postList}
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	export default Home
+
+2. index.css
+
+	body {
+	  margin: 0;
+	  padding: 0;
+	  font-family: sans-serif;
+	}
+
+	.home .post img{ 	/*<div className="container home">, <div className="post card" key={post.id}>, <img src={Pokeball} alt="A Pokeball" />*/
+		position: absolute;
+		top: 20px;
+		left: -100px;
+		opacity: 0.6;
+	}
+
+	.home .post{
+		overflow: hidden;
+		padding-left: 80px;
+	}
+
+34. Introduction of Redux
+-----------------------------------------------------------------------------------
+
+35. Redux Action
+-----------------------------------------------------------------------------------
+1. redux store sample code
+
+	const {createStore} = redux; 								//access createStore from redux library
+
+	const initState = { 										//empty state
+		todos:[];
+		posts:[]
+	}
+
+	function myreducer(state = initState, action){ 				//reducer function
+
+	}
+
+	const store = createStore(myreducer);
+
+36. Redux Action 	
+-----------------------------------------------------------------------------------
+1. redux action sample code
+
+	const {createStore} = redux; 								//access createStore from redux library
+
+	const initState = { 										//empty state
+		todos:[];
+		posts:[]
+	}
+
+	function myreducer(state = initState, action){ 				//reducer function
+		console.log(action, state);
+	}
+
+	const store = createStore(myreducer);
+
+	const todoAction  = {type: 'ADD_TODO', todo: 'buy milk'} 	//action parameter
+
+	store.dispatch(todoAction)	 								//ditpatch is use to update the state
+
+37. Redux Reducers
+-----------------------------------------------------------------------------------
+1. redux reducers sample code
+
+	const {createStore} = redux; 								//access createStore from redux library
+
+	const initState = { 										//empty state
+		todos:[];
+		posts:[]
+	}
+
+	function myreducer(state = initState, action){ 				//initState - when first state is run, action - action wiil dispatch
+		//console.log(action, state);
+		if(action.type == 'ADD_TODO'){ 
+			return{
+				todos: [...state.todos, action.todo]
+			}
+		}
+	}
+
+	const store = createStore(myreducer); 						//const store - create store, createStore(myreducer) - passing store to reducer
+
+	const todoAction  = {type: 'ADD_TODO', todo: 'buy milk'} 	//action parameter
+
+	store.dispatch(todoAction)	 								//ditpatch is use to update the state
+
+38. Redux Store Subscriptions Sample Code
+-----------------------------------------------------------------------------------
+const {createStore} = redux; 								//access createStore from redux library
+
+const initState = { 										//empty state
+	todos:[];
+	posts:[]
+}
+
+function myreducer(state = initState, action){ 				//initState - when first state is run, action - action wiil dispatch
+	//console.log(action, state);
+	if(action.type == 'ADD_TODO'){ 
+		return{
+			...state,
+			todos: [...state.todos, action.todo]
+		}
+	}
+	if(action.type == 'ADD_POST'){ 
+		return{
+			...state,
+			posts: [...state.posts, action.post]
+		}
+	}
+}
+
+const store = createStore(myreducer); 						//const store - create store, createStore(myreducer) - passing store to reducer
+
+store.subscribe(() => { 									//this function will fire everytime the state changes
+	console.log('state update');
+	console.log(store.getState());
+})
+
+store.dispatch({type: 'ADD_TODO', todo: 'buy milk'});
+store.dispatch({type: 'ADD_TODO', todo: 'sleep some more'});
+store.dispatch({type: 'ADD_POST', post: 'Egg hunt with yushi'});
+
+39. Setting Redux in React - use redux in react or connect react to redux store
+-----------------------------------------------------------------------------------
+1. cmd\Desktop\react-and-redux-notes\poketimes> npm install redux react-redux
+2. create src\reducers\rootReducer.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import registerServiceWorker from './registerServiceWorker';
+	import { createStore } from 'redux' 							//39.1 redux library
+	import { Provider } from 'react-redux'							//39.2 wrapper
+	import rootReducer from './reducers/rootReducer' 				//39.3
+
+	const store = createStore(rootReducer);
+
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+	registerServiceWorker();
+
+3. rootReducer.js
+
+	const initState = {
+	  posts: []
+	}
+
+	const rootReducer = (state = initState, action) => {
+	  return state;
+	}
+
+	export default rootReducer
+
+40. Mapping State to Props - connect component to redux store
+-----------------------------------------------------------------------------------
+1. index.js
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import './index.css';
+	import App from './App';
+	import registerServiceWorker from './registerServiceWorker';
+	import { createStore } from 'redux' 							//39.1 redux library
+	import { Provider } from 'react-redux'							//39.2 wrapper
+	import rootReducer from './reducers/rootReducer' 				//39.3
+
+	const store = createStore(rootReducer);
+
+	ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+	registerServiceWorker();
+
+2. rootReducer.js
+
+	const initState = {
+	  posts: [
+	    {id: '1', title: 'Squirtle Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+	    {id: '2', title: 'Charmander Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+	    {id: '3', title: 'a Helix Fossil was Found', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'}
+	  ]
+	}
+
+	const rootReducer = (state = initState, action) => {
+	  return state;
+	}
+
+	export default rootReducer
+
+3. Home.js
+
+	import React, { Component } from 'react'
+	import { Link } from 'react-router-dom'
+	import Pokeball from '../pokeball.png'
+	import { connect } from 'react-redux'       //1. connect is a higher order component
+
+	class Home extends Component {
+	  render(){
+	    const { posts } = this.props
+	    const postList = posts.length ? (
+	      posts.map(post => {
+	        return (
+	          <div className="post card" key={post.id}>
+	            <img src={Pokeball} alt="A Pokeball" />
+	            <div className="card-content">
+	              <Link to={'/' + post.id}>
+	                <span className="card-title red-text">{post.title}</span>
+	              </Link>
+	              <p>{post.body}</p>
+	            </div>
+	          </div>
+	        )
+	      })
+	    ) : (
+	      <div className="center">No posts to show</div>
+	    );
+
+	    return (
+	      <div>
+	        <div className="container home">
+	          <h4 className="center">Home</h4>
+	          {postList}
+	        </div>
+	      </div>
+	    )
+	  }
+	}
+
+	const mapStateToProps = (state) => {
+	  return {
+	    posts: state.posts                          //3. naa ni sa rootReducer.js
+	  }
+	}
+
+	export default connect(mapStateToProps)(Home)   //2. connect is a higher order component
+
+
+	41
+
