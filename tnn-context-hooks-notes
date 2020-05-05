@@ -10,6 +10,9 @@ https://www.youtube.com/watch?v=6RhOzQciVwI&list=PL4cUxeGkcC9hNokByJilPg5g9m2APU
 7-8.using multiple context - when button is click change the background color of the text
     using multiple comsuming context - mag change change ang text of login or logout when click
 9-10. hooks - use to change or update data in the state, you can access state in functional components, creating unique id
+11.useState forms - input, submit, display console/page
+12.useEffect hook - this function always run everytime there is changes in the state
+13.hooks with context - shorter code, when click button change the background
 
 NOTES
 ------------------------------------------------------------------------------------
@@ -670,3 +673,154 @@ App.js
 		}
 
 		export default App;
+		
+11.useState forms - input, submit, display console/page
+---------------------------------------------------------------------------
+1.NewSongForm.js - input field, submit, add data to state array, send data to SongList.js to display, prevent refresh, clear field after submit
+2.SongList.js - recieve input data from NewSongForm.js, add data to state, display data to page
+
+1.NewSongForm.js
+
+        import React, { useState } from 'react';                                                  //useState is a hooks library
+
+        const NewSongForm = ({ addSong }) => {
+        const [title, setTitle] = useState('');                                                   //3.useState('') - get data from forms, title(default data), setTitle(update data)
+        // useState can be used multiple times for different data
+        const [artist, setArtist] = useState('');
+        const handleSubmit = (e) => {                                                             //4.handleSubmit - means what will happen when submit
+            e.preventDefault();
+            //console.log(title);
+            addSong(title);
+            setTitle('');                                                                         //5.clear input field after submit
+        }
+        return (
+            <form onSubmit={handleSubmit}>                                                        //2.onSubmit - wrap the data and submit
+            <label>Song name:</label>
+            <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} />        //1.onChange - value={title} - default value, meand empty pa ang input field
+            <input type='submit' value='add' />                                                                - setTitle(e.target.value) - store here the input value and pass here useState('')
+            </form>
+        );
+        }
+        
+        export default NewSongForm;
+
+2.SongList.js
+
+        import React, { useState } from 'react';
+        import uuid from 'uuid/v1';
+        import NewSongForm from './NewSongForm';                      //NewSongForm.js
+
+        const SongList = () => {
+        const [songs, setSongs] = useState([
+            { title: 'almost home', id: 1 },
+            { title: 'memory gospel', id: 2 },
+            { title: 'this wild darkness', id: 3 }
+        ]);
+
+        const addSong = (title) => {                                  //1.(title) - will recieve the data in <input type='text' value={title} in NewSongForm.js
+            setSongs([...songs, { title, id: uuid() }]);              //2.add to title and id to the array
+        };
+
+        return (
+            <div className="song-list">
+            <ul>
+                {songs.map(song => {
+                return ( <li key={song.id}>{song.title}</li> );
+                })}
+            </ul>
+            <NewSongForm addSong={addSong} />                         //3.dislay submitted data from NewSongForm.js
+            </div>
+        );
+        }
+
+        export default SongList;
+
+12.useEffect hook - this function always run everytime there is changes in the state
+---------------------------------------------------------------------------
+1.only change the SongList.js
+
+        import React, { useState, useEffect } from 'react';                               //2.useEffect
+        import uuid from 'uuid/v1';
+        import NewSongForm from './NewSongForm';
+
+        const SongList = () => {
+        const [songs, setSongs] = useState([
+            { title: 'almost home', id: 1 },
+            { title: 'memory gospel', id: 2 },
+            { title: 'this wild darkness', id: 3 }
+        ]);
+
+        const [age, setAge] = useState(20);                                             
+        const addSong = (title) => {
+            setSongs([...songs, { title, id: uuid() }]);
+        };
+
+        useEffect(() => {                                                               //3.useEffect - this only run if there is changes in the songs state                                                          
+            console.log('useEffect callback', songs);
+        }, [songs]);
+
+        useEffect(() => {                                                               //4.useEffect - this only run if there is changes in the age state                                                                
+            console.log('useEffect callback', age);
+        }, [age]);
+
+        return (
+            <div className="song-list">
+            <ul>
+                {songs.map(song => {
+                return ( <li key={song.id}>{song.title}</li> );
+                })}
+            </ul>
+            <NewSongForm addSong={addSong} />
+            <button onClick={() => setAge(age + 1)}>Add 1 to age: {age}</button>      //1.useEffect - when click button get the data of setAge and plus, display data in {age}
+            </div>
+        );
+        }
+
+        export default SongList;
+
+13.hooks with context - shorter code, when click button change the background
+---------------------------------------------------------------------------
+1.(update) contextapp\src\components\BookList.js
+
+        import React, { useContext } from 'react';                                                      //1.useContext hook
+        import { ThemeContext } from '../contexts/ThemeContext';
+
+        // class BookList extends Component {
+        //   static contextType = ThemeContext;
+        //   render() { 
+        //     const { isLightTheme, light, dark } = this.context;
+        //     const theme = isLightTheme ? light : dark;
+        //     return ( 
+        //       <div className="book-list" style={{ color: theme.syntax, background: theme.bg }}>
+        //         <ul>
+        //           <li style={{ background: theme.ui }}>the way of kings</li>
+        //           <li style={{ background: theme.ui }}>the name of the wind</li>
+        //           <li style={{ background: theme.ui }}>the final empire</li>
+        //         </ul>
+        //       </div>
+        //     );
+        //   }
+        // }
+
+
+        //THIS IS SHORTER CODE THAN ABOVE
+
+        const BookList = () => {                                                                        //2.useContext hook
+        const { isLightTheme, light, dark } = useContext(ThemeContext);                                 //3.isLightTheme, light, dark - get this property in ThemeContext.js
+        const theme = isLightTheme ? light : dark;
+        return ( 
+            <div className="book-list" style={{ color: theme.syntax, background: theme.bg }}>
+            <ul>
+                <li style={{ background: theme.ui }}>the way of kings</li>
+                <li style={{ background: theme.ui }}>the name of the wind</li>
+                <li style={{ background: theme.ui }}>the final empire</li>
+            </ul>
+            </div>
+        );
+        }
+        
+        export default BookList;
+
+14.multiple using hooks with context - 
+---------------------------------------------------------------------------
+1.(update) contextapp\src\components\BookList.js
