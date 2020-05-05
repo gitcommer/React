@@ -13,6 +13,11 @@ https://www.youtube.com/watch?v=6RhOzQciVwI&list=PL4cUxeGkcC9hNokByJilPg5g9m2APU
 11.useState forms - input, submit, display console/page
 12.useEffect hook - this function always run everytime there is changes in the state
 13.hooks with context - shorter code, when click button change the background
+14.using multiple hooks with context - you can use many different context in a components
+									 - functional components is shorter code than class components
+15.Creating Context with Functional Components, Provider
+16-18. (create project) insert, delete, local storage
+20-21. apply reducers, action, state in the (create project)
 
 NOTES
 ------------------------------------------------------------------------------------
@@ -782,7 +787,7 @@ App.js
 ---------------------------------------------------------------------------
 1.(update) contextapp\src\components\BookList.js
 
-        import React, { useContext } from 'react';                                                      //1.useContext hook
+        import React, { useContext } from 'react';                                    //1.useContext hook
         import { ThemeContext } from '../contexts/ThemeContext';
 
         // class BookList extends Component {
@@ -821,6 +826,500 @@ App.js
         
         export default BookList;
 
-14.multiple using hooks with context - 
+14.using multiple hooks with context - you can use many different context in a components
+									 - functional components is shorter code than class components
 ---------------------------------------------------------------------------
-1.(update) contextapp\src\components\BookList.js
+1.(update) contextapp\src\components\Navbar.js
+
+		----- SAMPE-1: CONTEXT IN CLASS COMPONENT -----
+
+		import React, { Component } from 'react';
+		import { ThemeContext } from '../contexts/ThemeContext';
+		import { AuthContext } from '../contexts/AuthContext';
+
+		class Navbar extends Component {
+		// static contextType = ThemeContext;
+		render() {
+			return (
+			<AuthContext>{(authContext) => (
+				<ThemeContext.Consumer>{(themeContext) => {
+				const { isAuthenticated, toggleAuth } = authContext;
+				const { isLightTheme, light, dark } = themeContext;
+				const theme = isLightTheme ? light : dark;
+				return (
+					<nav style={{ background: theme.ui, color: theme.syntax }}>
+					<h1>Context App</h1>
+					<div onClick={() => toggleAuth()}>
+						{ isAuthenticated ? 'Logged in' : 'Logged out' }
+					</div>
+					<ul>
+						<li>Home</li>
+						<li>About</li>
+						<li>Contact</li>
+					</ul>
+					</nav>
+				)
+				}}</ThemeContext.Consumer>
+			)}</AuthContext>
+			);
+		}
+		}
+		
+		export default Navbar;
+
+		----- SAMPE-2: CONTEXT IN FUNCTIONAL COMPONENT (same result but this code is short) -----
+
+		import React, { useContext } from 'react'; 								//1.import useContext
+		import { ThemeContext } from '../contexts/ThemeContext';
+		import { AuthContext } from '../contexts/AuthContext';
+		
+		const Navbar = () => {
+			const { isLightTheme, light, dark } = useContext(ThemeContext);
+			const { isAuthenticated, toggleAuth } = useContext(AuthContext);
+			const theme = isLightTheme ? light : dark;
+			return (
+				<nav style={{ background: theme.ui, color: theme.syntax }}>
+					<h1>Context App</h1>
+					<div onClick={() => toggleAuth()}>
+						{ isAuthenticated ? 'Logged in' : 'Logged out' }
+					</div>
+					<ul>
+						<li>Home</li>
+						<li>About</li>
+						<li>Contact</li>
+					</ul>
+				</nav>
+			);
+		}
+
+		export default Navbar;
+
+2.contextapp/src/components/ThemeToggle.js
+
+		----- SAMPE-1: CONTEXT IN CLASS COMPONENT -----
+
+		import React, { Component } from 'react';
+		import { ThemeContext } from '../contexts/ThemeContext';
+
+		class ThemeToggle extends Component {
+		static contextType = ThemeContext;
+			render() { 
+				const { toggleTheme } = this.context;
+				return ( <button onClick={toggleTheme}>Toggle the theme</button>);
+			}
+		}
+		
+		export default ThemeToggle;
+
+		----- SAMPE-2: CONTEXT IN FUNCTIONAL COMPONENT (same result but this code is short) -----
+
+		import React, { useContext } from 'react'; 								//1.import useContext
+		import { ThemeContext } from '../contexts/ThemeContext';
+		
+		const ThemToggle = () => {
+			const { toggleTheme }= useContext(ThemeContext);
+			return ( 
+				<button onClick={toggleTheme}>Toggle the theme</button>
+			);
+		}
+
+		export default ThemeToggle;
+
+15.Creating Context with Functional Components, Provider
+---------------------------------------------------------------------------
+
+1.contextapp/src/contexts/BookContext.js
+
+	import React, { createContext, useState } from 'react'; 	//1.define createContext library
+
+	export const BookContext = createContext(); 				//2.use createContext in a form of function
+
+	const BookContextProvider = (props) => {					//3.(props) - holds the state in ThemeContext.js
+	const [books, setBooks] = useState([
+		{title: 'name of the wind', id: 1},
+		{title: 'the way of kings', id: 2},
+		{title: 'the final empire', id: 3},
+		{title: 'the hero of ages', id: 4}
+	]);
+	return (
+		<BookContext.Provider value={{books}}> 					//4.send data to ThemeContext.js
+			{props.children}
+		</BookContext.Provider>
+	)
+	}
+
+	export default BookContextProvider;							//5.
+
+2.contextapp/src/App.js 
+
+	import React from 'react';
+	import BookList from './components/BookList';
+	import Navbar from './components/Navbar';
+	import ThemeContextProvider from './contexts/ThemeContext';
+	import ThemeToggle from './components/ThemeToggle';
+	import AuthContextProvider from './contexts/AuthContext';
+	import BookContextProvider from './contexts/BookContext'; 		//8.
+
+	function App() {
+	return (
+		<div className="App">
+		<ThemeContextProvider>
+			<AuthContextProvider>
+			<Navbar />
+			<BookContextProvider> 									//7.BookList.js
+				<BookList />
+			</BookContextProvider>
+			<ThemeToggle />
+			</AuthContextProvider>
+		</ThemeContextProvider>
+		</div>
+	);
+	}
+
+	export default App;
+
+3.contextapp/src/components/BookList.js
+
+	import React, { useContext } from 'react';
+	import { ThemeContext } from '../contexts/ThemeContext';
+	import { BookContext } from '../contexts/BookContext'; 									//9.
+
+	const BookList = () => {
+	const { isLightTheme, light, dark } = useContext(ThemeContext);
+	const { books } = useContext(BookContext); 												//10.
+	const theme = isLightTheme ? light : dark;
+	return ( 
+		<div className="book-list" style={{ color: theme.syntax, background: theme.bg }}>
+		<ul>
+			{books.map(book => { 															//11.
+				return (
+					<li key={book.id} style={{ background: theme.ui }}>{book.title}</li>
+				);
+			})}
+		</ul>
+		</div>
+	);
+	}
+	
+	export default BookList;
+
+16-18. (create project) insert, delete, local storage
+---------------------------------------------------------------------------
+1. npx create-react-app booklist
+2. src/contexts/BookContext.js 
+
+	// SAMPLE-1 20.bookReducer.js (USING STATE) ----------------------------------------------------------------
+
+	import React, { createContext, useState } from 'react'; 					//1.import createContext, useState
+	import uuid from 'uuid/v1';
+
+	export const BookContext = createContext(); 								//2.use createContext()
+
+	const BookContextProvider = (props) => { 									//3.(props) - store state to this props
+		const [books, setBooks] = useState([ 									//4.default and update state
+			{title: 'name of the wind', author: 'patrick rothfuss', id: 1},
+			{title: 'the final empire', author: 'brandon sanderson', id: 2},
+		]);
+		const addBook = (title, author) => { 									//5.add new data to this array
+			setBooks([...books, {title, author, id: uuid()}]);
+		};
+		const removeBook = (id) => { 											//6.delete data to this array
+			setBooks(books.filter(book => book.id !== id));
+		}
+
+		return (
+			<BookContext.Provider value={{ books, addBook, removeBook }}> 		//7.wrap data to this provider
+				{props.children}
+			</BookContext.Provider>
+		);
+	}
+	
+	export default BookContextProvider; 										//8.send data and display to App.js
+
+	// SAMPLE-2 20.bookReducer.js (USING REDUCERS / same result but shorter code) ----------------------------------------------------------------
+
+	import React, { createContext, useReducer } from 'react'; 		//5.bookReducer.js - useReducer / local crud
+	import { bookReducer } from '../reducers/bookReducer';
+
+	export const BookContext = createContext();
+
+	const BookContextProvider = (props) => {
+	const [books, dispatch] = useReducer(bookReducer, []); 			//6.bookReducer.js - use useReducer fuction, dispatch is the action
+	return (
+		<BookContext.Provider value={{ books, dispatch }}> 			//7.bookReducer.js - dispatch is the action
+		{props.children}
+		</BookContext.Provider>
+	);
+	}
+	
+	export default BookContextProvider;										
+
+3.App.js
+
+	import React from 'react';
+	import Navbar from './components/Navbar';
+	import BookContextProvider from './contexts/BookContext';
+	import BookList from './components/BookList';
+	import NewBookForm from './components/NewBookForm';
+
+	function App() {
+	return (
+		<div className="App">
+		<BookContextProvider> 									//9.BookContextProvider hold the state data in BookContext.js 
+			<Navbar /> 											//10.Navbar.js can access the state data of BookContext.js 
+			<BookList /> 										//5.BookList - display data in BookList.js
+			<NewBookForm /> 									//9.NewBookForm.js - 
+		</BookContextProvider>
+		</div>
+	);
+	}
+
+	export default App;
+
+4.src/components/Navbar.js 
+
+	import React, { useContext } from 'react';
+	import { BookContext } from '../contexts/BookContext'; 					//11.BookContext.js, { BookContext } is the <BookContext.Provider in BookContext.js 
+
+	const Navbar = () => {
+	const { books } = useContext(BookContext); 						 		//12.{ books } is the default state in BookContext.js 
+	return (
+		<div className="navbar">
+		<h1>Ninja Reading List</h1>
+		<p>Currently you have {books.length} books to get through...</p>	//13.{books.length} or display data in array in the state of BookContext.js 
+		</div>
+	);
+	}
+	
+	export default Navbar;
+
+5.src/index.css
+
+	body {
+		margin: 0;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+		sans-serif;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		background: #553055;
+	}
+	.App{
+		background: #4c2a4c;
+		margin: 20px auto;
+		width: 90%;
+		max-width: 700px;
+		color: #eee;
+	}
+	.navbar{
+		padding: 10px 20px;
+		text-align: center;
+		background: #6d3d6d
+	}
+	.navbar h1{
+		margin: 10px 0;
+	}
+	
+	.book-list{
+		margin: 20px;
+	}
+	.book-list ul{
+		padding: 0;
+		list-style-type: none;
+	}
+	.book-list li{
+		background: #6d3d6d;
+		border-radius: 4px;
+		padding: 10px;
+		cursor: pointer;
+		margin: 10px 0;
+	}
+	.book-list li:hover{
+		opacity: 0.7;
+		text-decoration: line-through;
+	}
+	.book-list .title{
+		font-weight: bold;
+		color: #fff;
+		font-size: 1.2em;
+	}
+	.book-list .author{
+		font-size: 0.9em;
+		color: #ddd;
+	}
+	.empty{
+		margin: 20px;
+		text-align: center;
+	}
+	
+	form{
+		padding: 20px;
+	}
+	input[type='text']{
+		width: 100%;
+		padding: 10px;
+		box-sizing: border-box;
+		margin: 6px 0;
+		background: #3c1f3c;
+		color: #fff;
+		border: 0;
+	}
+	input[type='submit']{
+		margin: 10px auto;
+		background: #eee;
+		border: 0;
+		padding: 6px 20px;
+		display: block;
+	}
+
+6.src/components/BookList.js
+
+	import React, { useContext } from 'react'; 									//1.BookList - use hooks library
+	import BookDetails from './BookDetails'; 									//6.BookDetails.js - 
+	import { BookContext } from '../contexts/BookContext';
+
+	const BookList = () => { 													//2.BookList - create functional component 
+	const { books } = useContext(BookContext); 									//3.BookList - use useContext(), { books } holds the state data in BookContext.js 
+	return books.length ? ( 													//4.BookList - check of books has data and display
+		<div className="book-list">
+		<ul>
+			{books.map(book => {
+			return ( <BookDetails book={book} key={book.id} /> );
+			})}
+		</ul>
+		</div>
+	) : (
+		<div className="empty">No books to read. Hello free time :).</div>
+	);
+	}
+
+	export default BookList;
+
+7.src/components/BookDetails.js (click and remove data on the list)
+
+// SAMPLE-1 20.bookReducer.js (USING STATE) ----------------------------------------------------------------
+
+	import React, { useContext } from 'react'; 					//1.BookDetails.js - 
+	import { BookContext } from '../contexts/BookContext'; 		//2.BookDetails.js - 
+
+	const BookDetails = ({ book }) => { 						//3.BookDetails.js - 
+	const { removeBook } = useContext(BookContext); 			//4.BookDetails.js - use useContext(), { books } holds the state data in BookContext.js 
+	return (
+		<li onClick={() => removeBook(book.id)}> 				//5.BookDetails.js - when click get the id and remove
+			<div className="title">{book.title}</div>
+			<div className="author">{book.author}</div>
+		</li>
+	);
+	}
+
+	export default BookDetails;
+
+	// SAMPLE-2 20.bookReducer.js (USING REDUCERS / same result but shorter code) ----------------------------------------------------------------
+
+	import React, { useContext } from 'react';
+	import { BookContext } from '../contexts/BookContext';
+
+	const BookDetails = ({ book }) => {
+	const { dispatch } = useContext(BookContext); 								//10.bookReducer.js - 
+	return (
+		<li onClick={() => dispatch({ type: 'REMOVE_BOOK', id: book.id })}> 	//11.bookReducer.js - delete data
+		<div className="title">{book.title}</div>
+		<div className="author">{book.author}</div>
+		</li>
+	);
+	}
+
+	export default BookDetails;
+
+8.src/components/NewBookForm.js 
+
+// SAMPLE-1 20.bookReducer.js (USING STATE) ----------------------------------------------------------------
+
+	import React, { useContext, useState } from 'react'; 					//1.NewBookForm.js - useContext or hooks
+	import { BookContext } from '../contexts/BookContext';
+
+	const NewBookForm = () => { 											//2.NewBookForm.js - functional components
+	const { addBook } = useContext(BookContext); 							//3.NewBookForm.js - BookContext.js
+	const [title, setTitle] = useState(''); 								//4.NewBookForm.js - default and update state 
+	const [author, setAuthor] = useState('');
+	
+	const handleSubmit = (e) => { 											//6.NewBookForm.js - 
+		e.preventDefault();
+		//console.log(title, author);
+		addBook(title, author); 											//7.NewBookForm.js - add data to title and author state
+		setTitle('');
+		setAuthor('');
+	}
+
+	return (
+		<form onSubmit={handleSubmit}>										//5.NewBookForm.js - 
+			<input type="text" placeholder="book title" value={title}
+				onChange={(e) => setTitle(e.target.value)} />
+			<input type="text" placeholder="author name" value={author}
+				onChange={(e) => setAuthor(e.target.value)} />
+			<input type="submit" value="add book" />
+		</form>
+	);
+	}
+	
+	export default NewBookForm; 											//8.NewBookForm.js - display data to App.js
+
+	// SAMPLE-2 20.bookReducer.js (USING REDUCERS / same result but shorter code) ----------------------------------------------------------------
+
+	import React, { useContext, useState } from 'react';
+	import { BookContext } from '../contexts/BookContext';
+
+	const NewBookForm = () => {
+	const { dispatch } = useContext(BookContext); 					//8.bookReducer.js - 
+	const [title, setTitle] = useState('');
+	const [author, setAuthor] = useState('');
+	
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		dispatch({ type: 'ADD_BOOK', book: { title, author }}); 	//9.bookReducer.js - save to reducers 
+		setTitle('');
+		setAuthor('');
+	}
+
+	return (
+		<form onSubmit={handleSubmit}>
+		<input type="text" placeholder="book title" value={title}
+			onChange={(e) => setTitle(e.target.value)} />
+		<input type="text" placeholder="author name" value={author}
+			onChange={(e) => setAuthor(e.target.value)} />
+		<input type="submit" value="add book" />
+		</form>
+	);
+	}
+	
+	export default NewBookForm;
+
+20. apply reducers, action, state like add, delete in the (create project)
+---------------------------------------------------------------------------
+1.src/reducers/bookReducer.js 
+
+	import uuid from 'uuid/v4';
+
+	export const bookReducer = (state, action) => { 				//1.bookReducer.js - state (data), action(crud)
+		switch (action.type) {
+			case 'ADD_BOOK': 										//2.bookReducer.js - ADD_BOOk is the action insert
+			return [...state, { 									//3.bookReducer.js - insert the data in the BookContext.js state
+				title: action.book.title, 
+				author: action.book.author, 
+				id: uuid()}
+			]
+			case 'REMOVE_BOOK': 									//4.bookReducer.js - delete the data in the BookContext.js state
+			return state.filter(book => book.id !== action.id);
+			default:
+			return state;
+		}
+	}
+	
+21. local storage(storing the data in the users browser)- meaning bisan i refresh ang page, dili mawala ang data
+---------------------------------------------------------------------------
+1.chrome, application, localstorage, localhost:3000
+2.console and type localstorage - this is use to access localstorage
+3.localstorage.setItem('name', 'shaun')
+
+
+
