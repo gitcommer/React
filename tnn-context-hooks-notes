@@ -1319,7 +1319,38 @@ App.js
 ---------------------------------------------------------------------------
 1.chrome, application, localstorage, localhost:3000
 2.console and type localstorage - this is use to access localstorage
-3.localstorage.setItem('name', 'shaun')
+		- localstorage.setItem('name', 'shaun') 							//same like name="shaun"
+		- localstorage.getItem('name') 										//display shaun 
 
+		- const book = {title: 'blah', authog: 'blah'}
+		- book 																//display in json format
+
+		- localstorage.setItem('mybook', JSON.stringify(book))
+				- go to application, localhost:3000 						//this data will display in json format
+		- const result = localstorage.getItem()'mybook'
+		- result 															//display data in json string 
+		- JSON.parse(result) 												//display data in json format
+
+3.BookContext.js
+
+	import React, { createContext, useReducer, useEffect } from 'react';  	//1.local-storage - useEffect, this will always run, everytime the data update
+	import { bookReducer } from '../reducers/bookReducer';
+
+	export const BookContext = createContext();
+
+	const BookContextProvider = (props) => {
+	const [books, dispatch] = useReducer(bookReducer, [], () => {
+		const localData = localStorage.getItem('books'); 					//3.local-storage - this will save the data into localStorage
+		return localData ? JSON.parse(localData) : []; 						//4.local-storage - if localStorage has data send it again to browser to display
+	});
+	useEffect(() => { 														//2.local-storage -  useEffect, this will always run, everytime the data update
+		localStorage.setItem('books', JSON.stringify(books)); 								  - this will log into the console JSON.stringify everytime data update
+	}, [books]);
+	return (
+		<BookContext.Provider value={{ books, dispatch }}>
+		{props.children}
+		</BookContext.Provider>
+	);
+	}
 
 
