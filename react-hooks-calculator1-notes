@@ -1,0 +1,172 @@
+April 6, 2020
+code and file: https://codesandbox.io/s/react-calculator-4yf85
+
+1.index.js
+
+    import React, { useState } from "react";
+    import ReactDOM from "react-dom";
+    import "./styles.css";
+
+    function App() {
+    const [input, setInput] = useState("");
+    const calcBtns = [];                                                //blank array
+    
+    [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, ".", "%"].forEach(item => {          //item is the copy of array
+        calcBtns.push(
+        <button
+            onClick={e => {
+            setInput(input + e.target.value);
+            }}
+            value={item}                                                //value in input
+            key={item}                                                  //id
+        >
+            {" "}                                                       //if no item, display default
+            {item}
+        </button>
+        );
+    });
+
+    return (
+        <div className="wrapper">
+            {" "}
+            <div className="show-input">{input}</div>
+            <div className="digits flex">{calcBtns}</div>
+            <div className="modifiers subgrid">
+
+                {/* clear button */}
+                <button onClick={() => setInput(input.substr(0, input.length - 1))}>        //start from 0 delete 1 number
+                    Clear
+                </button>
+
+                {/* clear all */}
+                <button onClick={() => setInput("")} value="">                              //clear all field value in array
+                    AC
+                </button>
+            </div>
+            <div className="operations subgrid">
+
+                {/* add button */}
+                <button onClick={e => setInput(input + e.target.value)} value="+">
+                    +
+                </button>
+
+                {/* minus btn */}
+                <button onClick={e => setInput(input + e.target.value)} value="-">
+                    {" "}
+                   -{" "}
+                </button>
+
+                <button onClick={e => setInput(input + e.target.value)} value="*">
+                    {" "}
+                    *
+                </button>
+
+                <button onClick={e => setInput(input + e.target.value)} value="/">
+                    {" "}
+                    /
+                </button>
+
+                {/* "=" btn */}                                                             //this is for equal button
+                <button
+                    onClick={e => {
+                        try {
+                        setInput(
+                            String(eval(input)).length > 3 &&
+                            String(eval(input)).includes(".")
+                            ? String(eval(input).toFixed(4))
+                            : String(eval(input))
+                        );
+                        } catch (e) {
+                        console.log(e);
+                        }
+                    }}
+                    value="="
+                    >
+                    =
+                </button>
+            </div>
+        </div>
+    );
+    }
+
+    const rootElement = document.getElementById("root");
+    ReactDOM.render(<App />, rootElement);
+
+2.styles.css 
+
+    html,
+    body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    }
+    .wrapper {
+    max-width: 420px;
+    min-height: 96vh;
+    margin: 0 auto;
+    }
+
+    button {
+    font-size: 2rem;
+    border: 1px solid #333;
+    cursor: pointer;
+    }
+    .modifiers button {
+    background-color: #ccc;
+    }
+    .operations button {
+    background-color: orange;
+    width: 100px;
+    }
+    .digits button {
+    background-color: #efefef;
+    }
+
+    /* All things Grid, Flexbox, Box Alignment */
+    .wrapper,
+    .subgrid {
+    display: grid;
+    }
+    .wrapper {
+    grid-template-areas:
+        "total total total total"
+        "modif modif modif oper"
+        "digit digit digit oper"
+        "digit digit digit oper"
+        "digit digit digit oper"
+        "digit digit digit oper";
+    grid-auto-columns: 1fr;
+    }
+    .show-input {
+    grid-area: total;
+    }
+    .modifiers {
+    grid-area: modif;
+    }
+    .operations {
+    grid-area: oper;
+    }
+    .digits {
+    grid-area: digit;
+    }
+
+    .show-input {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 2rem;
+    }
+
+    .modifiers {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    }
+
+    .digits {
+    display: flex;
+    flex-wrap: wrap;
+    }
+    .digits button {
+    flex: 1 0 26%;
+    }
+
