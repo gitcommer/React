@@ -1,0 +1,100 @@
+12 May 2020
+https://www.youtube.com/watch?v=ur6I5m2nTvk&list=PL4cUxeGkcC9ixPU-QkScoRBVxtPPzVjrQ
+https://github.com/iamshaunjp/react-native-tutorial
+
+NOTES
+VISUAL STUDIO CODE
+2.INSTALL, CREATE PROJECT, RUN
+3.Views, Text & Styles - <View>(or div), <Text>(or <p>)
+4.Using State or Hooks - when click button update state
+
+NOTES
+-------------------------------------------------------------------------
+cli - command line interface
+expo cli - native code, simplier
+react native cli - you need to configure, pure native app, no additional features, import other library
+css - android and ios dont understand css, react emulate id to understand css
+
+2. INSTALL, CREATE PROJECT, RUN
+-------------------------------------------------------------------------
+nodejs
+andriod studio - https://developer.android.com/studio/install
+               - configure, avd(android virtual devices) manager, create virtual devices, nexus 6p, pie
+               - open android to terminal: bin$ ./studio.sh
+expo.io/learn - npm install expo-cli --global
+create project - cmd/project> expo init myproject, blank, name: myproject, cd myproject, npm start
+run mobile - install expo client, camera scan qi code
+to run: npm start or expo start
+
+VISUAL STUDIO CODE
+-------------------------------------------------------------------------
+es7 react native snippets
+
+3.Views, Text & Styles
+-------------------------------------------------------------------------
+App.js
+    1. <View style={styles.container}>
+
+    2. const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+    });
+
+note: <Text style={styles.boldText}>Tae tubol <Text>igit</Text> ka!</Text>      //<Text>igit</Text> this will become bold also, inheret in parent
+
+4. Using State or Hooks - when click button update state
+-------------------------------------------------------------------------
+sample1: App.js 
+
+            import React, {useState} from 'react';                      //1.state/hooks - 
+            import { StyleSheet, Text, View } from 'react-native';
+
+            export default function App() {
+            const [name, setName] = useState('shaun');                 //2.state/hooks - 'shaun' is the default variable 'name'
+            return (
+                <View style={styles.container}>
+                <Text>My name is {name}</Text>                         {/*3.state/hooks - output: My name is shaun*/}                             
+                </View>
+            );
+            }
+
+sample2: App.js
+
+            import React, { useState } from 'react';
+            import { StyleSheet, Text, View, Button } from 'react-native';                  //1.state/hooks - Button when use click button
+
+            export default function App() {
+            const [name, setName] = useState('shaun');
+            const [person, setPerson] = useState({ name: 'mario', age: 40 });
+
+            const clickHandler = () => {
+                setName('chun-li');
+                setPerson({ name: 'luigi', age: 45 });                                      //3.state/hooks - update the state to this data
+            };
+
+            return (
+                <View style={styles.container}>
+                <Text>My name is {name}</Text>
+                <Text>His name is {person.name} and his age is {person.age}</Text>          //4.state/hooks - display
+                <View style={styles.buttonContainer}>
+                    <Button title='update state' onPress={clickHandler} />                  //2.state/hooks - when click button
+                </View>
+                </View>
+            );
+            }
+
+            const styles = StyleSheet.create({
+            container: {
+                flex: 1,
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                justifyContent: 'center',
+            },
+            buttonContainer: {
+                marginTop: 20,
+            }
+            });
