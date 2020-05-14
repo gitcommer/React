@@ -7,6 +7,16 @@ VISUAL STUDIO CODE
 2.INSTALL, CREATE PROJECT, RUN
 3.Views, Text & Styles - <View>(or div), <Text>(or <p>)
 4.Using State or Hooks - when click button update state
+7.Flat List Component - display block, inline, columns, id error
+8.when click the list item, fade the list item
+9.Todo App 1 - using different file components (add header component)
+10.Todo App 2 - list will delete when click and item
+11-12. Todo App 3 - add data and diplay, hold data and it will delete, alert message if 3 characters only
+13. whenever you click anywhere in the screen the keyboard hide
+14.Flexbox Basics - div layouting row and column
+15.Icons & More Flexbox - how to use icon using expo.io
+16-17.Create Reviews App - custom fonts using expo, download and use google fonts, 
+18.Global Styles -  
 
 NOTES
 -------------------------------------------------------------------------
@@ -98,3 +108,644 @@ sample2: App.js
                 marginTop: 20,
             }
             });
+
+7. Flat List Component - display block, inline, columns, id error
+-------------------------------------------------------------------------
+App.js 
+
+    import React, { useState } from 'react';
+    import { StyleSheet, Text, View, FlatList } from 'react-native';    //1.flatlist - 
+
+    export default function App() {
+    const [people, setPeople] = useState([
+        { name: 'shaun', id: '1' },
+        { name: 'yoshi', id: '2' },
+        { name: 'mario', id: '3' },
+        { name: 'luigi', id: '4' },
+        { name: 'peach', id: '5' },
+        { name: 'toad', id: '6' },
+        { name: 'bowser', id: '7' },
+    ]);
+
+    return (
+        <View style={styles.container}>
+
+        <FlatList                                                       //2.flatlist - 
+            numColumns={2}                                              // 2 column
+            keyExtractor={(item) => item.id}                            // this is use kong naay error sa key
+            data={people}                                               // pass the people data to data
+            renderItem={({ item }) => (                                 // item is the data in array 
+            <Text style={styles.item}>{item.name}</Text>                // display name in the array
+            )}
+        />
+
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingTop: 40,
+        paddingHorizontal: 20,
+        backgroundColor: '#fff',
+    },
+    item: {
+        flex: 1,
+        marginHorizontal: 10,
+        marginTop: 24,
+        padding: 30,
+        backgroundColor: 'pink',
+        fontSize: 24,
+    },
+    });
+
+8. when click the list item, fade the list item
+-------------------------------------------------------------------------
+App.js
+
+    import React, { useState } from 'react';
+    import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';      //1.touchable - TouchableOpacity
+
+    export default function App() {
+    const [people, setPeople] = useState([
+        { name: 'shaun', id: '1' },
+        { name: 'yoshi', id: '2' },
+        { name: 'mario', id: '3' },
+        { name: 'luigi', id: '4' },
+        { name: 'peach', id: '5' },
+        { name: 'toad', id: '6' },
+        { name: 'bowser', id: '7' },
+    ]);
+
+    const pressHandler = (id) => {                                //3.touchable - 
+        console.log(id);                                          //  display id in the console
+        setPeople((prevPeople) => {                               //4.touchable - (prevPeople) is the current data in the array
+        return prevPeople.filter(person => person.id  != id);     //5.touchable - search the id if wala siya sa array retrun true and keep the item in the array
+        });
+    };
+
+    return (
+        <View style={styles.container}>
+
+        <FlatList 
+            numColumns={2}
+            keyExtractor={(item) => item.id} 
+            data={people} 
+            renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => pressHandler(item.id)}>      {/*2.touchable - when press onPress={() send data to pressHandler(item.id)*/}
+                <Text style={styles.item}>{item.name}</Text>              {/*  display data and apply css*/}
+            </TouchableOpacity>
+            )}
+        />
+
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingTop: 40,
+        paddingHorizontal: 20,
+        backgroundColor: '#fff',
+    },
+    item: {
+        flex: 1,
+        marginHorizontal: 10,
+        marginTop: 24,
+        padding: 30,
+        backgroundColor: 'pink',
+        fontSize: 24,
+    },
+    });
+
+9. Todo App 1 - using different file components (add header component)
+-------------------------------------------------------------------------
+1.componets/header.js
+
+    import React from 'react';
+    import { View, Text, StyleSheet } from 'react-native';
+
+    export default function Header() {                  //1.
+    return (
+        <View style={styles.header}>
+        <Text style={styles.title}>My Todos</Text>
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    header: {
+        height: 80,
+        paddingTop: 38,
+        backgroundColor: 'coral',
+    },
+    title: {
+        textAlign: 'center',
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: 'bold',
+    }
+    });
+
+2.App.js 
+
+    import React, { useState } from 'react';
+    import { StyleSheet, Text, View, FlatList } from 'react-native';
+    import Header from './components/header';                               //2.
+
+    export default function App() {
+    const [todos, setTodos] = useState([
+        { text: 'buy coffee', key: '1' },
+        { text: 'create an app', key: '2' },
+        { text: 'play on the switch', key: '3' }
+    ]);
+
+
+    return (
+        <View style={styles.container}>
+        <Header />                                                          //3.
+        <View style={styles.content}>
+            {/* add todo form */}
+            <View style={styles.list}>
+            <FlatList
+                data={todos}
+                renderItem={({ item }) => (
+                <Text>{item.text}</Text>
+                )}
+            />
+            </View>
+        </View>
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {
+        padding: 40,
+    },
+    list: {
+        marginTop: 20,
+    },
+    });
+
+10. Todo App 2 - list will delete when click and item
+-------------------------------------------------------------------------
+1.App.js 
+
+    import React, { useState } from 'react';
+    import { StyleSheet, Text, View, FlatList } from 'react-native';
+    import Header from './components/header';
+    import TodoItem from './components/todoItem';
+
+    export default function App() {
+    const [todos, setTodos] = useState([
+        { text: 'buy coffee', key: '1' },
+        { text: 'create an app', key: '2' },
+        { text: 'play on the switch', key: '3' }
+    ]);
+
+    const pressHandler = (key) => {
+        setTodos(prevTodos => {
+        return prevTodos.filter(todo => todo.key != key);
+        });
+    };
+
+    return (
+        <View style={styles.container}>
+        <Header />
+        <View style={styles.content}>
+            {/* add todo form */}
+            <View style={styles.list}>
+            <FlatList
+                data={todos}
+                renderItem={({ item }) => (                                 //item is the array data
+                <TodoItem item={item} pressHandler={pressHandler} />
+                )}
+            />
+            </View>
+        </View>
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {
+        padding: 40,
+    },
+    list: {
+        marginTop: 20,
+    },
+    });
+
+2.todoitem.js 
+
+    import React from 'react'
+    import {StyleSheet, TouchableOpacity, Text} from 'react-native';
+
+    export default function TodoItem({ pressHandler, item }) {
+    return (
+        <TouchableOpacity onPress={() => pressHandler(item.key)}>
+        <Text style={styles.item}>{item.text}</Text>                    //item.text - is the data in the state in App.js
+        </TouchableOpacity>
+    )
+    }
+
+    const styles = StyleSheet.create({
+    item: {
+        padding: 16,
+        marginTop: 16,
+        borderColor: '#bbb',
+        borderWidth: 1,
+        borderStyle: "dashed",
+        borderRadius: 1,
+        borderRadius: 10,
+    }
+    });
+
+11-12. Todo App 3 - add data and diplay, hold data and it will delete, alert message if 3 characters only
+13. whenever you click anywhere in the screen the keyboard hide
+-------------------------------------------------------------------------
+App.js 
+
+    import React, { useState } from 'react';
+    import { StyleSheet, View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';       //13.1 - Keyboard
+    import Header from './components/header';
+    import TodoItem from './components/todoItem';
+    import AddTodo from './components/addTodo';                                       //4.
+
+    export default function App() {
+    const [todos, setTodos] = useState([
+        { text: 'buy coffee', key: '1' },
+        { text: 'create an app', key: '2' },
+        { text: 'play on the switch', key: '3' },
+    ]);
+
+    const pressHandler = (key) => {
+        setTodos(prevTodos => {
+        return prevTodos.filter(todo => todo.key != key);
+        });
+    };
+
+    const submitHandler = (text) => {                                               //5.(text) - this will recieve the data of addTodo.js, state when button is clicked
+        if(text.length > 3){                                                        //6.if input more than 3 characters, display to page else alert message
+        setText('');
+        setTodos(prevTodos => {                                                     //7.prevTodos - is a new array that store the data of the prev and new data inserted
+            return [
+            { text, key: Math.random().toString() },                                //8.this will insert new data in the state (text: and key:)
+            ...prevTodos
+            ];
+        });
+        } else {
+        Alert.alert('OOPS', 'Todo must be over 3 characters long', [
+            {text: 'Understood', onPress: () => console.log('alert closed') }
+        ]);
+        }
+    };
+
+    return (
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>               //13.2 - whenever you click anywhere in the screen the keyboard hide
+        <View style={styles.container}>
+            <Header />
+            <View style={styles.content}>
+            <AddTodo submitHandler={submitHandler} />                               //9.
+            <View style={styles.list}>
+                <FlatList
+                data={todos}
+                renderItem={({ item }) => (
+                    <TodoItem item={item} pressHandler={pressHandler} />
+                )}
+                />
+            </View>
+            </View>
+        </View>
+        </TouchableWithoutFeedback>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {
+        padding: 40,
+    },
+    list: {
+        marginTop: 20,
+    },
+    });
+
+components/addTodo.js 
+
+    import React, { useState } from 'react';
+    import { StyleSheet, View, TextInput, Button } from 'react-native';
+
+    export default function AddTodo({ submitHandler }) {
+    [text, setText] = useState('');                                                             //3. useState('') - get data of the input and update to setText, use text to send the data to App.js
+
+    const changeHandler = (val) => {                                                            //2. get data of the input and store to setText
+        setText(val);
+    };
+
+    return (
+        <View>
+        <TextInput 
+            style={styles.input} 
+            placeholder='new todo...'
+            onChangeText={changeHandler} 
+            value={text} 
+        />
+        <Button color='coral' onPress={() => submitHandler(text)} title='add todo' />           //1. onPress={() - when button is click, fire a function
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    input: {
+        marginBottom: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 6,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+    },
+    });
+
+14.Flexbox Basics - div layouting row and column
+-------------------------------------------------------------------------
+1.App.js 
+
+    import React, { useState } from 'react';
+    import { StyleSheet, View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+    import Header from './components/header';
+    import TodoItem from './components/todoItem';
+    import AddTodo from './components/addTodo';
+    import Sandbox from './components/sandbox';                                         //14.1 - sandbox.js
+
+    export default function App() {
+    const [todos, setTodos] = useState([
+        { text: 'buy coffee', key: '1' },
+        { text: 'create an app', key: '2' },
+        { text: 'play on the switch', key: '3' },
+    ]);
+
+    const pressHandler = (key) => {
+        setTodos(prevTodos => {
+        return prevTodos.filter(todo => todo.key != key);
+        });
+    };
+
+    const submitHandler = (text) => {
+        if(text.length > 3){
+        setTodos(prevTodos => {
+            return [
+            { text, key: Math.random().toString() },
+            ...prevTodos
+            ];
+        });
+        } else {
+        Alert.alert('OOPS', 'Todo must be over 3 characters long', [
+            {text: 'Understood', onPress: () => console.log('alert closed') }
+        ]);
+        }
+    };
+
+    return (
+        // <Sandbox />                                                                  //14.2 - wrap the component
+        <TouchableWithoutFeedback onPress={() => {
+        Keyboard.dismiss();
+        console.log('dismissed');
+        }}>
+        <View style={styles.container}>
+            <Header />
+            <View style={styles.content}>
+            <AddTodo submitHandler={submitHandler} />
+            <View style={styles.list}>
+                <FlatList
+                data={todos}
+                renderItem={({ item }) => (
+                    <TodoItem item={item} pressHandler={pressHandler} />
+                )}
+                />
+            </View>
+            </View>
+        </View>
+        </TouchableWithoutFeedback>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {
+        padding: 40,
+        //backgroundColor: 'grey',
+        flex: 1,
+    },
+    list: {
+        marginTop: 20,
+        //backgroundColor: 'lightgrey',
+        flex: 1,
+    },
+    });
+
+2.components/sandbox.js 
+
+    import React from 'react';
+    import { StyleSheet, Text, View } from 'react-native';
+
+    export default function Sandbox() {
+    return (
+        <View style={styles.container}>
+        <Text style={styles.boxOne}>one</Text>
+        <Text style={styles.boxTwo}>two</Text>
+        <Text style={styles.boxThree}>three</Text>
+        <Text style={styles.boxFour}>four</Text>
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        paddingTop: 40,
+        backgroundColor: '#ddd',
+        flexDirection: 'row',                                           //14.3.flexDirection: 'row' or 'column' - display in row the container:
+        justifyContent: 'space-around',                                 //14.3.justifyContent: 'space-around(LRTB)' or 'center' or flex-end(right side) or start(left-side) or space-between(marginRL)
+        alignItems: 'center',                                           //14.4.alignItems: 'center' or 'flex-start' or 'flex-end'
+        height: '100%',
+    },
+    boxOne: {
+        flex: 1,                                                        //14.3.flex: 1 - default row or column, full height or occupy the whole page lenght
+        backgroundColor: 'violet',
+        padding: 10,                                                    //14.4.
+    },
+    boxTwo: {
+        flex: 2,
+        backgroundColor: 'gold',
+        padding: 10,                                                    //14.4.
+        alignSelf: 'flex-end',
+    },
+    boxThree: {
+        flex: 1,
+        backgroundColor: 'coral',
+        padding: 10,                                                    //14.4.
+    },
+    boxFour: {
+        flex: 3,
+        backgroundColor: 'skyblue',
+        padding: 10,                                                    //14.4.
+        alignSelf: 'flex-start',
+    }
+    });
+
+15.Icons & More Flexbox - how to use icon using expo.io
+-------------------------------------------------------------------------
+1.https://docs.expo.io/guides/icons/ or https://icons.expo.fyi/ - you will find available icon in expo
+
+2.components/todoItem.js
+
+    import React from 'react'
+    import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+    import { MaterialIcons } from '@expo/vector-icons';                             //15.1. import
+
+    export default function TodoItem({ pressHandler, item }) {
+    return (
+        <TouchableOpacity onPress={() => pressHandler(item.key)}>
+        <View style={styles.item}>
+            <MaterialIcons name='delete' size={18} color='#333' />                  //15.2. name='delete'(is the icon), size={18}(size of icon)
+            <Text style={styles.itemText}>{item.text}</Text>                        //      css of icon
+        </View>
+        </TouchableOpacity>
+    )
+    }
+
+    const styles = StyleSheet.create({
+    item: {
+        padding: 16,
+        marginTop: 16,
+        borderColor: '#bbb',
+        borderWidth: 1,
+        borderStyle: "dashed",
+        borderRadius: 1,
+        borderRadius: 10,
+        flexDirection: 'row',                                                       //15.3. para ma inline ang icon og ang text
+        alignItems: 'center',
+    },
+    itemText: {
+        marginLeft: 10,
+    }
+    });
+
+16-17.Create Reviews App - custom fonts using expo, download and use google fonts, 
+-------------------------------------------------------------------------
+1.https://docs.expo.io/guides/using-custom-fonts/
+2.download google fonts and save to assets folder like assets/fonts
+3.desktop> expo init gamezone, blank
+
+4.App.js 
+
+    import React, { useState } from 'react';
+    import Home from './screens/home';
+    import * as Font from 'expo-font';                                      //1.expo-font - 
+    import { AppLoading } from 'expo';
+
+    const getFonts = () => Font.loadAsync({                                 //2.expo-font - 
+        'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf'),
+        'nunito-bold': require('./assets/fonts/Nunito-Bold.ttf'),
+    });
+
+    export default function App() {
+        const [fontsLoaded, setFontsLoaded] = useState(false);              //3.expo-font - state for fonts
+
+    if (fontsLoaded) {
+        return (
+        <Home />
+        );
+    } else {
+        return (
+        <AppLoading                                                         //4.expo-font - this is the components for fonts
+            startAsync={getFonts} 
+            onFinish={() => setFontsLoaded(true)} 
+        />
+        )
+    }
+    }
+
+5.home.js 
+
+    import React from 'react';
+    import { StyleSheet, View, Text } from 'react-native';
+
+    export default function Home() {
+    return (
+        <View style={styles.container}>
+        <Text style={styles.titleText}>Home Screen</Text>                   //5.expo-font - 
+        </View>
+    );
+    }
+
+    const styles = StyleSheet.create({
+    container: {
+        padding: 24,
+    },
+    titleText: {                                                            //6.expo-font - use the google fonts
+        fontFamily: 'nunito-bold',
+        fontSize: 18,
+    }
+    });
+
+18.Global Styles -  
+-------------------------------------------------------------------------
+1.project folder/styles/global.js 
+
+    import { StyleSheet } from 'react-native';              //1.StyleSheet
+
+    export const globalStyles = StyleSheet.create({         //2.globalStyles
+    titleText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    paragraph: {
+        marginVertical: 8,
+        lineHeight: 20,
+    },
+    container: {
+        flex: 1,
+        padding: 20,
+    },
+    });
+    
+2.components/home.js, about.js, reviewDetails.js
+
+    import React from 'react';
+    import { StyleSheet, View, Text } from 'react-native';
+    import { globalStyles } from '../styles/global';                //3.globalStyles
+
+    export default function Home() {
+    return (
+        <View style={globalStyles.container}>                       //4.globalStyles
+        <Text style={globalStyles.titleText}>Home Screen</Text>
+        </View>
+    );
+    }
+
+19.React Navigation Setup - using stack navigation, bali i push, pop niya ang page sa stack
+-------------------------------------------------------------------------
+1.https://reactnavigation.org/ 
+    - npm install react-navigation
+    - expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+
+20
+
